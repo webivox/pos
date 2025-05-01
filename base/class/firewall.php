@@ -16,15 +16,27 @@ class firewall
 	
 	//done
 	public function validate($username, $password) {
-
-         global $db;
-
-		$count = $db->fetch("SELECT username, password FROM secure_users WHERE username= ? AND password=?", [$username, $password]);
-
-		// Check if $count has any result (i.e., not empty or null)
-		return !empty($count) ? true : false;
-
-    }
+		global $db;
+		
+		// First get the stored hash by username only
+		$user = $db->fetch("SELECT username, password FROM secure_users WHERE username = ?", [$username]);
+		
+		if (!$user) {
+			return false; // User not found
+		}
+		
+		// Verify the password against the stored hash
+		if (password_verify($password, $user['password'])) {
+			// Check if password needs rehashing (if using old algorithm)
+			if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
+				$newHash = password_hash($password, PASSWORD_DEFAULT);
+				$db->execute("UPDATE secure_users SET password = ? WHERE username = ?", [$newHash, $username]);
+			}
+			return true;
+		}
+		
+		return false;
+	}
 	
 	//done
 	public function verifyUser()

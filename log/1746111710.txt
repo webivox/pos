@@ -1,1 +1,0 @@
-[01-May-2025 15:01:50 UTC] PHP Parse error:  syntax error, unexpected variable "$error_no", expecting "," or ";" in D:\wamp64\www\pos\core\connector\sales\transaction_quotations.php on line 149

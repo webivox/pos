@@ -45,11 +45,11 @@ class SystemMasterUsersQuery {
 	}
 	
 	
-    public function getUSerDataByUserPass($username, $password) {
+    public function getUSerDataByUser($username) {
 		
         global $db;
 
-		$row = $db->fetch("SELECT * FROM secure_users WHERE username= ? AND password=?", [$username, $password]);
+		$row = $db->fetch("SELECT * FROM secure_users WHERE username= ?", [$username]);
 		
 		// Return $row if it's not empty, otherwise return an empty array
 		return !empty($row) ? $row : [];
@@ -105,6 +105,8 @@ class SystemMasterUsersQuery {
     public function create($data) {
 		
 		global $db;
+		
+		$hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
@@ -113,7 +115,7 @@ class SystemMasterUsersQuery {
 						location_id='".$data['location_id']."', 
 						name='".$data['name']."', 
 						username='".$data['username']."', 
-						password='".sha1($data['password'])."', 
+						password='".$hashed_password."', 
 						loginRedirectTo='".$data['loginRedirectTo']."', 
 						status='".$data['status']."'
 						
@@ -131,6 +133,8 @@ class SystemMasterUsersQuery {
     public function edit($data) {
 		
 		global $db;
+		
+		$hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
         // Query to fetch all blogs
         $sql = "UPDATE ".$this->tableName." SET 
@@ -140,7 +144,7 @@ class SystemMasterUsersQuery {
 						name='".$data['name']."', 
 						username='".$data['username']."',";
 						
-						if($data['password']){ $sql .= "password='".sha1($data['password'])."',"; }
+						if($data['password']){ $sql .= "password='".$hashed_password."',"; }
 						
 	$sql .= "loginRedirectTo='".$data['loginRedirectTo']."', 
 						status='".$data['status']."'

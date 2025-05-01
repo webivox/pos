@@ -66,29 +66,29 @@ class SecureSigninConnector {
 		if(strlen($data['password'])<8){ $error_msg[]="Password must be minimum 8 letters"; $error_no++; }
 		
 		
-		if(!$firewallCls->validate($data['username'], sha1($data['password'])))
+		if(!$firewallCls->validate($data['username'], $data['password']))
 		{
 			$error_msg[]="Invalid Login Details!"; $error_no++;
 		}
 		
 		if(!$error_no)
 		{
-			$userInfo = $SystemMasterUsersQuery->getUSerDataByUserPass($data['username'], sha1($data['password']));
 			
-			if($userInfo)
+			$userInfo = $SystemMasterUsersQuery->getUSerDataByUser($data['username']);
+			
+   			if($userInfo)
 			{
-				function generateToken($length = 32) {
-					return bin2hex(random_bytes($length / 2));
-				}
 				
-				$token = generateToken(32);
+				$token = bin2hex(random_bytes(32));
 				
 				$nowDate = $dateCls->nowDb();
 								
 				$sessionCls->set('signedUserId',$userInfo['user_id']);
 				$sessionCls->set('signedToken',$token);
 				
-				$db->execute("UPDATE secure_users SET token='".$token."', lastLogin=thisLogin, thisLogin='".$nowDate."' WHERE user_id = '".$userInfo['user_id']."'");
+				
+				$db->execute("UPDATE secure_users SET token=?, lastLogin=thisLogin, thisLogin=? WHERE user_id=?", [$token, $nowDate, $userInfo['user_id']]);
+
 				
 				$firewallCls->addLog("User signed in successfully.");
 				
@@ -96,7 +96,7 @@ class SecureSigninConnector {
 				$json['redirect']=_SERVER.$userInfo['loginRedirectTo'];
 				
 			}
-			else{ $error_msg[]="Invalid Login Details!"; $error_no++; }
+			else{ $error_msg[]="Invalid User Details!"; $error_no++; }
 		}
 		
 		if($error_no)

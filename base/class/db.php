@@ -15,7 +15,8 @@ class db
 
         // Check connection
         if ($this->conn->connect_error) {
-            die("Database connection failed: " . $this->conn->connect_error);
+            error_log("Database Error: " . $this->conn->connect_error);
+			exit("Internal error. Please contact support.");
         }
 
         $this->conn->set_charset("utf8mb4"); // Set character encoding
