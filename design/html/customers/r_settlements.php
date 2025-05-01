@@ -1,0 +1,106 @@
+<div id="right">
+
+	<div id="filter_head">
+    
+    	<h1>Settlement Report</h1>
+        
+    
+    </div>
+    
+    <div id="filter_content">
+    
+    	<h3>Filter Here</h3>
+        
+        <form method="post" id="searchReportForm" action="<?php echo $data['view_url'] ; ?>" target="_blank">
+        
+        
+        <div class="col_4">
+        
+            <label for="search_date_from">Date From</label>
+            <input type="text" name="search_date_from" id="search_date_from" class="dateField" placeholder="">
+        
+        </div>
+        
+        <div class="col_4">
+        
+            <label for="search_date_to">Date To</label>
+            <input type="text" name="search_date_to" id="search_date_to" class="dateField" placeholder="">
+        
+        </div>
+        
+        <div class="col_4">
+        
+            <label for="search_customer">Customer</label>
+            <select name="search_customer" id="search_customer">
+                
+                <option value="">- Choose -</option>
+                <?php
+                foreach($data['customer_list'] as $cat){
+                ?>
+                <option value="<?php echo $cat['customer_id']; ?>"><?php echo $cat['name']; ?></option>
+                <?php } ?>
+            
+            </select>
+        
+        </div>
+        
+        
+        <div class="col_4">
+        
+            <label for="search_location">Location</label>
+            <select name="search_location" id="search_location">
+                
+                <option value="">- Choose -</option>
+                <?php
+                foreach($data['location_list'] as $cat){
+                ?>
+                <option value="<?php echo $cat['location_id']; ?>"><?php echo $cat['name']; ?></option>
+                <?php } ?>
+            
+            </select>
+        
+        </div>
+        
+        <div class="col_4">
+        
+            <label for="search_account">Account</label>
+            <select name="search_account" id="search_account">
+                
+                <option value="">- Choose -</option>
+                <?php
+                foreach($data['account_list'] as $cat){
+                ?>
+                <option value="<?php echo $cat['account_id']; ?>"><?php echo $cat['name']; ?></option>
+                <?php } ?>
+            
+            </select>
+        
+        </div>
+        
+        <div class="col_4">
+        
+            <label for="search_user">User</label>
+            <select name="search_user" id="search_user">
+                
+                <option value="">- Choose -</option>
+                <?php
+                foreach($data['user_list'] as $cat){
+                ?>
+                <option value="<?php echo $cat['user_id']; ?>"><?php echo $cat['name']; ?></option>
+                <?php } ?>
+            
+            </select>
+        
+        </div>
+        
+        <div class="col_1">
+        
+            <button class="btn btn-primary" type="submit" id="searchReportForm">View</button>
+        
+        </div>
+        </form>
+    
+    </div>
+
+</div>
+

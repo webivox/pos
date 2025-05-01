@@ -1,0 +1,4 @@
+[01-May-2025 17:11:34 UTC] PHP Fatal error:  Cannot redeclare CustomersMasterCustomersConnector::autoComplete() in D:\wamp64\www\pos\core\connector\customers\master_customers.php on line 436
+[01-May-2025 17:11:34 UTC] PHP Stack trace:
+[01-May-2025 17:11:34 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 17:11:34 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16

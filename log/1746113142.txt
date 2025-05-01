@@ -1,0 +1,24 @@
+[01-May-2025 20:55:42 Asia/Colombo] PHP Warning:  Undefined array key "customer_list" in D:\wamp64\www\pos\design\html\sales\transaction_return.php on line 45
+[01-May-2025 20:55:42 Asia/Colombo] PHP Stack trace:
+[01-May-2025 20:55:42 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 20:55:42 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 20:55:42 Asia/Colombo] PHP   3. SalesTransactionReturnConnector->index() D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 20:55:42 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:33
+[01-May-2025 20:55:42 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\sales\transaction_return.php on line 45
+[01-May-2025 20:55:42 Asia/Colombo] PHP Stack trace:
+[01-May-2025 20:55:42 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 20:55:42 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 20:55:42 Asia/Colombo] PHP   3. SalesTransactionReturnConnector->index() D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 20:55:42 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:33
+[01-May-2025 20:55:42 Asia/Colombo] PHP Warning:  Undefined array key "location_list" in D:\wamp64\www\pos\design\html\sales\transaction_return.php on line 60
+[01-May-2025 20:55:42 Asia/Colombo] PHP Stack trace:
+[01-May-2025 20:55:42 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 20:55:42 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 20:55:42 Asia/Colombo] PHP   3. SalesTransactionReturnConnector->index() D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 20:55:42 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:33
+[01-May-2025 20:55:42 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\sales\transaction_return.php on line 60
+[01-May-2025 20:55:42 Asia/Colombo] PHP Stack trace:
+[01-May-2025 20:55:42 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 20:55:42 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 20:55:42 Asia/Colombo] PHP   3. SalesTransactionReturnConnector->index() D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 20:55:42 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:33

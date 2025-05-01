@@ -1,0 +1,1 @@
+[01-May-2025 16:59:28 UTC] PHP Parse error:  syntax error, unexpected token "public" in D:\wamp64\www\pos\core\connector\accounts\master_accounts.php on line 147

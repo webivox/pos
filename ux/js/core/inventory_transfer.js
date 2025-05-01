@@ -1,0 +1,72 @@
+// JavaScript Document
+
+
+function totalCalc() {
+    
+
+	var  itemincart = 0;
+	
+	
+	$(".linerows").each(function () {
+		var qty = parseFloat($("input.eqty", this).val()) || 0;
+	   
+	
+		itemincart += qty;
+	});
+	
+	// Update bottom summary fields
+	$("#bottom_total_qty").val(itemincart.toFixed(2));
+}
+
+
+
+
+$(document).on('change', '.editlinechange', function() {
+	
+	totalCalc();
+	
+});
+
+$(document).on('click', '#addItem', function() {
+
+	
+	var no = parseFloat($("#no").val());
+	
+	var itemId = $("#item_name_id").val();
+	var itemName = $("#item_name").val();
+	
+	var qty = $("#qty").val();
+	
+	if(no && itemId && itemName && qty)
+	{
+	
+		$("#addedItemsList").append('<tr id="row'+no+'" class="linerows"> <td><input type="text" name="added_no[]" disabled="disabled" value="'+no+'" /></td> <td><input type="text" name="added_item_name[]" data-focus="qty" value="'+itemName+'" disabled /><input type="hidden" name="added_item_id[]" value="'+itemId+'"></td> <td><input type="text" name="added_qty[]" class="text-right editlinechange eqty" value="'+qty+'" /></td> <td><a class="btn btn-danger removeItem" data-id="'+no+'"><i class="fa-light fa-trash-xmark"></i></a></td> </tr>');
+
+	
+		$("#no").val(no+1);
+		$("#itemId").val('');
+		$("#item_name").val('');
+		$("#qty").val('');
+		
+		$("#item_name").trigger('focus');
+	
+	}
+	else
+	{
+		$("#modal ul").html('<li>Error Found: Please re check</li>');
+		$("#modal").fadeIn(1);
+	}
+	
+	totalCalc();
+});
+
+$(document).on('click', '.removeItem', function() {
+	
+	if (confirm("Click OK to confirm the removal of this item!")) {
+		var id = $(this).data("id");
+		$("#row"+id).remove();
+	}
+	
+	totalCalc();
+	
+});

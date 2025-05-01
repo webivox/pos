@@ -1,0 +1,12 @@
+[01-May-2025 16:48:34 UTC] PHP Warning:  Undefined array key "balane" in D:\wamp64\www\pos\design\html\accounts\master_accounts_table.php on line 20
+[01-May-2025 16:48:34 UTC] PHP Stack trace:
+[01-May-2025 16:48:34 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 16:48:34 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 16:48:34 UTC] PHP   3. AccountsMasterAccountsConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 16:48:34 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\accounts\master_accounts.php:106
+[01-May-2025 16:48:34 UTC] PHP Warning:  Undefined array key "balane" in D:\wamp64\www\pos\design\html\accounts\master_accounts_table.php on line 20
+[01-May-2025 16:48:34 UTC] PHP Stack trace:
+[01-May-2025 16:48:34 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 16:48:34 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 16:48:34 UTC] PHP   3. AccountsMasterAccountsConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 16:48:34 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\accounts\master_accounts.php:106

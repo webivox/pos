@@ -1,0 +1,25 @@
+[01-May-2025 15:29:03 UTC] PHP Warning:  Undefined array key "added_item_id" in D:\wamp64\www\pos\core\connector\sales\transaction_return.php on line 209
+[01-May-2025 15:29:03 UTC] PHP Stack trace:
+[01-May-2025 15:29:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:29:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:29:03 UTC] PHP   3. SalesTransactionReturnConnector->create('create') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:29:03 UTC] PHP Warning:  Undefined array key "added_cost" in D:\wamp64\www\pos\core\connector\sales\transaction_return.php on line 210
+[01-May-2025 15:29:03 UTC] PHP Stack trace:
+[01-May-2025 15:29:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:29:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:29:03 UTC] PHP   3. SalesTransactionReturnConnector->create('create') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:29:03 UTC] PHP Warning:  Undefined array key "added_qty" in D:\wamp64\www\pos\core\connector\sales\transaction_return.php on line 211
+[01-May-2025 15:29:03 UTC] PHP Stack trace:
+[01-May-2025 15:29:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:29:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:29:03 UTC] PHP   3. SalesTransactionReturnConnector->create('create') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:29:03 UTC] PHP Warning:  Undefined array key "added_amount" in D:\wamp64\www\pos\core\connector\sales\transaction_return.php on line 212
+[01-May-2025 15:29:03 UTC] PHP Stack trace:
+[01-May-2025 15:29:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:29:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:29:03 UTC] PHP   3. SalesTransactionReturnConnector->create('create') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:29:03 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\core\connector\sales\transaction_return.php on line 215
+[01-May-2025 15:29:03 UTC] PHP Stack trace:
+[01-May-2025 15:29:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:29:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:29:03 UTC] PHP   3. SalesTransactionReturnConnector->create('create') D:\wamp64\www\pos\base\load.php:22

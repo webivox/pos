@@ -1,0 +1,30 @@
+[01-May-2025 15:33:03 UTC] PHP Warning:  Undefined array key "customer_id" in D:\wamp64\www\pos\design\html\sales\transaction_return_table.php on line 24
+[01-May-2025 15:33:03 UTC] PHP Stack trace:
+[01-May-2025 15:33:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:33:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:33:03 UTC] PHP   3. SalesTransactionReturnConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:33:03 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:135
+[01-May-2025 15:33:03 UTC] PHP Warning:  Undefined array key "customer_id" in D:\wamp64\www\pos\design\html\sales\transaction_return_table.php on line 24
+[01-May-2025 15:33:03 UTC] PHP Stack trace:
+[01-May-2025 15:33:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:33:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:33:03 UTC] PHP   3. SalesTransactionReturnConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:33:04 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:135
+[01-May-2025 15:33:04 UTC] PHP Warning:  Undefined array key "customer_id" in D:\wamp64\www\pos\design\html\sales\transaction_return_table.php on line 24
+[01-May-2025 15:33:04 UTC] PHP Stack trace:
+[01-May-2025 15:33:04 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:33:04 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:33:04 UTC] PHP   3. SalesTransactionReturnConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:33:04 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:135
+[01-May-2025 15:33:04 UTC] PHP Warning:  Undefined array key "customer_id" in D:\wamp64\www\pos\design\html\sales\transaction_return_table.php on line 24
+[01-May-2025 15:33:04 UTC] PHP Stack trace:
+[01-May-2025 15:33:04 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:33:04 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:33:04 UTC] PHP   3. SalesTransactionReturnConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:33:04 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:135
+[01-May-2025 15:33:04 UTC] PHP Warning:  Undefined array key "customer_id" in D:\wamp64\www\pos\design\html\sales\transaction_return_table.php on line 24
+[01-May-2025 15:33:04 UTC] PHP Stack trace:
+[01-May-2025 15:33:04 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 15:33:04 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 15:33:04 UTC] PHP   3. SalesTransactionReturnConnector->load('load') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 15:33:04 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_return.php:135

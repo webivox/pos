@@ -1,0 +1,10 @@
+[01-May-2025 17:01:17 UTC] PHP Warning:  Undefined array key "item_id" in D:\wamp64\www\pos\core\connector\accounts\master_accounts.php on line 139
+[01-May-2025 17:01:17 UTC] PHP Stack trace:
+[01-May-2025 17:01:17 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 17:01:17 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 17:01:17 UTC] PHP   3. AccountsMasterAccountsConnector->autoComplete('autoComplete') D:\wamp64\www\pos\base\load.php:22
+[01-May-2025 17:01:17 UTC] PHP Warning:  Undefined array key "item_id" in D:\wamp64\www\pos\core\connector\accounts\master_accounts.php on line 139
+[01-May-2025 17:01:17 UTC] PHP Stack trace:
+[01-May-2025 17:01:17 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[01-May-2025 17:01:17 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[01-May-2025 17:01:17 UTC] PHP   3. AccountsMasterAccountsConnector->autoComplete('autoComplete') D:\wamp64\www\pos\base\load.php:22
