@@ -5,7 +5,7 @@
     	<h1>Payments</h1>
         
         
-        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="650" data-height="380">Create New</a>
+        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="650" data-height="460">Create New</a>
     
     </div>
     
@@ -128,5 +128,3 @@
 
 </div>
 
-
-<script type="text/javascript" src="<?php echo _JS; ?>core/suppliers_rn.js"></script>

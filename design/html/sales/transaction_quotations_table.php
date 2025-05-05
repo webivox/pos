@@ -4,7 +4,8 @@
     
         <div class="col-20">No</div>
         <div class="col-10">Date</div>
-        <div class="col-40">Customer</div>
+        <div class="col-30">Customer</div>
+        <div class="col-10">No of Item/Qty</div>
         <div class="col-20">Location</div>
         <div class="col-10 text-center">Action</div>
     
@@ -19,7 +20,8 @@
     
         <div class="col-20"><?php echo $cat['quotation_no']; ?></div>
         <div class="col-10"><?php echo $cat['added_date']; ?></div>
-        <div class="col-40"><?php echo $cat['customer']; ?></div>
+        <div class="col-30"><?php echo $cat['customer']; ?></div>
+        <div class="col-10"><?php echo $cat['no_of_items']; ?></div>
         <div class="col-20"><?php echo $cat['location']; ?></div>
         <div class="col-10 action">
         

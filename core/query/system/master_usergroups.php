@@ -27,7 +27,7 @@ class SystemMasterUsergroupsQuery{
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE group_id='".$usergroupId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE group_id='".$usergroupId."'");
 		$count = count($res);
 		if($count)
 		{

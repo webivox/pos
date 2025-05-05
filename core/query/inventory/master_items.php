@@ -109,10 +109,9 @@ class InventoryMasterItemsQuery {
 						selling_price='".$data['selling_price']."',
 						minimum_selling_price='".$data['minimum_selling_price']."',
 						cost='".$data['cost']."',
-						expiry_date='".$data['expiry_date']."',
 						re_order_qty='".$data['re_order_qty']."',
 						order_qty='".$data['order_qty']."',
-						subtract_stock='".$data['subtract_stock']."',
+						minimum_qty='".$data['minimum_qty']."',
 						status='".$data['status']."'
 						
 				";
@@ -144,10 +143,9 @@ class InventoryMasterItemsQuery {
 						selling_price='".$data['selling_price']."',
 						minimum_selling_price='".$data['minimum_selling_price']."',
 						cost='".$data['cost']."',
-						expiry_date='".$data['expiry_date']."',
 						re_order_qty='".$data['re_order_qty']."',
 						order_qty='".$data['order_qty']."',
-						subtract_stock='".$data['subtract_stock']."',
+						minimum_qty='".$data['minimum_qty']."',
 						status='".$data['status']."'
 						
 						WHERE

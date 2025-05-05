@@ -176,7 +176,7 @@ class accountsMasterPayeeConnector {
 					}
 					$json['error']=true;
 					$json['error_msg']=$error_msg_list;
-				}
+				}header('Content-Type: application/json');
 				echo json_encode($json);
 				
 			}

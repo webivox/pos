@@ -104,7 +104,7 @@
                         <td><input type="text" id="eno<?php echo $i['return_note_item_id']; ?>" name="no" disabled="disabled" value="<?php echo $ino; ?>" /></td>
                         <td><input type="text" id="eitem_name<?php echo $i['return_note_item_id']; ?>" disabled name="eitem_name<?php echo $i['return_note_item_id']; ?>" value="<?php echo $InventoryMasterItemsQuery->data($i['item_id'],'name'); ?>" /></td>
                         <td><input type="text" id="eqty<?php echo $i['return_note_item_id']; ?>" name="eqty<?php echo $i['return_note_item_id']; ?>" class="text-right editlinechange eqty" value="<?php echo $defCls->num($i['qty']); ?>" /></td>
-                        <td><input type="text" id="eamount<?php echo $i['return_note_item_id']; ?>" name="eamount<?php echo $i['return_note_item_id']; ?>" class="text-right editlinechange eprice" value="<?php echo $defCls->num($i['price']); ?>" /></td>
+                        <td><input type="text" id="eamount<?php echo $i['return_note_item_id']; ?>" name="eamount<?php echo $i['return_note_item_id']; ?>" class="text-right editlinechange eamount" value="<?php echo $defCls->num($i['price']); ?>" /></td>
                         <td><input type="text" id="etotal<?php echo $i['return_note_item_id']; ?>" name="etotal<?php echo $i['return_note_item_id']; ?>" disabled class="text-right etotal" value="<?php echo $defCls->num($i['total']); ?>" /></td>
                         <td><a class="btn btn-danger removeItem" data-id="e<?php echo $i['return_note_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a></td>
                 

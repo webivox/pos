@@ -20,19 +20,34 @@ function totalCalc() {
         itemincart = 0,
         totalDiscount = 0;
 
-  
+    $(".linerows").each(function () {
+		
+		var price = parseFloat($("input.eprice", this).val()) || 0;
+        var buying_price = parseFloat($("input.ebuying_price", this).val()) || 0;
+		
+		if(price<buying_price)
+		{
+			alert("You can't enter a buying price higher than the actual amount.");
+			$("input.ebuying_price", this).val(price);
+		}
+		
+	});
+	
     $(".linerows").each(function () {
         var qty = parseFloat($("input.eqty", this).val()) || 0;
-        var amount = parseFloat($("input.eamount", this).val()) || 0;
+        var price = parseFloat($("input.eprice", this).val()) || 0;
         var buying_price = parseFloat($("input.ebuying_price", this).val()) || 0;
         var discount = parseFloat($("input.ediscount", this).val()) || 0;
-
+		
+        //var final_price = parseFloat($("input.efinal_price", this).val()) || 0;
+	
         var discountVal = (buying_price * discount) / 100;
         var final_price = buying_price - discountVal;
         var total = final_price * qty;
 
-        var priceReduced = amount - buying_price;
-        totalDiscount += (discountVal + priceReduced) * qty;
+        totalDiscount += (price-final_price) * qty;
+		
+        $("input.efinal_price", this).val(final_price.toFixed(2));
 
         $("input.etotal", this).val(total.toFixed(2));
 
@@ -73,6 +88,7 @@ $(document).on('change', '.addlinechange', function() {
 	
 });
 
+
 $(document).on('change', '.editlinechange', function() {
 	
 	totalCalc();
@@ -97,7 +113,7 @@ $(document).on('click', '#addItem', function() {
 	if(no && itemId && itemName && qty && amount && buying_price && discount && final_price && total)
 	{
 	
-		$("#addedItemsList").append('<tr id="row'+no+'" class="linerows"> <td><input type="text" name="added_no[]" disabled="disabled" value="'+no+'" /></td> <td><input type="text" name="added_item_name[]" data-focus="qty" value="'+itemName+'" disabled /><input type="hidden" name="added_item_id[]" value="'+itemId+'"></td> <td><input type="text" name="added_qty[]" class="text-right editlinechange eqty" value="'+qty+'" /></td> <td><input type="text" name="added_amount[]" class="text-right editlinechange eamount" value="'+amount+'" /></td> <td><input type="text" name="added_buying_price[]" class="text-right editlinechange ebuying_price" value="'+buying_price+'" /></td> <td><input type="text" name="added_discount[]" class="text-right editlinechange ediscount" value="'+discount+'" /></td> <td><input type="text" name="added_final_price[]" class="text-right efinal_price" disabled="disabled" value="'+final_price+'" /></td> <td><input type="text" name="added_total[]" disabled class="text-right etotal" value="'+total+'" /></td> <td><a class="btn btn-danger removeItem" data-id="'+no+'"><i class="fa-light fa-trash-xmark"></i></a></td> </tr>');
+		$("#addedItemsList").append('<tr id="row'+no+'" class="linerows"> <td><input type="text" name="added_no[]" disabled="disabled" value="'+no+'" /></td> <td><input type="text" name="added_item_name[]" data-focus="qty" value="'+itemName+'" disabled /><input type="hidden" name="added_item_id[]" value="'+itemId+'"></td> <td><input type="text" name="added_qty[]" class="text-right editlinechange eqty" value="'+qty+'" /></td> <td><input type="text" name="added_amount[]" class="text-right editlinechange eprice" value="'+amount+'" /></td> <td><input type="text" name="added_buying_price[]" class="text-right editlinechange ebuying_price" value="'+buying_price+'" /></td> <td><input type="text" name="added_discount[]" class="text-right editlinechange ediscount" value="'+discount+'" /></td> <td><input type="text" name="added_final_price[]" class="text-right efinal_price" disabled="disabled" value="'+final_price+'" /></td> <td><input type="text" name="added_total[]" disabled class="text-right etotal" value="'+total+'" /></td> <td><a class="btn btn-danger removeItem" data-id="'+no+'"><i class="fa-light fa-trash-xmark"></i></a></td> </tr>');
 
 	
 		$("#no").val(no+1);

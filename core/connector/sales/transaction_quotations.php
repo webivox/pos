@@ -112,6 +112,7 @@ class SalesTransactionQuotationsConnector {
 										'added_date' => $dateCls->showDate($cat['added_date']),
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
 										'customer' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name'),
+										'no_of_items' => $defCls->num($cat['no_of_items']).' / '.$defCls->num($cat['no_of_qty']),
 										'updateURL' => $defCls->genURL('sales/transaction_quotations/edit/'.$cat['quotation_id'])
 											);
 			}
@@ -157,6 +158,7 @@ class SalesTransactionQuotationsConnector {
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['form_url'] 	= _SERVER."sales/transaction_quotations/create";
+			$data['customer_create_url'] = $defCls->genURL("customers/master_customers/create");
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 			
@@ -165,8 +167,16 @@ class SalesTransactionQuotationsConnector {
 				
 			$data['quotation_no'] = 'New';
 			
-			if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-			else{ $data['customer_id'] = ''; }
+			if($db->request('customer_id'))
+			{
+				$data['customer_id'] = $db->request('customer_id');
+				$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
+			}
+			else
+			{
+				$data['customer_id'] = '';
+				$data['customer_id_txt'] = '';
+			}
 			
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -180,6 +190,8 @@ class SalesTransactionQuotationsConnector {
 			
 			$data['user_id'] = $userInfo['user_id'];
 			
+			$data['total_qty'] = 0;
+			$data['total_tiotal'] = 0;
 			
 			$data['no_of_items'] = 0;
 			
@@ -200,6 +212,7 @@ class SalesTransactionQuotationsConnector {
 					$added_item_id = $_REQUEST['added_item_id'];
 					$added_qty = $_REQUEST['added_qty'];
 					$added_amount = $_REQUEST['added_amount'];
+					$added_discount = $_REQUEST['added_discount'];
 					
 			
 					foreach ($added_item_id as $index => $q) {
@@ -207,6 +220,11 @@ class SalesTransactionQuotationsConnector {
 						$aitemId = isset($added_item_id[$index]) ? $added_item_id[$index] : 0;
 						$aqty = isset($added_qty[$index]) ? $added_qty[$index] : 0;
 						$aamount = isset($added_amount[$index]) ? $added_amount[$index] : 0;
+						$adiscount = isset($added_discount[$index]) ? $added_discount[$index] : 0;
+						
+						$discCalc = $aamount*$adiscount/100;
+						
+						$afinalAmount = $aamount-$discCalc;
 						
 						if(!$InventoryMasterItemsQuery->has($aitemId))
 						{
@@ -224,7 +242,9 @@ class SalesTransactionQuotationsConnector {
 														'itemId' => $aitemId,
 														'qty' => $aqty,
 														'amount' => $aamount,
-														'total' => $aamount*$aqty
+														'discount' => $adiscount,
+														'finalAmount' => $afinalAmount,
+														'total' => $afinalAmount*$aqty
 							
 												);
 												
@@ -241,6 +261,7 @@ class SalesTransactionQuotationsConnector {
 				{
 					
 					$createdId = $SalesTransactionsQuotationsQuery->create($data);
+					$SalesTransactionsQuotationsQuery->runTotal($createdId);
 					$transaction_no = $defCls->docNo('QTE-',$createdId);
 					$firewallCls->addLog("Quotation Created: ".$transaction_no);
 					
@@ -314,6 +335,7 @@ class SalesTransactionQuotationsConnector {
 		{
 			$getQuotationInfo = $SalesTransactionsQuotationsQuery->get($id);
 			
+			
 			if($getQuotationInfo)
 			{
 			
@@ -321,6 +343,7 @@ class SalesTransactionQuotationsConnector {
 				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 				
 				$data['form_url'] 	= _SERVER."sales/transaction_quotations/edit/".$id;
+				$data['customer_create_url'] = $defCls->genURL("customers/master_customers/create");
 				
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
@@ -331,9 +354,17 @@ class SalesTransactionQuotationsConnector {
 					
 				$data['quotation_no'] = $defCls->docNo('QTE-',$getQuotationInfo['quotation_id']);;
 				
-				if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-				else{ $data['customer_id'] = $getQuotationInfo['customer_id']; }
-				
+				if($db->request('customer_id'))
+				{
+					$data['customer_id'] = $db->request('customer_id');
+					$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
+				}
+				else
+				{
+					$data['customer_id'] = $getQuotationInfo['customer_id'];
+					$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
+				}
+					
 				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getQuotationInfo['location_id']; }
 				
@@ -346,7 +377,10 @@ class SalesTransactionQuotationsConnector {
 				
 				$data['item_lists'] = $SalesTransactionsQuotationsQuery->getItems("WHERE quotation_id='".$id."' ORDER BY quotation_item_id ASC");
 				
+				
 				$data['no_of_items'] = count($data['item_lists']);
+				$data['no_of_qty'] = $defCls->num($getQuotationInfo['no_of_qty']);
+				$data['total_tiotal'] = $defCls->num($getQuotationInfo['total']);
 
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 				{
@@ -372,6 +406,12 @@ class SalesTransactionQuotationsConnector {
 							$aqty = isset($added_qty[$index]) ? $added_qty[$index] : 0;
 							$aamount = isset($added_amount[$index]) ? $added_amount[$index] : 0;
 							
+							$adiscount = isset($added_discount[$index]) ? $added_discount[$index] : 0;
+							
+							$discCalc = $aamount*$adiscount/100;
+							
+							$afinalAmount = $aamount-$discCalc;
+							
 							if(!$InventoryMasterItemsQuery->has($aitemId))
 							{
 								$error_msg[]="Invalid item found!"; $error_no++;
@@ -388,7 +428,9 @@ class SalesTransactionQuotationsConnector {
 															'itemId' => $aitemId,
 															'qty' => $aqty,
 															'amount' => $aamount,
-															'total' => $aamount*$aqty
+															'discount' => $adiscount,
+															'finalAmount' => $afinalAmount,
+															'total' => $afinalAmount*$aqty
 								
 													);
 								$noofItems+=1;
@@ -404,6 +446,12 @@ class SalesTransactionQuotationsConnector {
 						
 						$eqty = isset($_REQUEST['eqty'.$i['quotation_item_id']]) ? $_REQUEST['eqty'.$i['quotation_item_id']] : 0;
 						$eamount = isset($_REQUEST['eamount'.$i['quotation_item_id']]) ? $_REQUEST['eamount'.$i['quotation_item_id']] : 0;
+						$ediscount = isset($_REQUEST['ediscount'.$i['quotation_item_id']]) ? $_REQUEST['ediscount'.$i['quotation_item_id']] : 0;
+						
+						$discCalc = $eamount*$ediscount/100;
+							
+						$efinalAmount = $eamount-$discCalc;
+							
 						
 						
 						if($eqty)
@@ -415,7 +463,9 @@ class SalesTransactionQuotationsConnector {
 														'itemId' => $i['item_id'],
 														'qty' => $eqty,
 														'amount' => $eamount,
-														'total' => $eamount*$eqty
+														'discount' => $ediscount,
+														'finalAmount' => $efinalAmount,
+														'total' => $efinalAmount*$eqty
 							
 												);
 							$noofItems+=1;
@@ -444,6 +494,7 @@ class SalesTransactionQuotationsConnector {
 					{
 						
 						$SalesTransactionsQuotationsQuery->edit($data);
+						$SalesTransactionsQuotationsQuery->runTotal($id);
 						$transaction_no = $defCls->docNo('QTE-',$id);
 						$firewallCls->addLog("Quotations Updated: ".$transaction_no);
 						

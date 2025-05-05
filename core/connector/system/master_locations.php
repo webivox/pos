@@ -220,7 +220,7 @@ class SystemMasterLocationsConnector {
 				if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 				if($countLocationsByName){ $error_msg[]="The name already exists"; $error_no++; }
 				if(strlen($data['phone_number'])<10){ $error_msg[]="Phone number must be minimum 3 letters"; $error_no++; }
-				if(strlen($data['invoice_no_start'])<3){ $error_msg[]="Invoice no must be minimum 3 letters"; $error_no++; }
+				if(strlen($data['invoice_no_start'])<2){ $error_msg[]="Invoice no must be minimum 2 letters"; $error_no++; }
 				
 				if(!$error_no)
 				{
@@ -363,7 +363,7 @@ class SystemMasterLocationsConnector {
 						if($countLocationsByName){ $error_msg[]="The name already exists"; $error_no++; }
 					}
 					if(strlen($data['phone_number'])<10){ $error_msg[]="Phone number must be minimum 3 letters"; $error_no++; }
-					if(strlen($data['invoice_no_start'])<3){ $error_msg[]="Invoice no must be minimum 3 letters"; $error_no++; }
+					if(strlen($data['invoice_no_start'])<2){ $error_msg[]="Invoice no must be minimum 2 letters"; $error_no++; }
 					
 					if(!$error_no)
 					{

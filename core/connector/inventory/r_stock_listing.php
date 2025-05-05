@@ -71,17 +71,16 @@ class InventoryRStockListingConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
-				$search_no=$db->request('search_no');
-			}
-			else{ $search_no=''; }
+			
+			
 			
 			if($db->request('search_customer')!==''){ $search_customer=$db->request('search_customer'); }
 			else{ $search_customer=''; }
 			
 			/////////////
 			
-			$sql=" WHERE item_id != 0";
+			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			else{ $search_date_from=''; }
 			
 			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
@@ -110,7 +109,24 @@ class InventoryRStockListingConnector {
 			if($db->request('search_item_name')!==''){ $search_item_name=$db->request('search_item_name'); }
 			else{ $search_item_name=''; }
 			
+			$filter_heading = '';
+			if($search_date_from){ $filter_heading .= ' | From : '.$search_date_from; }
+			if($search_date_to){ $filter_heading .= ' | To : '.$search_date_to; }
+			if($search_location){ $filter_heading .= ' | Location : '.$SystemMasterLocationsQuery->data($search_location,'name'); }
+			if($search_supplier){ $filter_heading .= ' | Supplier : '.$SuppliersMasterSuppliersQuery->data($search_supplier,'name'); }
+			if($search_category){ $filter_heading .= ' | Category : '.$InventoryMasterCategoryQuery->data($search_category,'name'); }
+			if($search_brand){ $filter_heading .= ' | Brand : '.$InventoryMasterBrandsQuery->data($search_brand,'name'); }
+			if($search_unit){ $filter_heading .= ' | Unit : '.$InventoryMasterUnitsQuery->data($search_unit,'name'); }
+			if($search_barcode){ $filter_heading .= ' | Barcode : '.$search_barcode; }
+			if($search_barcode_name){ $filter_heading .= ' | Barcode Name : '.$search_barcode_name; }
+			if($search_item_name){ $filter_heading .= ' | Item Name : '.$search_item_name; }
+			
+			$data['title_tag'] = 'Stock Listing Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
+			
 			///////////
+			$sql=" WHERE item_id != 0";
 			
 			if($search_supplier){ $sql.=" AND inventory_items.supplier_id='".$search_supplier."'"; }
 			if($search_category){ $sql.=" AND inventory_items.category_id='".$search_category."'"; }
@@ -170,11 +186,9 @@ class InventoryRStockListingConnector {
 										'selling_price' => $defCls->money($cat['selling_price']),
 										'minimum_selling_price' => $defCls->money($cat['minimum_selling_price']),
 										'cost' => $defCls->money($cat['cost']),
-										'expiry_date' => $dateCls->showDate($cat['expiry_date']),
 										're_order_qty' => $defCls->num($cat['re_order_qty']),
 										'order_qty' => $defCls->num($cat['order_qty']),
 										'minimum_qty' => $defCls->num($cat['minimum_qty']),
-										'subtract_stock' => $defCls->num($cat['subtract_stock']),
 										'status' => $defCls->getMasterStatus($cat['status']),
 										'in' => $defCls->money($in),
 										'out' => $defCls->money($out),

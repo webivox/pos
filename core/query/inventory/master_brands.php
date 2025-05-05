@@ -27,7 +27,7 @@ class InventoryMasterBrandsQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE brand_id='".$brandId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE brand_id='".$brandId."'");
 		$count = count($res);
 		if($count)
 		{

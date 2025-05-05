@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Sign In | <?php echo $data['companyName']; ?></title>
+<title><?php echo $data['title_tag']; ?></title>
 <link href="<?php echo _CSS; ?>report.css" rel="stylesheet" type="text/css">
 <link href="<?php echo _CSS; ?>jquery-ui.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
@@ -37,9 +37,9 @@
         
             <td colspan="12" id="sales_report_head">
             
-            	<h1>Transfer Note Listing Report</h1>
-                <h3>Filter: sdsd</h3>
-                <h3>Print By: Shihan | Printed On: 01-01-2025</h3>
+            	<h1>Inventory Transfer Note Listing Report</h1>
+                <h3>Filter: <?php echo $data['filter_heading']; ?></h3>
+                <h3><?php echo $data['print_by_n_date']; ?></h3>
             
             </td>
         

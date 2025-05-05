@@ -292,6 +292,63 @@ class CustomersMasterCustomersQuery {
 		
 		$db->query("UPDATE customers_customers SET closing_balance='".$balanceAll."' WHERE customer_id=".$customerId."");
 	}
+	
+	
+	////Loyalty
+	
+	
+	
+	
+	/////
+	public function loyaltyTransactionAdd($loyaltyData)
+	{
+		global $db;
+		global $dateCls;
+		
+		$addedDate = $dateCls->dateToDB($loyaltyData['added_date']);
+		
+		$sql = "INSERT INTO customer_loyalty_transactions SET
+		
+												`customer_id`='".$loyaltyData['customer_id']."',
+												`reference_id`='".$loyaltyData['reference_id']."',
+												`added_date`='".$addedDate."',
+												`transaction_type`='".$loyaltyData['transaction_type']."',
+												`debit`='".$loyaltyData['debit']."',
+												`credit`='".$loyaltyData['credit']."',
+												`remarks`='".$loyaltyData['remarks']."'
+		
+			";
+		
+		$db->query($sql);
+		
+		
+		$this->loyaltyTransactionsBalanceUpdate($loyaltyData['customer_id']);
+		
+	}
+	
+	
+	public function loyaltyTransactionsBalanceUpdate($customerId)
+	{
+	
+		global $db;
+		
+		
+		$balanceAll = 0;
+		$res = $db->fetchAll("SELECT * FROM customer_loyalty_transactions WHERE customer_id=".$customerId." ORDER BY added_date, transaction_id ASC");
+		
+		foreach($res as $row) {
+			
+			$balanceAll += $row['debit'];
+			$balanceAll -= $row['credit'];
+			
+			$db->query("UPDATE customer_loyalty_transactions SET balance='".$balanceAll."' WHERE transaction_id='".$row['transaction_id']."'");
+			
+			
+		}
+		
+		
+		$db->query("UPDATE customers_customers SET loyalty_points='".$balanceAll."' WHERE customer_id=".$customerId."");
+	}
 }
 
 // Instantiate the blogsModels class

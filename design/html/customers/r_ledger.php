@@ -47,7 +47,7 @@
         
         <div class="col_4">
         
-            <label for="search_customer">Account</label>
+            <label for="search_customer">Customer</label>
             <select name="search_customer" id="search_customer">
                 <?php
                 foreach($data['customer_list'] as $cat){

@@ -44,6 +44,7 @@ class InventoryRLedgerConnector {
 	{
 		global $db;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
@@ -67,6 +68,13 @@ class InventoryRLedgerConnector {
 			
 			if($db->request('search_item')!==''){ $search_item=$db->request('search_item'); }
 			else{ $search_item=0; }
+			
+			$filter_heading = '';
+			if($search_item){ $filter_heading .= ' | Item : '.$InventoryMasterItemsQuery->data($search_item,'name'); }
+			
+			$data['title_tag'] = 'Item Ledger Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
 			
 			
 			/////////////
@@ -108,7 +116,7 @@ class InventoryRLedgerConnector {
 			
 			$data['tDebit'] = $defCls->money($tDebit);
 			$data['tCredit'] = $defCls->money($tCredit);
-			$data['tBalance'] = $defCls->money($tBalance);
+			$data['tBalance'] = $defCls->money($tDebit-$tCredit);
 
 	
 			$this_required_file = _HTML.'inventory/r_ledger_view.php';

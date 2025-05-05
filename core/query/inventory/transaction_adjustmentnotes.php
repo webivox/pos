@@ -28,7 +28,7 @@ class InventoryTransactionsAdjustmentnotesQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE adjustment_note_id='".$adjustmentnoteId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE adjustment_note_id='".$adjustmentnoteId."'");
 		$count = count($res);
 		if($count)
 		{

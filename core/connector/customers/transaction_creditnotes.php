@@ -159,8 +159,13 @@ class CustomersTransactionCreditnotesConnector {
 			
 			$data['credit_note_no'] = 'New';
 			
-			if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-			else{ $data['customer_id'] = ''; }
+			if($db->request('customer_id'))
+			{
+				$data['customer_id'] = $db->request('customer_id');
+				$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+				$data['outstanding'] = $defCls->num($closing_balance);
+			}
+			else{ $data['customer_id'] = ''; $data['outstanding'] = '0.00'; }
 			
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -185,6 +190,7 @@ class CustomersTransactionCreditnotesConnector {
 				if(!$CustomersMasterCustomersQuery->has($data['customer_id'])){ $error_msg[]="You must choose a customer"; $error_no++; }
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+				if($data['amount']>$data['outstanding']){ $error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++; }
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 				
 				
@@ -301,8 +307,18 @@ class CustomersTransactionCreditnotesConnector {
 				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getCreditNoteInfo['location_id']; }
 				
-				if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-				else{ $data['customer_id'] = $getCreditNoteInfo['customer_id']; }
+				if($db->request('customer_id'))
+				{
+					$data['customer_id'] = $db->request('customer_id');
+					$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
+				else
+				{
+					$data['customer_id'] = $getCreditNoteInfo['customer_id'];
+					$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
 				
 				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getCreditNoteInfo['added_date']); }
@@ -322,6 +338,10 @@ class CustomersTransactionCreditnotesConnector {
 					if(!$CustomersMasterCustomersQuery->has($data['customer_id'])){ $error_msg[]="You must choose a customer"; $error_no++; }
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 					if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+					if($data['amount']>$data['outstanding']+$getCreditNoteInfo['amount'])
+					{
+						$error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++;
+					}
 					if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 					
 						

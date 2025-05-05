@@ -45,6 +45,7 @@ class SuppliersRSuppliersConnector {
 	{
 		global $db;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
@@ -68,6 +69,13 @@ class SuppliersRSuppliersConnector {
 			
 			if($db->request('search_supplier')!==''){ $search_supplier=$db->request('search_supplier'); }
 			else{ $search_supplier=''; }
+			
+			$filter_heading='';
+			if($search_supplier){ $filter_heading .= ' | Supplier : '.$SuppliersMasterSuppliersQuery->data($search_supplier,'name'); }
+			
+			$data['title_tag'] = 'Supplier Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
 			
 			/////////////
 			

@@ -5,7 +5,7 @@
     	<h1>Items</h1>
         
         
-        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="1024" data-height="530">Create New</a>
+        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="1024" data-height="460">Create New</a>
     
     </div>
     

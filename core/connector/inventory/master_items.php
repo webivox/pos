@@ -136,6 +136,7 @@ class InventoryMasterItemsConnector {
 		global $db;
 		global $SystemMasterUsersQuery;
 		global $InventoryMasterItemsQuery;
+		global $CustomersMasterCustomersQuery;
 		
 		
 		$data = [];
@@ -144,6 +145,7 @@ class InventoryMasterItemsConnector {
 		if($firewallCls->verifyUser())
 		{
 			
+			$customerId = $db->request('customerId');
 			$term = $db->request('term');
 			
 			$sql = "WHERE name LIKE \"%".$term."%\"";
@@ -153,9 +155,19 @@ class InventoryMasterItemsConnector {
 			foreach($itemInfo as $itm)
 			{
 				
+				if($customerId){ $customerGroupId = $CustomersMasterCustomersQuery->data($customerId,'customer_group_id'); }
+				else{ $customerGroupId = 0; }
+				
+				$price =  $InventoryMasterItemsQuery->getCustomerGroupPrice($customerGroupId,$itm['item_id']);
+				
+				if($SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'cost_show')){ $cost = $itm['cost']; }
+				else{ $cost = 0; }
+				
 				$json[]=array(
 						'value'=> $itm['item_id'],
-						'label'=> $itm['name']
+						'label'=> $defCls->docNo('',$itm['item_id']).' - '.$itm['name'],
+						'price'=> $price,
+						'cost'=> $cost
 							);
 			}
 		}
@@ -175,7 +187,8 @@ class InventoryMasterItemsConnector {
 		global $InventoryMasterCategoryQuery;
 		global $InventoryMasterBrandsQuery;
 		global $InventoryMasterUnitsQuery;
-		global $InventoryMasterWarrantyQuery;		
+		global $InventoryMasterWarrantyQuery;	
+		global $SuppliersMasterSuppliersQuery;	
 		
 		$data = [];
 		$error_no = 0;
@@ -204,8 +217,16 @@ class InventoryMasterItemsConnector {
 			if($db->request('unit_id')){ $data['unit_id'] = $db->request('unit_id'); }
 			else{ $data['unit_id'] = 0; }
 			
-			if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-			else{ $data['supplier_id'] = 0; }
+			if($db->request('supplier_id'))
+			{
+				$data['supplier_id'] = $db->request('supplier_id');
+				$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
+			}
+			else
+			{
+				$data['supplier_id'] = '';
+				$data['supplier_id_txt'] = '';
+			}
 			
 			if($db->request('name')){ $data['name'] = $db->request('name'); }
 			else{ $data['name'] = ''; }
@@ -228,17 +249,14 @@ class InventoryMasterItemsConnector {
 			if($db->request('cost')){ $data['cost'] = $db->request('cost'); }
 			else{ $data['cost'] = 0; }
 			
-			if($db->request('expiry_date')){ $data['expiry_date'] = $db->request('expiry_date'); }
-			else{ $data['expiry_date'] = ''; }
-			
 			if($db->request('re_order_qty')){ $data['re_order_qty'] = $db->request('re_order_qty'); }
 			else{ $data['re_order_qty'] = 0; }
 			
 			if($db->request('order_qty')){ $data['order_qty'] = $db->request('order_qty'); }
 			else{ $data['order_qty'] = 0; }
 			
-			if($db->request('subtract_stock')){ $data['subtract_stock'] = $db->request('subtract_stock'); }
-			else{ $data['subtract_stock'] = 0; }
+			if($db->request('minimum_qty')){ $data['minimum_qty'] = $db->request('minimum_qty'); }
+			else{ $data['minimum_qty'] = 1; }
 			
 			if($db->request('status')){ $data['status'] = $db->request('status');}
 			elseif($db->request('status')==0){ $data['status'] = 0; }
@@ -334,6 +352,7 @@ class InventoryMasterItemsConnector {
 		global $InventoryMasterBrandsQuery;
 		global $InventoryMasterUnitsQuery;
 		global $InventoryMasterWarrantyQuery;	
+		global $SuppliersMasterSuppliersQuery;
 		
 		$data = [];
 		$error_no = 0;
@@ -368,8 +387,16 @@ class InventoryMasterItemsConnector {
 				if($db->request('unit_id')){ $data['unit_id'] = $db->request('unit_id'); }
 				else{ $data['unit_id'] = $getItemInfo['unit_id']; }
 				
-				if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-				else{ $data['supplier_id'] = $getItemInfo['supplier_id']; }
+				if($db->request('supplier_id'))
+				{
+					$data['supplier_id'] = $db->request('supplier_id');
+					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
+				}
+				else
+				{
+					$data['supplier_id'] = $getItemInfo['supplier_id'];
+					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($getItemInfo['supplier_id'],'name');
+				}
 				
 				if($db->request('name')){ $data['name'] = $db->request('name'); }
 				else{ $data['name'] = $getItemInfo['name']; }
@@ -392,17 +419,14 @@ class InventoryMasterItemsConnector {
 				if($db->request('cost')){ $data['cost'] = $db->request('cost'); }
 				else{ $data['cost'] = $getItemInfo['cost']; }
 				
-				if($db->request('expiry_date')){ $data['expiry_date'] = $db->request('expiry_date'); }
-				else{ $data['expiry_date'] = $getItemInfo['expiry_date']; }
-				
 				if($db->request('re_order_qty')){ $data['re_order_qty'] = $db->request('re_order_qty'); }
 				else{ $data['re_order_qty'] = $getItemInfo['re_order_qty']; }
 				
 				if($db->request('order_qty')){ $data['order_qty'] = $db->request('order_qty'); }
 				else{ $data['order_qty'] = $getItemInfo['order_qty']; }
-				
-				if($db->request('subtract_stock')){ $data['subtract_stock'] = $db->request('subtract_stock'); }
-				else{ $data['subtract_stock'] = $getItemInfo['subtract_stock']; }
+			
+				if($db->request('minimum_qty')){ $data['minimum_qty'] = $db->request('minimum_qty'); }
+				else{ $data['minimum_qty'] = $getItemInfo['minimum_qty']; }
 				
 				if($db->request('status')){ $data['status'] = $db->request('status'); }
 				elseif($db->request('status')==0){ $data['status'] = 0; }

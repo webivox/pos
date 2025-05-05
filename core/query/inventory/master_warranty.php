@@ -26,7 +26,7 @@ class InventoryMasterWarrantyQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE warranty_id='".$warrantyId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE warranty_id='".$warrantyId."'");
 		$count = count($res);
 		if($count)
 		{

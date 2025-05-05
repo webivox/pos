@@ -34,9 +34,10 @@ class SalesScreenConnector {
 			$data['load_table_url'] = $defCls->genURL('sales/master_rep/load');
 			
 			$data['shift_status'] 	= count($SalesScreenQuery->getShift($userId));
-			$data['cashierPoints'] = $SystemMasterCashierpointsQuery->gets("ORDER BY name ASC");
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+			
+			$data['cashierPoints'] = $SystemMasterCashierpointsQuery->gets("WHERE location_id='".$userInfo['location_id']."' ORDER BY name ASC");
 			
 			$shiftInfo = $SalesScreenQuery->getShift($userId);
 			
@@ -54,6 +55,7 @@ class SalesScreenConnector {
 					{
 						
 						$salesInfo = $SalesScreenQuery->get($data['invoiceId']);
+						$cashierPointInfo = $SystemMasterCashierpointsQuery->get($salesInfo['cashier_point_id']);
 						
 						$data['loggedUserName'] = $defCls->showText($userInfo['name']);
 						$data['logOut'] = $defCls->genURL('secure/signout');
@@ -108,17 +110,54 @@ class SalesScreenConnector {
 						
 						$data['cardPayments'] = [];
 						
-						$cardPayments = $AccountsMasterAccountsQuery->gets("WHERE payment_method=1 AND status=1 ORDER BY name ASC");
-						
-						foreach($cardPayments as $cp)
+						if($cashierPointInfo['card_account_1_name'] && $cashierPointInfo['card_account_1_id'])
 						{
 							$data['cardPayments'][] = array(
 							
-														'accountId' => $cp['account_id'],
-														'name' => $defCls->showText($cp['name'])
+														'accountId' => $cashierPointInfo['card_account_1_id'],
+														'name' => $defCls->showText($cashierPointInfo['card_account_1_name'])
 							
 														);
+						}
+						
+						if($cashierPointInfo['card_account_2_name'] && $cashierPointInfo['card_account_2_id'])
+						{
+							$data['cardPayments'][] = array(
 							
+														'accountId' => $cashierPointInfo['card_account_2_id'],
+														'name' => $defCls->showText($cashierPointInfo['card_account_2_name'])
+							
+														);
+						}
+						
+						if($cashierPointInfo['card_account_3_name'] && $cashierPointInfo['card_account_3_id'])
+						{
+							$data['cardPayments'][] = array(
+							
+														'accountId' => $cashierPointInfo['card_account_3_id'],
+														'name' => $defCls->showText($cashierPointInfo['card_account_3_name'])
+							
+														);
+						}
+						
+						if($cashierPointInfo['card_account_4_name'] && $cashierPointInfo['card_account_4_id'])
+						{
+							$data['cardPayments'][] = array(
+							
+														'accountId' => $cashierPointInfo['card_account_4_id'],
+														'name' => $defCls->showText($cashierPointInfo['card_account_4_name'])
+							
+														);
+						}
+						
+						if($cashierPointInfo['card_account_5_name'] && $cashierPointInfo['card_account_5_id'])
+						{
+							$data['cardPayments'][] = array(
+							
+														'accountId' => $cashierPointInfo['card_account_5_id'],
+														'name' => $defCls->showText($cashierPointInfo['card_account_5_name'])
+							
+														);
 						}
 						
 						$data['cartPayments'] = [];
@@ -527,6 +566,10 @@ class SalesScreenConnector {
 					
 					$json['success']=true;
 					$json['customername']=$defCls->showText($CustomersMasterCustomersQuery->data($id,'name'). ' ('.$CustomersMasterCustomersQuery->data($id,'phone_number').')');
+					
+					
+					$json['loyaltyPoints'] = $defCls->money($CustomersMasterCustomersQuery->data($id, 'loyalty_points'));
+					$json['outstanding'] = $defCls->money($CustomersMasterCustomersQuery->data($id, 'closing_balance'));
 					
 				}
 				else
@@ -2076,54 +2119,64 @@ class SalesScreenConnector {
 					{
 						$cashierPointInfo = $SystemMasterCashierpointsQuery->get($shiftInfo['cashier_point_id']);
 						
+						$currentBalance = $AccountsMasterAccountsQuery->data($cashierPointInfo['cash_account_id'],'closing_balance');
 						
-						$data['account_from_id'] = $cashierPointInfo['cash_account_id'];
-						$data['account_to_id'] = $cashierPointInfo['transfer_account_id'];
-						$data['location_id'] = $cashierPointInfo['location_id'];
-						$data['added_date'] = $dateCls->todayDate('Y-m-d');
-						$data['details'] = 'CASH OUT';
+						if($currentBalance<$data['amount'])
+						{
+							$error_msg[]="Account balance is lower than the given amount!"; $error_no++;
+						}
+						else
+						{
 						
-						
-						$createdId = $AccountsTransactionsTransfersQuery->create($data);
-						
-						$transaction_no = $defCls->docNo('ATRN-',$createdId);
-						$firewallCls->addLog("Account Transfer Created: ".$transaction_no);
-						
-						$transferInfo = $AccountsTransactionsTransfersQuery->get($createdId);
-						
-						
-						////Account transactipn update
-						$accountData = [];
-						$accountData['added_date'] = $transferInfo['added_date'];
-						$accountData['account_id'] = $data['account_from_id'];
-						$accountData['reference_id'] = $createdId;
-						$accountData['transaction_type'] = 'ATRNOUT';
-						$accountData['debit'] = 0;
-						$accountData['credit'] = $transferInfo['amount'];
-						$accountData['remarks'] = $transaction_no;
-						
-						$AccountsMasterAccountsQuery->transactionAdd($accountData);
-						
-						
-						////Account transactipn update
-						$accountData = [];
-						$accountData['added_date'] = $transferInfo['added_date'];
-						$accountData['account_id'] = $data['account_to_id'];
-						$accountData['reference_id'] = $createdId;
-						$accountData['transaction_type'] = 'ATRNIN';
-						$accountData['debit'] = $transferInfo['amount'];
-						$accountData['credit'] = 0;
-						$accountData['remarks'] = $transaction_no;
-						
-						$AccountsMasterAccountsQuery->transactionAdd($accountData);
-						
-						$json['success']=true;
-						$json['success_msg']="Sucessfully Created";
+							$data['account_from_id'] = $cashierPointInfo['cash_account_id'];
+							$data['account_to_id'] = $cashierPointInfo['transfer_account_id'];
+							$data['location_id'] = $cashierPointInfo['location_id'];
+							$data['added_date'] = $dateCls->todayDate('Y-m-d');
+							$data['details'] = 'CASH OUT';
+							$data['user_id'] = $sessionCls->load('signedUserId');
+							
+							
+							$createdId = $AccountsTransactionsTransfersQuery->create($data);
+							
+							$transaction_no = $defCls->docNo('ATRN-',$createdId);
+							$firewallCls->addLog("Account Transfer Created: ".$transaction_no);
+							
+							$transferInfo = $AccountsTransactionsTransfersQuery->get($createdId);
+							
+							
+							////Account transactipn update
+							$accountData = [];
+							$accountData['added_date'] = $transferInfo['added_date'];
+							$accountData['account_id'] = $data['account_from_id'];
+							$accountData['reference_id'] = $createdId;
+							$accountData['transaction_type'] = 'ATRNOUT';
+							$accountData['debit'] = 0;
+							$accountData['credit'] = $transferInfo['amount'];
+							$accountData['remarks'] = $transaction_no;
+							$accountData['user_id'] = $sessionCls->load('signedUserId');
+							
+							$AccountsMasterAccountsQuery->transactionAdd($accountData);
+							
+							
+							////Account transactipn update
+							$accountData = [];
+							$accountData['added_date'] = $transferInfo['added_date'];
+							$accountData['account_id'] = $data['account_to_id'];
+							$accountData['reference_id'] = $createdId;
+							$accountData['transaction_type'] = 'ATRNIN';
+							$accountData['debit'] = $transferInfo['amount'];
+							$accountData['credit'] = 0;
+							$accountData['remarks'] = $transaction_no;
+							$accountData['user_id'] = $sessionCls->load('signedUserId');
+							
+							$AccountsMasterAccountsQuery->transactionAdd($accountData);
+							
+							$json['success']=true;
+							$json['success_msg']="Sucessfully Created";
 	
-						
+						}
 					}
 					
-						$json['success']=true;
 					if($error_no)
 					{
 						
@@ -2350,7 +2403,7 @@ class SalesScreenConnector {
 					{
 						$error_msg[]="Multiple loyalty payments found. Loyalty payment can be added only once!"; $error_no++;
 					}
-					elseif($customerOutstanding>$customerInfo['credit_limit'])
+					elseif($customerOutstanding>$customerInfo['credit_limit'] && $totalCredits)
 					{
 						$error_msg[]="Credit Limit Reached. Credit limit is Rs.".$defCls->money($customerInfo['credit_limit'])." and the total outstanding amount with the current invoice is Rs.".$defCls->money($customerOutstanding)."!"; $error_no++;
 					}

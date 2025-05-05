@@ -184,6 +184,7 @@ class SalesScreenQuery {
 		$salesInfo = $SalesScreenQuery->get($invoiceId);
 		$customerGroupId = $CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'customer_group_id');
 		
+		$masterPrice = $InventoryMasterItemsQuery->data($itemId,'selling_price');
 		$price =  $InventoryMasterItemsQuery->getCustomerGroupPrice($customerGroupId,$itemId);
 		
 		$total=$price*$itemInfo['minimum_qty'];
@@ -194,7 +195,7 @@ class SalesScreenQuery {
 					`invoice_id`='".$invoiceId."',
 					`item_id`='".$itemInfo['item_id']."',
 					`cost`='".$itemInfo['cost']."',
-					`master_price`='".$price."',
+					`master_price`='".$masterPrice."',
 					`price`='".$price."',
 					`discount`=0,
 					`unit_price`='".$price."',
@@ -506,11 +507,17 @@ class SalesScreenQuery {
 		global $SystemMasterLocationsQuery;
 		global $CustomersMasterCustomersQuery;
 		global $SalesTransactionsReturnQuery;
+		global $stockTransactionsCls;
+		global $SalesTransactionGiftcardsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $SystemMasterCashierpointsQuery;
+		global $AccountsTransactionChequeQuery;
 		
 		$invoiceInfo = $SalesScreenQuery->get($invoiceId);
 		$invoiceItemsInfo = $SalesScreenQuery->getItems($invoiceId);
 		$invoicePaymentsInfo = $SalesScreenQuery->getPayments($invoiceId);
 		$locationInfo = $SystemMasterLocationsQuery->get($invoiceInfo['location_id']);
+		$cashierPointInfo = $SystemMasterCashierpointsQuery->get($invoiceInfo['cashier_point_id']);
 		
 		$row = $db->fetch("SELECT * FROM sales_invoices WHERE location_id='".$invoiceInfo['location_id']."' ORDER BY invoice_id DESC");
 		
@@ -566,6 +573,12 @@ class SalesScreenQuery {
 			
 			$lastId = $db->last_id();
 			
+			///
+			
+			
+			
+			//
+			
 			////Customer transactipn update
 			$customerData = [];
 			$customerData['added_date'] = $dateToday;
@@ -593,6 +606,25 @@ class SalesScreenQuery {
 											`total`='".$item['total']."',
 											`created_on`='".$item['created_on']."'
 							");
+							
+				$itemastId = $db->last_id();
+							
+				//// UPDATE STOCKS
+					 
+				 $stockData = [];
+				 
+				 $stockData['item_id'] = $item['item_id'];
+				 $stockData['location_id'] = $invoiceInfo['location_id'];
+				 $stockData['reference_id'] = $lastId;
+				 $stockData['reference_row_id'] = $itemastId;
+				 $stockData['transaction_type'] = 'INV';
+				 $stockData['added_date'] = $dateToday;
+				 $stockData['amount'] = $item['cost'];
+				 $stockData['qty_in'] = 0;
+				 $stockData['qty_out'] = $item['qty'];
+				 $stockData['remarks'] = $invoiceNo;
+				 
+				$stockTransactionsCls->add($stockData);
 				
 			}
 			
@@ -615,25 +647,275 @@ class SalesScreenQuery {
 							");
 				$lastInvoicePaymentId = $db->last_id();
 				
+				if($pmnt['type'] == 'CASH')
+				{
+					
+					////Account transactipn update
+					$accountData = [];
+					$accountData['added_date'] = $dateToday;
+					$accountData['account_id'] = $cashierPointInfo['cash_account_id'];
+					$accountData['reference_id'] = $lastInvoicePaymentId;
+					$accountData['transaction_type'] = 'INV';
+					$accountData['debit'] = $pmnt['amount'];
+					$accountData['credit'] = 0;
+					$accountData['remarks'] = $invoiceNo;
+					
+					$AccountsMasterAccountsQuery->transactionAdd($accountData);
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_cash'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+				}
+				
+				
+				if($pmnt['type'] == 'CARD')
+				{
+					
+					////Account transactipn update
+					$accountData = [];
+					$accountData['added_date'] = $dateToday;
+					$accountData['account_id'] = $pmnt['cardoption_id'];
+					$accountData['reference_id'] = $lastInvoicePaymentId;
+					$accountData['transaction_type'] = 'INV';
+					$accountData['debit'] = $pmnt['amount'];
+					$accountData['credit'] = 0;
+					$accountData['remarks'] = $invoiceNo;
+					
+					$AccountsMasterAccountsQuery->transactionAdd($accountData);
+					
+					
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_card'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
+				}
+				
 				if($pmnt['type'] == 'RETURN')
 				{
 					
 					$SalesTransactionsReturnQuery->addUsedAmount($pmnt['return_id'],$pmnt['amount']);
 					
+					
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_return'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
 				}
 				
-				////Customer transactipn update
-				$customerData = [];
-				$customerData['added_date'] = $dateToday;
-				$customerData['customer_id'] = $invoiceInfo['customer_id'];
-				$customerData['reference_id'] = $lastInvoicePaymentId;
-				$customerData['transaction_type'] = 'INVPMNT';
-				$customerData['debit'] = 0;
-				$customerData['credit'] = $pmnt['amount'];
-				$customerData['remarks'] = $invoiceNo;
+				if($pmnt['type'] == 'GIFT CARD')
+				{
+					
+					$SalesTransactionGiftcardsQuery->addUsedAmount($pmnt['gift_card_id'],$pmnt['amount']);
+					
+					
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_gift_card'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
+				}
 				
-				$CustomersMasterCustomersQuery->transactionAdd($customerData);
+				if($pmnt['type'] == 'CREDIT')
+				{
+					
+					$SalesTransactionsReturnQuery->addUsedAmount($pmnt['return_id'],$pmnt['amount']);
+					
+					
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_credit'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
+				}
 				
+				if($pmnt['type'] == 'CHEQUE')
+				{
+					
+					$chequeData = [];
+					$chequeData['reference_id'] = $lastInvoicePaymentId;
+					$chequeData['added_date'] = $dateToday;
+					$chequeData['transaction_type'] = 'INV';
+					$chequeData['type'] = 'Received';
+					$chequeData['bank_code'] = $pmnt['cheque_bank'];
+					$chequeData['cheque_date'] = $pmnt['cheque_date'];
+					$chequeData['cheque_no'] = $pmnt['cheque_no'];
+					$chequeData['amount'] = $pmnt['amount'];
+					$chequeData['remarks'] = $invoiceNo;
+					$chequeData['deposited_account_id'] = 0;
+					$chequeData['status'] = 0;
+					
+					$AccountsTransactionChequeQuery->create($chequeData);
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_cheque'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
+				}
+				
+				if($pmnt['type'] == 'LOYALTY')
+				{
+					
+					
+					$loyaltyData = [];
+					$loyaltyData['added_date'] = $dateToday;
+					$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+					$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+					$loyaltyData['transaction_type'] = 'INV';
+					$loyaltyData['debit'] = 0;
+					$loyaltyData['credit'] = $pmnt['amount'];
+					$loyaltyData['remarks'] = $invoiceNo;
+					
+					$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					
+					
+					////Loyalty transactipn update
+					if($defCls->master('loyalty_points_loyalty'))
+					{
+						$pointsRules = $defCls->master('loyalty_points');
+						$pointsRulesExp = explode('=',$pointsRules);
+						$pointsRulesAmount = $pointsRulesExp[0];
+						$pointsRulesforOne = $pointsRulesExp[1];
+						
+						$pointsCalc = floor($pmnt['amount']/$pointsRulesAmount);
+						
+						$loyaltyData = [];
+						$loyaltyData['added_date'] = $dateToday;
+						$loyaltyData['customer_id'] = $invoiceInfo['customer_id'];
+						$loyaltyData['reference_id'] = $lastInvoicePaymentId;
+						$loyaltyData['transaction_type'] = 'INV';
+						$loyaltyData['debit'] = $pointsCalc;
+						$loyaltyData['credit'] = 0;
+						$loyaltyData['remarks'] = $invoiceNo;
+						
+						$CustomersMasterCustomersQuery->loyaltyTransactionAdd($loyaltyData);
+					}
+					
+				}
+				
+				if($pmnt['type'] !== 'CREDIT')
+				{
+					////Customer transactipn update
+					$customerData = [];
+					$customerData['added_date'] = $dateToday;
+					$customerData['customer_id'] = $invoiceInfo['customer_id'];
+					$customerData['reference_id'] = $lastInvoicePaymentId;
+					$customerData['transaction_type'] = 'INVPMNT';
+					$customerData['debit'] = 0;
+					$customerData['credit'] = $pmnt['amount'];
+					$customerData['remarks'] = $invoiceNo;
+					
+					$CustomersMasterCustomersQuery->transactionAdd($customerData);
+				}
 			}
 			
 			

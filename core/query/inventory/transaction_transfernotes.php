@@ -28,7 +28,7 @@ class InventoryTransactionsTransfernotesQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE transfer_note_id='".$transfernoteId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE transfer_note_id='".$transfernoteId."'");
 		$count = count($res);
 		if($count)
 		{

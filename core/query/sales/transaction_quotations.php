@@ -28,7 +28,7 @@ class SalesTransactionsQuotationsQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE quotation_id='".$quotationId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE quotation_id='".$quotationId."'");
 		$count = count($res);
 		if($count)
 		{
@@ -94,7 +94,7 @@ class SalesTransactionsQuotationsQuery {
 	}
 	
 	
-    public function getItems($sql = '') {
+  	 public function getItems($sql = '') {
 		
 		global $db;
 
@@ -136,6 +136,8 @@ class SalesTransactionsQuotationsQuery {
 										`item_id` = '".$i['itemId']."',
 										`qty` = '".$i['qty']."',
 										`amount` = '".$i['amount']."',
+										`discount` = '".$i['discount']."',
+										`final_amount` = '".$i['finalAmount']."',
 										`total` = '".$i['total']."'
 						
 				";
@@ -190,6 +192,8 @@ class SalesTransactionsQuotationsQuery {
 										`item_id` = '".$i['itemId']."',
 										`qty` = '".$i['qty']."',
 										`amount` = '".$i['amount']."',
+										`discount` = '".$i['discount']."',
+										`final_amount` = '".$i['finalAmount']."',
 										`total` = '".$i['total']."'
 						
 				";
@@ -249,6 +253,45 @@ class SalesTransactionsQuotationsQuery {
 		
 		
     }
+   
+    public function runTotal($quotationId) {
+		
+		
+        global $db;
+		global $SalesTransactionsQuotationsQuery;
+		
+		$quotationInfo = $SalesTransactionsQuotationsQuery->get($quotationId);
+		$items = $SalesTransactionsQuotationsQuery->getItems("WHERE quotation_id='".$quotationId."'");
+		
+		$total_amount = 0;
+		$total_qty = 0;
+		$total_no_items = 0;
+		
+		foreach($items as $item)
+		{
+			
+			//`cost`, `master_price`, `price`, `discount`, `unit_price`, `qty`, `total`
+			$amount = $item['amount'];
+			$discount = $item['discount'];
+			$qty = $item['qty'];
+			
+			if($discount){ $disc = $amount*$discount/100; }
+			else{ $disc = 0; }
+			
+			$final_amount = $amount-$disc;
+			$total = $final_amount*$qty;
+			
+			$db->query("UPDATE ".$this->itemTableName." SET final_amount = '".$final_amount."', total='".$total."' WHERE quotation_item_id = '".$item['quotation_item_id']."'");
+			
+			$total_amount += $total;
+			$total_no_items += 1;
+			$total_qty += $qty;
+			
+		}
+		
+		
+		$db->query("UPDATE ".$this->tableName." SET no_of_items = '".$total_no_items."', no_of_qty='".$total_qty."', total='".$total_amount."' WHERE quotation_id = '".$quotationId."'");
+	}
     
 }
 

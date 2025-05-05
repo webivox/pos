@@ -2,7 +2,7 @@
 
 	<div id="filter_head">
     
-    	<h1>Transfer Report</h1>
+    	<h1>Adjustment Report</h1>
         
     
     </div>

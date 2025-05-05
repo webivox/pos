@@ -67,6 +67,10 @@ class SalesRSalesreturnConnector {
 		global $SalesTransactionsReturnQuery;
 		global $SystemMasterLocationsQuery;
 		global $SalesMasterRepQuery;
+		global $InventoryMasterCategoryQuery;
+		global $InventoryMasterBrandsQuery;
+		global $InventoryMasterUnitsQuery;
+		global $SuppliersMasterSuppliersQuery;
 		
 		
 		$data = [];
@@ -121,6 +125,25 @@ class SalesRSalesreturnConnector {
 			
 			if($db->request('search_item_name')!==''){ $search_item_name=$db->request('search_item_name'); }
 			else{ $search_item_name=''; }
+			
+			$filter_heading = '';
+			if($search_date_from){ $filter_heading .= ' | From : '.$search_date_from; }
+			if($search_date_to){ $filter_heading .= ' | To : '.$search_date_to; }
+			if($search_customer){ $filter_heading .= ' | Customer : '.$CustomersMasterCustomersQuery->data($search_customer,'name'); }
+			if($search_location){ $filter_heading .= ' | Location : '.$SystemMasterLocationsQuery->data($search_location,'name'); }
+			if($search_sales_rep){ $filter_heading .= ' | Sales Rep : '.$SalesMasterRepQuery->data($search_sales_rep,'name'); }
+			if($search_user){ $filter_heading .= ' | User : '.$SystemMasterUsersQuery->data($search_user,'name'); }
+			if($search_category){ $filter_heading .= ' | Category : '.$InventoryMasterCategoryQuery->data($search_category,'name'); }
+			if($search_brand){ $filter_heading .= ' | Brand : '.$InventoryMasterBrandsQuery->data($search_brand,'name'); }
+			if($search_unit){ $filter_heading .= ' | Unit : '.$InventoryMasterUnitsQuery->data($search_unit,'name'); }
+			if($search_supplier){ $filter_heading .= ' | Supplier : '.$SuppliersMasterSuppliersQuery->data($search_supplier,'name'); }
+			if($search_barcode){ $filter_heading .= ' | Barcode : '.$search_barcode; }
+			if($search_barcode_name){ $filter_heading .= ' | Barcode Name : '.$search_barcode_name; }
+			if($search_item_name){ $filter_heading .= ' | Item Name : '.$search_item_name; }
+			
+			$data['title_tag'] = 'Sales Return Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
 			
 			/////////////
 			

@@ -1,5 +1,4 @@
 <?php
-
 class SystemMasterLocationsQuery {
 	
 	private $tableName="system_locations";

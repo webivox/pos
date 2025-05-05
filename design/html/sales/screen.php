@@ -259,8 +259,8 @@
                 
                 	<tr>
                     
-                    	<td><label for="">Loyalty Points:</label> <input type="text" placeholder="0.00" value="<?php echo $data['loyaltyPoints']; ?>"></td>
-                    	<td><label for="">Outstanding:</label> <input type="text" placeholder="0.00" disabled value="<?php echo $data['customerOutstanding']; ?>"></td>
+                    	<td><label for="">Loyalty Points:</label> <input type="text" placeholder="0.00" value="<?php echo $data['loyaltyPoints']; ?>" id="loyaltyPointsTotal" disabled></td>
+                    	<td><label for="">Outstanding:</label> <input type="text" placeholder="0.00" disabled value="<?php echo $data['customerOutstanding']; ?>" id="totalOutstanding" disabled></td>
                     	<td><label for="lineTotalDiscount">Line Discount:</label> <input type="text" placeholder="0.00" disabled id="lineTotalDiscount"></td>
                     	<td id="gsdtd">
                         	<label for="discount_type">Discount:</label>

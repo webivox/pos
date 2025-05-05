@@ -1,6 +1,0 @@
-[01-May-2025 19:22:32 UTC] PHP Warning:  Undefined variable $password in D:\wamp64\www\pos\core\query\system\master_users.php on line 52
-[01-May-2025 19:22:32 UTC] PHP Stack trace:
-[01-May-2025 19:22:32 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[01-May-2025 19:22:32 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
-[01-May-2025 19:22:32 UTC] PHP   3. SecureSigninConnector->validate('validate') D:\wamp64\www\pos\base\load.php:22
-[01-May-2025 19:22:32 UTC] PHP   4. SystemMasterUsersQuery->getUSerDataByUser($username = 'shihan') D:\wamp64\www\pos\core\connector\secure\signin.php:77

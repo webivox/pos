@@ -141,6 +141,8 @@ class SuppliersTransactionPaymentsConnector {
 		global $SuppliersTransactionsPaymentsQuery;
 		global $SystemMasterLocationsQuery;
 		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
 		
 		
 		$data = [];
@@ -163,8 +165,13 @@ class SuppliersTransactionPaymentsConnector {
 			
 			$data['payment_no'] = 'New';
 			
-			if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-			else{ $data['supplier_id'] = ''; }
+			if($db->request('supplier_id'))
+			{
+				$data['supplier_id'] = $db->request('supplier_id');
+				$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+				$data['outstanding'] = $defCls->num($closing_balance);
+			}
+			else{ $data['supplier_id'] = ''; $data['outstanding'] = '0.00'; }
 			
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -175,8 +182,19 @@ class SuppliersTransactionPaymentsConnector {
 			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
-			else{ $data['account_id'] = 0; }
+			if($db->request('account_id'))
+			{
+				$data['account_id'] = $db->request('account_id');
+				$account_balance = $AccountsMasterAccountsQuery->data($data['account_id'],'closing_balance');
+				$data['account_balance'] = $defCls->num($account_balance);
+			}
+			else{ $data['account_id'] = 0; $data['account_balance'] = 0; }
+			
+			if($db->request('cheque_date')){ $data['cheque_date'] = $db->request('cheque_date'); }
+			else{ $data['cheque_date'] = ''; }
+			
+			if($db->request('cheque_no')){ $data['cheque_no'] = $db->request('cheque_no'); }
+			else{ $data['cheque_no'] = ''; }
 			
 			if($db->request('details')){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
@@ -192,7 +210,13 @@ class SuppliersTransactionPaymentsConnector {
 				if(!$SuppliersMasterSuppliersQuery->has($data['supplier_id'])){ $error_msg[]="You must choose a supplier"; $error_no++; }
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+				if($data['amount']>$data['outstanding']){ $error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++; }
 				if(!$data['account_id']){ $error_msg[]="You must choose a account"; $error_no++; }
+				if($data['amount']>$data['account_balance']){ $error_msg[]="Account balance is lower than the given amount!"; $error_no++; }
+				if($data['cheque_no'] && !$data['cheque_date'] || !$data['cheque_no'] && $data['cheque_date'])
+				{
+					$error_msg[]="You can't fill only one cheque field; you must enter both the cheque number and the date.!"; $error_no++;
+				}
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 				
 				
@@ -207,6 +231,39 @@ class SuppliersTransactionPaymentsConnector {
 					$paymentInfo = $SuppliersTransactionsPaymentsQuery->get($createdId);
 					
 					
+					if($data['cheque_no'] && $data['cheque_date'])
+					{
+						////Cheque
+						$chequeData = [];
+						$chequeData['reference_id'] = $createdId;
+						$chequeData['added_date'] = $paymentInfo['added_date'];
+						$chequeData['transaction_type'] = 'SPMNT';
+						$chequeData['type'] = 'Issued';
+						$chequeData['bank_code'] = $paymentInfo['account_id'];
+						$chequeData['cheque_date'] = $paymentInfo['cheque_date'];
+						$chequeData['cheque_no'] = $paymentInfo['cheque_no'];
+						$chequeData['amount'] = $paymentInfo['amount'];
+						$chequeData['remarks'] = $transaction_no;
+						$chequeData['deposited_account_id'] = $paymentInfo['account_id'];
+						$chequeData['status'] = 0;
+						
+						$AccountsTransactionChequeQuery->create($chequeData);
+					}
+					else
+					{
+						////Account transactipn update
+						$accountData = [];
+						$accountData['added_date'] = $paymentInfo['added_date'];
+						$accountData['account_id'] = $data['account_id'];
+						$accountData['reference_id'] = $createdId;
+						$accountData['transaction_type'] = 'SPMNT';
+						$accountData['debit'] = 0;
+						$accountData['credit'] = $paymentInfo['amount'];
+						$accountData['remarks'] = $transaction_no;
+						
+						$AccountsMasterAccountsQuery->transactionAdd($accountData);
+					}
+					
 					////Supplier transactipn update
 					$supplierData = [];
 					$supplierData['added_date'] = $paymentInfo['added_date'];
@@ -219,18 +276,6 @@ class SuppliersTransactionPaymentsConnector {
 					
 					$SuppliersMasterSuppliersQuery->transactionAdd($supplierData);
 					
-					
-					////Account transaction update
-					$accountData = [];
-					$accountData['account_id'] = $data['account_id'];
-					$accountData['reference_id'] = $createdId;
-					$accountData['added_date'] = $paymentInfo['added_date'];
-					$accountData['transaction_type'] = 'SPMNT';
-					$accountData['debit'] = 0;
-					$accountData['credit'] = $paymentInfo['amount'];
-					$accountData['remarks'] = $transaction_no;
-					
-					$AccountsMasterAccountsQuery->transactionAdd($accountData);
 					
 					
 					$json['success']=true;
@@ -293,6 +338,8 @@ class SuppliersTransactionPaymentsConnector {
 		global $SuppliersTransactionsPaymentsQuery;
 		global $SystemMasterLocationsQuery;
 		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
 		
 		
 		$data = [];
@@ -301,9 +348,10 @@ class SuppliersTransactionPaymentsConnector {
 		
 		if($firewallCls->verifyUser())
 		{
-			$getDebitNoteInfo = $SuppliersTransactionsPaymentsQuery->get($id);
+			$paymentInfo = $SuppliersTransactionsPaymentsQuery->get($id);
+			$chequeInfo = $AccountsTransactionChequeQuery->getByTrn($paymentInfo['payment_id'],'SPMNT');
 			
-			if($getDebitNoteInfo)
+			if($paymentInfo)
 			{
 			
 				$data['companyName'] 	= $defCls->master('companyName');
@@ -313,31 +361,56 @@ class SuppliersTransactionPaymentsConnector {
 				
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-				$data['payment_id'] = $getDebitNoteInfo['payment_id'];
+				$data['payment_id'] = $paymentInfo['payment_id'];
 			
 				$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				$data['supplier_list'] = $SuppliersMasterSuppliersQuery->gets("ORDER BY name ASC");
 				$data['account_list']	= $AccountsMasterAccountsQuery->gets("ORDER BY name ASC");
 					
-				$data['payment_no'] = $defCls->docNo('SPMNT-',$getDebitNoteInfo['payment_id']);
+				$data['payment_no'] = $defCls->docNo('SPMNT-',$paymentInfo['payment_id']);
 				
 				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
-				else{ $data['location_id'] = $getDebitNoteInfo['location_id']; }
+				else{ $data['location_id'] = $paymentInfo['location_id']; }
 				
-				if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-				else{ $data['supplier_id'] = $getDebitNoteInfo['supplier_id']; }
+				if($db->request('supplier_id'))
+				{
+					$data['supplier_id'] = $db->request('supplier_id');
+					$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
+				else
+				{
+					$data['supplier_id'] = $paymentInfo['supplier_id'];
+					$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
 				
 				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
-				else{ $data['added_date'] = $dateCls->showDate($getDebitNoteInfo['added_date']); }
+				else{ $data['added_date'] = $dateCls->showDate($paymentInfo['added_date']); }
 				
 				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
-				else{ $data['amount'] = $defCls->num($getDebitNoteInfo['amount']); }
+				else{ $data['amount'] = $defCls->num($paymentInfo['amount']); }
 				
-				if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
-				else{ $data['account_id'] = $getDebitNoteInfo['account_id']; }
+				if($db->request('account_id'))
+				{
+					$data['account_id'] = $db->request('account_id');
+					$account_balance = $AccountsMasterAccountsQuery->data($data['account_id'],'closing_balance');
+					$data['account_balance'] = $defCls->num($account_balance);
+				}
+				else
+				{
+					$data['account_id'] = $paymentInfo['account_id'];
+					$data['account_balance'] = $AccountsMasterAccountsQuery->data($paymentInfo['account_id'],'closing_balance');
+				}
+			
+				if(isset($_REQUEST['cheque_date'])){$data['cheque_date'] = $db->request('cheque_date'); }
+				else{ $data['cheque_date'] = $dateCls->showDate($paymentInfo['cheque_date']); }
+				
+				if(isset($_REQUEST['cheque_no'])){$data['cheque_no'] = $db->request('cheque_no'); }
+				else{ $data['cheque_no'] = $paymentInfo['cheque_no']; }
 				
 				if($db->request('details')){ $data['details'] = $db->request('details'); }
-				else{ $data['details'] = $getDebitNoteInfo['details']; }
+				else{ $data['details'] = $paymentInfo['details']; }
 				
 
 				
@@ -348,8 +421,27 @@ class SuppliersTransactionPaymentsConnector {
 					if(!$SuppliersMasterSuppliersQuery->has($data['supplier_id'])){ $error_msg[]="You must choose a supplier"; $error_no++; }
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 					if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+					if($data['amount']>$data['outstanding']+$paymentInfo['amount'])
+					{
+						$error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++;
+					}
 					if(!$data['account_id']){ $error_msg[]="You must choose a account"; $error_no++; }
+					if($data['amount']>$data['account_balance']+$paymentInfo['amount'])
+					{
+						$error_msg[]="Account balance is lower than the given amount!"; $error_no++;
+					}
+					if($data['cheque_no'] && !$data['cheque_date'] || !$data['cheque_no'] && $data['cheque_date'])
+					{
+						$error_msg[]="You can't fill only one cheque field; you must enter both the cheque number and the date.!"; $error_no++;
+					}
+					
+					if($chequeInfo && $chequeInfo['status']!==0)
+					{
+						$error_msg[]="Cheque already realized. Please Revert your cheque!"; $error_no++;
+					}
 					if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
+					
+					///
 					
 						
 					if(!$error_no)
@@ -361,6 +453,95 @@ class SuppliersTransactionPaymentsConnector {
 						
 						
 						$paymentInfo = $SuppliersTransactionsPaymentsQuery->get($id);
+						
+						
+						//
+						
+						if($chequeInfo)
+						{	
+							if($data['cheque_no'] && $data['cheque_date'])
+							{
+								$chequeData = [];
+								$chequeData['reference_id'] = $paymentInfo['payment_id'];
+								$chequeData['added_date'] = $paymentInfo['added_date'];
+								$chequeData['transaction_type'] = 'SPMNT';
+								$chequeData['type'] = 'Issued';
+								$chequeData['bank_code'] = $paymentInfo['account_id'];
+								$chequeData['cheque_date'] = $paymentInfo['cheque_date'];
+								$chequeData['cheque_no'] = $paymentInfo['cheque_no'];
+								$chequeData['amount'] = $paymentInfo['amount'];
+								$chequeData['remarks'] = $transaction_no;
+								$chequeData['deposited_account_id'] = $paymentInfo['account_id'];
+								$chequeData['status'] = 0;
+								
+								$AccountsTransactionChequeQuery->update($chequeData);
+								
+							}
+							else
+							{
+								
+								$AccountsTransactionChequeQuery->delete($paymentInfo['payment_id'],'SPMNT');
+								
+								////Account transactipn update
+								$accountData = [];
+								$accountData['added_date'] = $paymentInfo['added_date'];
+								$accountData['account_id'] = $paymentInfo['account_id'];
+								$accountData['reference_id'] = $paymentInfo['payment_id'];
+								$accountData['transaction_type'] = 'SPMNT';
+								$accountData['debit'] = 0;
+								$accountData['credit'] = $paymentInfo['amount'];
+								$accountData['remarks'] = $transaction_no;
+								
+								$AccountsMasterAccountsQuery->transactionAdd($accountData);
+								
+								
+							}
+							
+						}
+						else
+						{
+							if($data['cheque_no'] && $data['cheque_date'])
+							{
+								
+								$AccountsMasterAccountsQuery->transactionDelete($paymentInfo['payment_id'],'SPMNT');
+								
+								/////
+								$chequeData = [];
+								$chequeData['reference_id'] = $paymentInfo['payment_id'];
+								$chequeData['added_date'] = $paymentInfo['added_date'];
+								$chequeData['transaction_type'] = 'SPMNT';
+								$chequeData['type'] = 'Issued';
+								$chequeData['bank_code'] = $paymentInfo['account_id'];
+								$chequeData['cheque_date'] = $paymentInfo['cheque_date'];
+								$chequeData['cheque_no'] = $paymentInfo['cheque_no'];
+								$chequeData['amount'] = $paymentInfo['amount'];
+								$chequeData['remarks'] = $transaction_no;
+								$chequeData['deposited_account_id'] = $paymentInfo['account_id'];
+								$chequeData['status'] = 0;
+								
+								$AccountsTransactionChequeQuery->create($chequeData);
+								
+							}
+							else
+							{
+								
+								$AccountsTransactionChequeQuery->delete($paymentInfo['account_id'],'SPMNT');
+							
+								////Account transactipn update
+								$accountData = [];
+								$accountData['added_date'] = $paymentInfo['added_date'];
+								$accountData['account_id'] = $paymentInfo['account_id'];
+								$accountData['reference_id'] = $paymentInfo['payment_id'];
+								$accountData['transaction_type'] = 'SPMNT';
+								$accountData['debit'] = 0;
+								$accountData['credit'] = $paymentInfo['amount'];
+								$accountData['remarks'] = $transaction_no;
+								
+								$AccountsMasterAccountsQuery->transactionAdd($accountData);
+								
+							}
+							
+						}
 						
 						////Supplier transactipn update
 						$supplierData = [];
@@ -375,17 +556,6 @@ class SuppliersTransactionPaymentsConnector {
 						$SuppliersMasterSuppliersQuery->transactionEdit($supplierData);
 					
 					
-						////Account transaction update
-						$accountData = [];
-						$accountData['account_id'] = $data['account_id'];
-						$accountData['reference_id'] = $id;
-						$accountData['added_date'] = $paymentInfo['added_date'];
-						$accountData['transaction_type'] = 'SPMNT';
-						$accountData['debit'] = 0;
-						$accountData['credit'] = $paymentInfo['amount'];
-						$accountData['remarks'] = $transaction_no;
-						
-						$AccountsMasterAccountsQuery->transactionEdit($accountData);
 						
 						$json['success']=true;
 						$json['success_msg']="Sucessfully Updated";

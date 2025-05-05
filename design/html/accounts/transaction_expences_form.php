@@ -61,7 +61,7 @@
         </select>
     </div>
     
-    <div class="col_2">
+    <div class="col_3">
         <label for="account_id">Account</label>
         <select name="account_id" id="account_id">
             
@@ -75,7 +75,17 @@
         </select>
     </div>
     
-    <div class="col_2">
+    <div class="col_3">
+        <label for="cheque_no">Cheque No</label>
+        <input type="text" name="cheque_no" id="cheque_no" placeholder="Cheque No" value="<?php echo $data['cheque_no']; ?>">
+    </div>
+    
+    <div class="col_3">
+        <label for="cheque_date">Cheque Date</label>
+        <input type="text" name="cheque_date" id="cheque_date" placeholder="" value="<?php echo $data['cheque_date']; ?>" class="dateField">
+    </div>
+    
+    <div class="col_1">
         <label for="details">Details</label>
         <input type="text" name="details" id="details" placeholder="Details" value="<?php echo $data['details']; ?>">
     </div>
@@ -86,6 +96,7 @@
 <div id="popup_form_in_form_button">
     <div class="col_3">
     
+    	<input type="hidden" value="1" name="isSubmitted" />
         <button form="saveForm" type="submit" id="saveFormBtn">Save Now</button>
     
     </div>

@@ -28,7 +28,7 @@ class InventoryTransactionsReturnnotesQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE return_note_id='".$returnnoteId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE return_note_id='".$returnnoteId."'");
 		$count = count($res);
 		if($count)
 		{
@@ -231,8 +231,8 @@ class InventoryTransactionsReturnnotesQuery {
 					$stockData['transaction_type'] = 'RETN';
 					$stockData['added_date'] = $addedDate;
 					$stockData['amount'] = $i['amount'];
-					$stockData['qty_in'] = $i['qty'];
-					$stockData['qty_out'] = 0;
+					$stockData['qty_in'] = 0;
+					$stockData['qty_out'] = $i['qty'];
 					$stockData['remarks'] = $defCls->docNo('RETN-',$data['return_note_id']);
 					
 					$stockTransactionsCls->add($stockData);

@@ -1,0 +1,11 @@
+[05-May-2025 22:11:17 Asia/Colombo] PHP Warning:  require_once(D:/wamp64/www/pos/design/html/sales/r_giftcard.php): Failed to open stream: No such file or directory in D:\wamp64\www\pos\core\connector\sales\r_loyalty.php on line 40
+[05-May-2025 22:11:17 Asia/Colombo] PHP Stack trace:
+[05-May-2025 22:11:17 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[05-May-2025 22:11:17 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[05-May-2025 22:11:17 Asia/Colombo] PHP   3. SalesRLoyaltyConnector->index() D:\wamp64\www\pos\base\load.php:22
+[05-May-2025 22:11:17 Asia/Colombo] PHP Fatal error:  Uncaught Error: Failed opening required 'D:/wamp64/www/pos/design/html/sales/r_giftcard.php' (include_path='.;C:\php\pear') in D:\wamp64\www\pos\core\connector\sales\r_loyalty.php:40
+Stack trace:
+#0 D:\wamp64\www\pos\base\load.php(22): SalesRLoyaltyConnector->index()
+#1 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
+#2 {main}
+  thrown in D:\wamp64\www\pos\core\connector\sales\r_loyalty.php on line 40

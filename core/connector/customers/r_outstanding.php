@@ -45,6 +45,7 @@ class CustomersROutstandingConnector {
 	{
 		global $db;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
@@ -68,6 +69,13 @@ class CustomersROutstandingConnector {
 			
 			if($db->request('search_customer')!==''){ $search_customer=$db->request('search_customer'); }
 			else{ $search_customer=''; }
+			
+			$filter_heading = '';
+			if($search_customer){ $filter_heading .= ' | Customer : '.$CustomersMasterCustomersQuery->data($search_customer,'name'); }
+			
+			$data['title_tag'] = 'Customer Outstanding Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
 			
 			/////////////
 			

@@ -110,6 +110,8 @@ class SuppliersTransactionsPaymentsQuery {
 		global $stockTransactionsCls;
 		
 		$addedDate = $dateCls->dateToDB($data['added_date']);
+		$chequeDate = $dateCls->dateToDB($data['cheque_date']);
+
 		
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
@@ -120,6 +122,8 @@ class SuppliersTransactionsPaymentsQuery {
 						account_id='".$data['account_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
+						cheque_no='".$data['cheque_no']."',
+						cheque_date='".$chequeDate."',
 						details='".$data['details']."'
 						
 				";
@@ -144,6 +148,7 @@ class SuppliersTransactionsPaymentsQuery {
 		global $stockTransactionsCls;
 		
 		$addedDate = $dateCls->dateToDB($data['added_date']);
+		$chequeDate = $dateCls->dateToDB($data['cheque_date']);
 
         // Query to fetch all blogs
         $sql = "UPDATE ".$this->tableName." SET 
@@ -154,6 +159,8 @@ class SuppliersTransactionsPaymentsQuery {
 						supplier_id='".$data['supplier_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
+						cheque_no='".$data['cheque_no']."',
+						cheque_date='".$chequeDate."',
 						details='".$data['details']."'
 						
 						WHERE

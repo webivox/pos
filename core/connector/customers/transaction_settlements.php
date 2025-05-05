@@ -142,6 +142,8 @@ class CustomersTransactionSettlementsConnector {
 		global $CustomersTransactionsSettlementsQuery;
 		global $SystemMasterLocationsQuery;
 		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
 		
 		
 		$data = [];
@@ -164,8 +166,13 @@ class CustomersTransactionSettlementsConnector {
 			
 			$data['settlement_no'] = 'New';
 			
-			if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-			else{ $data['customer_id'] = ''; }
+			if($db->request('customer_id'))
+			{
+				$data['customer_id'] = $db->request('customer_id');
+				$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+				$data['outstanding'] = $defCls->num($closing_balance);
+			}
+			else{ $data['customer_id'] = ''; $data['outstanding'] = '0.00'; }
 			
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -181,6 +188,18 @@ class CustomersTransactionSettlementsConnector {
 			
 			if($db->request('details')){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
+			
+			if($db->request('bank_code')){ $data['bank_code'] = $db->request('bank_code'); }
+			else{ $data['bank_code'] = ''; }
+			
+			if($db->request('cheque_date')){ $data['cheque_date'] = $db->request('cheque_date'); }
+			else{ $data['cheque_date'] = ''; }
+			
+			if($db->request('cheque_no')){ $data['cheque_no'] = $db->request('cheque_no'); }
+			else{ $data['cheque_no'] = ''; }
+			
+			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			else{ $data['details'] = ''; }
 
 			
 			$data['user_id'] = $userInfo['user_id'];
@@ -193,7 +212,15 @@ class CustomersTransactionSettlementsConnector {
 				if(!$CustomersMasterCustomersQuery->has($data['customer_id'])){ $error_msg[]="You must choose a customer"; $error_no++; }
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+				if($data['amount']>$data['outstanding']){ $error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++; }
 				if(!$data['account_id']){ $error_msg[]="You must choose a account"; $error_no++; }
+				if($data['bank_code'] || $data['cheque_no'] || $data['cheque_date'])
+				{
+					if(!$data['bank_code'] || !$data['cheque_no'] || !$data['cheque_date'])
+					{
+						$error_msg[]="You can't fill only one cheque field; you must enter the bank number, cheque number, and the date!"; $error_no++;
+					}
+				}
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 				
 				
@@ -206,6 +233,39 @@ class CustomersTransactionSettlementsConnector {
 					$firewallCls->addLog("Customer Settlement Created: ".$transaction_no);
 					
 					$settlementInfo = $CustomersTransactionsSettlementsQuery->get($createdId);
+					
+					if($data['bank_code'] && $data['cheque_no'] && $data['cheque_date'])
+					{
+						////Cheque
+						$chequeData = [];
+						$chequeData['reference_id'] = $createdId;
+						$chequeData['added_date'] = $settlementInfo['added_date'];
+						$chequeData['transaction_type'] = 'CSETT';
+						$chequeData['type'] = 'Received';
+						$chequeData['bank_code'] = $settlementInfo['bank_code'];
+						$chequeData['cheque_date'] = $settlementInfo['cheque_date'];
+						$chequeData['cheque_no'] = $settlementInfo['cheque_no'];
+						$chequeData['amount'] = $settlementInfo['amount'];
+						$chequeData['remarks'] = $transaction_no;
+						$chequeData['deposited_account_id'] = 0;
+						$chequeData['status'] = 0;
+						
+						$AccountsTransactionChequeQuery->create($chequeData);
+					}
+					else
+					{
+						////Account transactipn update
+						$accountData = [];
+						$accountData['account_id'] = $data['account_id'];
+						$accountData['reference_id'] = $createdId;
+						$accountData['added_date'] = $settlementInfo['added_date'];
+						$accountData['transaction_type'] = 'CSETT';
+						$accountData['debit'] = $settlementInfo['amount'];
+						$accountData['credit'] = 0;
+						$accountData['remarks'] = $transaction_no;
+						
+						$AccountsMasterAccountsQuery->transactionAdd($accountData);
+					}
 					
 					
 					////Customer transactipn update
@@ -224,17 +284,7 @@ class CustomersTransactionSettlementsConnector {
 					$json['success_msg']="Sucessfully Created";
 					
 					
-					////Account transaction update
-					$accountData = [];
-					$accountData['account_id'] = $data['account_id'];
-					$accountData['reference_id'] = $createdId;
-					$accountData['added_date'] = $settlementInfo['added_date'];
-					$accountData['transaction_type'] = 'CSETT';
-					$accountData['debit'] = $settlementInfo['amount'];
-					$accountData['credit'] = 0;
-					$accountData['remarks'] = $transaction_no;
 					
-					$AccountsMasterAccountsQuery->transactionAdd($accountData);
 
 					
 				}
@@ -294,6 +344,8 @@ class CustomersTransactionSettlementsConnector {
 		global $CustomersTransactionsSettlementsQuery;
 		global $SystemMasterLocationsQuery;
 		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
 		
 		
 		$data = [];
@@ -302,9 +354,10 @@ class CustomersTransactionSettlementsConnector {
 		
 		if($firewallCls->verifyUser())
 		{
-			$getDebitNoteInfo = $CustomersTransactionsSettlementsQuery->get($id);
+			$settlementInfo = $CustomersTransactionsSettlementsQuery->get($id);
+			$chequeInfo = $AccountsTransactionChequeQuery->getByTrn($settlementInfo['settlement_id'],'CSETT');
 			
-			if($getDebitNoteInfo)
+			if($settlementInfo)
 			{
 			
 				$data['companyName'] 	= $defCls->master('companyName');
@@ -314,31 +367,51 @@ class CustomersTransactionSettlementsConnector {
 				
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-				$data['settlement_id'] = $getDebitNoteInfo['settlement_id'];
+				$data['settlement_id'] = $settlementInfo['settlement_id'];
 			
 				$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				$data['customer_list'] = $CustomersMasterCustomersQuery->gets("ORDER BY name ASC");
 				$data['account_list']	= $AccountsMasterAccountsQuery->gets("ORDER BY name ASC");
 					
-				$data['settlement_no'] = $defCls->docNo('CSETT-',$getDebitNoteInfo['settlement_id']);
+				$data['settlement_no'] = $defCls->docNo('CSETT-',$settlementInfo['settlement_id']);
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
-				else{ $data['location_id'] = $getDebitNoteInfo['location_id']; }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
+				else{ $data['location_id'] = $settlementInfo['location_id']; }
 				
-				if($db->request('customer_id')){ $data['customer_id'] = $db->request('customer_id'); }
-				else{ $data['customer_id'] = $getDebitNoteInfo['customer_id']; }
+				if(isset($_REQUEST['customer_id']))
+				{
+					$data['customer_id'] = $db->request('customer_id');
+					$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
+				else
+				{
+					$data['customer_id'] = $settlementInfo['customer_id'];
+					$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
 				
-				if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
-				else{ $data['account_id'] = $getDebitNoteInfo['account_id']; }
+				if(isset($_REQUEST['account_id'])){ $data['account_id'] = $db->request('account_id'); }
+				else{ $data['account_id'] = $settlementInfo['account_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
-				else{ $data['added_date'] = $dateCls->showDate($getDebitNoteInfo['added_date']); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
+				else{ $data['added_date'] = $dateCls->showDate($settlementInfo['added_date']); }
 				
-				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
-				else{ $data['amount'] = $defCls->num($getDebitNoteInfo['amount']); }
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
+				else{ $data['amount'] = $defCls->num($settlementInfo['amount']); }
+			
+				if(isset($_REQUEST['bank_code'])){ $data['bank_code'] = $db->request('bank_code'); }
+				else{ $data['bank_code'] = $settlementInfo['bank_code']; }
 				
-				if($db->request('details')){ $data['details'] = $db->request('details'); }
-				else{ $data['details'] = $getDebitNoteInfo['details']; }
+				if(isset($_REQUEST['cheque_date'])){ $data['cheque_date'] = $db->request('cheque_date'); }
+				elseif($settlementInfo['cheque_date']=='0000-00-00'){ $data['cheque_date'] = ''; }
+				else{ $data['cheque_date'] = $defCls->showText($settlementInfo['cheque_date']); }
+				
+				if(isset($_REQUEST['cheque_no'])){ $data['cheque_no'] = $db->request('cheque_no'); }
+				else{ $data['cheque_no'] = $settlementInfo['cheque_no']; }
+				
+				if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
+				else{ $data['details'] = $settlementInfo['details']; }
 				
 
 				
@@ -350,6 +423,24 @@ class CustomersTransactionSettlementsConnector {
 					if(!$data['account_id']){ $error_msg[]="You must choose a account"; $error_no++; }
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 					if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+					if($data['amount']>$data['outstanding']+$settlementInfo['amount'])
+					{
+						$error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++;
+					}
+					if($data['bank_code'] || $data['cheque_no'] || $data['cheque_date'])
+					{
+						if(!$data['bank_code'] || !$data['cheque_no'] || !$data['cheque_date'])
+						{
+							$error_msg[]="You can't fill only one cheque field; you must enter the bank number, cheque number, and the date!"; $error_no++;
+						}
+						
+					}
+					
+					
+					if($chequeInfo && $chequeInfo['status']!==0)
+					{
+						$error_msg[]="Cheque already realized. Please Revert your cheque!"; $error_no++;
+					}
 					if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 					
 						
@@ -362,6 +453,93 @@ class CustomersTransactionSettlementsConnector {
 						
 						
 						$settlementInfo = $CustomersTransactionsSettlementsQuery->get($id);
+						//
+						
+						if($chequeInfo)
+						{	
+							if($data['bank_code'] && $data['cheque_no'] && $data['cheque_date'])
+							{
+								$chequeData = [];
+								$chequeData['reference_id'] = $settlementInfo['settlement_id'];
+								$chequeData['added_date'] = $settlementInfo['added_date'];
+								$chequeData['transaction_type'] = 'CSETT';
+								$chequeData['type'] = 'Received';
+								$chequeData['bank_code'] = $settlementInfo['bank_code'];
+								$chequeData['cheque_date'] = $settlementInfo['cheque_date'];
+								$chequeData['cheque_no'] = $settlementInfo['cheque_no'];
+								$chequeData['amount'] = $settlementInfo['amount'];
+								$chequeData['remarks'] = $transaction_no;
+								$chequeData['deposited_account_id'] = 0;
+								$chequeData['status'] = 0;
+								
+								$AccountsTransactionChequeQuery->update($chequeData);
+								
+							}
+							else
+							{
+								
+								$AccountsTransactionChequeQuery->delete($settlementInfo['settlement_id'],'CSETT');
+								
+								////Account transactipn update
+								$accountData = [];
+								$accountData['added_date'] = $settlementInfo['added_date'];
+								$accountData['account_id'] = $settlementInfo['account_id'];
+								$accountData['reference_id'] = $settlementInfo['settlement_id'];
+								$accountData['transaction_type'] = 'CSETT';
+								$accountData['debit'] = $settlementInfo['amount'];
+								$accountData['credit'] = 0;
+								$accountData['remarks'] = $transaction_no;
+								
+								$AccountsMasterAccountsQuery->transactionAdd($accountData);
+								
+								
+							}
+							
+						}
+						else
+						{
+							if($data['bank_code'] && $data['cheque_no'] && $data['cheque_date'])
+							{
+								
+								$AccountsMasterAccountsQuery->transactionDelete($settlementInfo['settlement_id'],'CSETT');
+								
+								/////
+								$chequeData = [];
+								$chequeData['reference_id'] = $settlementInfo['settlement_id'];
+								$chequeData['added_date'] = $settlementInfo['added_date'];
+								$chequeData['transaction_type'] = 'CSETT';
+								$chequeData['type'] = 'Received';
+								$chequeData['bank_code'] = $settlementInfo['bank_code'];
+								$chequeData['cheque_date'] = $settlementInfo['cheque_date'];
+								$chequeData['cheque_no'] = $settlementInfo['cheque_no'];
+								$chequeData['amount'] = $settlementInfo['amount'];
+								$chequeData['remarks'] = $transaction_no;
+								$chequeData['deposited_account_id'] = 0;
+								$chequeData['status'] = 0;
+								
+								$AccountsTransactionChequeQuery->create($chequeData);
+								
+							}
+							else
+							{
+								
+								$AccountsTransactionChequeQuery->delete($settlementInfo['account_id'],'CSETT');
+							
+								////Account transactipn update
+								$accountData = [];
+								$accountData['added_date'] = $settlementInfo['added_date'];
+								$accountData['account_id'] = $settlementInfo['account_id'];
+								$accountData['reference_id'] = $settlementInfo['settlement_id'];
+								$accountData['transaction_type'] = 'CSETT';
+								$accountData['debit'] = $settlementInfo['amount'];
+								$accountData['credit'] = 0;
+								$accountData['remarks'] = $transaction_no;
+								
+								$AccountsMasterAccountsQuery->transactionAdd($accountData);
+								
+							}
+							
+						}
 						
 						////Customer transactipn update
 						$customerData = [];
@@ -375,19 +553,6 @@ class CustomersTransactionSettlementsConnector {
 						
 						$CustomersMasterCustomersQuery->transactionEdit($customerData);
 					
-					
-						////Account transaction update
-						$accountData = [];
-						$accountData['account_id'] = $data['account_id'];
-						$accountData['reference_id'] = $id;
-						$accountData['added_date'] = $settlementInfo['added_date'];
-						$accountData['transaction_type'] = 'CSETT';
-						$accountData['debit'] = $settlementInfo['amount'];
-						$accountData['credit'] = 0;
-						$accountData['remarks'] = $transaction_no;
-						
-						$AccountsMasterAccountsQuery->transactionEdit($accountData);
-						
 						$json['success']=true;
 						$json['success_msg']="Sucessfully Updated";
 						

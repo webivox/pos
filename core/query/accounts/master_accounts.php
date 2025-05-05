@@ -221,7 +221,7 @@ class AccountsMasterAccountsQuery {
 	}
 	
 	/////
-	public function transactionDelete($customerData)
+	public function transactionDelete($referenceId,$transactionType)
 	{
 		global $db;
 		global $dateCls;
@@ -229,27 +229,29 @@ class AccountsMasterAccountsQuery {
 		
 		
 		
-		$row = $db->fetch("SELECT * FROM account_transactions WHERE `reference_id`='".$customerData['reference_id']."' AND `transaction_type`='".$customerData['transaction_type']."'");
+		$row = $db->fetch("SELECT * FROM account_transactions WHERE `reference_id`='".$referenceId."' AND `transaction_type`='".$transactionType."'");
 		
-		$itemId = $row['item_id'];
+		if($row)
+		{
 		
-		$sql = "DELETE FROM account_transactions 
-												
-												WHERE
-												
-												`reference_id`='".$customerData['reference_id']."'
-												
-												AND
-												
-												`transaction_type`='".$customerData['transaction_type']."'
-												
-												
-												
-			";
-		
-		$db->query($sql);
-		
-		$this->transactionsBalanceUpdate($itemId);
+			$sql = "DELETE FROM account_transactions 
+													
+													WHERE
+													
+													`reference_id`='".$referenceId."'
+													
+													AND
+													
+													`transaction_type`='".$transactionType."'
+													
+													
+													
+				";
+			
+			$db->query($sql);
+			
+			$this->transactionsBalanceUpdate($row['account_id']);
+		}
 	}
 	
 	

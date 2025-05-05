@@ -41,6 +41,7 @@
                         <li><a href="<?php echo $defCls->genURL('sales/r_saleslisting'); ?>">Sales Listing</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/r_calcelled'); ?>">Cancelled Sales</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/r_salesreturn'); ?>">Sales Return</a></li>
+                        <li><a href="<?php echo $defCls->genURL('sales/r_loyalty'); ?>">Loyalty</a></li>
                     
                     </ul>
                 
@@ -63,6 +64,7 @@
                         <li><a href="<?php echo $defCls->genURL('accounts/transaction_expences'); ?>">Expences</a></li>
                         <li><a href="<?php echo $defCls->genURL('accounts/transaction_transfers'); ?>">Transfers</a></li>
                         <li><a href="<?php echo $defCls->genURL('accounts/transaction_adjustments'); ?>">Adjustments</a></li>
+                        <li><a href="<?php echo $defCls->genURL('accounts/transaction_cheque'); ?>">Cheques</a></li>
                     
                     </ul>
                 
@@ -248,7 +250,7 @@
                 <li><a href="<?php echo $defCls->genURL('system/master_cashierpoints'); ?>">Cashier Points</a></li>
                 <li><a href="<?php echo $defCls->genURL('system/master_users'); ?>">Users</a></li>
                 <li><a href="<?php echo $defCls->genURL('system/master_usergroups'); ?>">User Groups</a></li>
-                <li><a href="<?php echo $defCls->genURL('system/master'); ?>">Master</a></li>
+                <li><a href="<?php echo $defCls->genURL('system/master_master'); ?>">Master</a></li>
                 
                 
             </ul>

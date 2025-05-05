@@ -26,7 +26,7 @@ class InventoryMasterUnitsQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE unit_id='".$unitId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE unit_id='".$unitId."'");
 		$count = count($res);
 		if($count)
 		{

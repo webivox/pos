@@ -27,7 +27,7 @@
         <div class="col-10 text-center status"><?php echo $cat['status']; ?></div>
         <div class="col-10 action">
         
-            <a class="btn btn-primary open_popup_form" data-url="<?php echo $cat['updateURL']; ?>" data-width="1024" data-height="530"><i class="fa-light fa-pen-to-square"></i></a>
+            <a class="btn btn-primary open_popup_form" data-url="<?php echo $cat['updateURL']; ?>" data-width="1024" data-height="460"><i class="fa-light fa-pen-to-square"></i></a>
         
             <a class="btn btn-black open_popup_form" data-url="<?php echo $cat['updatePriceURL']; ?>" data-width="400" data-height="530"><i class="fa-light fa-money-check-dollar-pen"></i></a>
             

@@ -121,6 +121,7 @@ class CustomersMasterCustomergroupsConnector {
 		global $firewallCls;
 		global $db;
 		global $SystemMasterUsersQuery;
+		global $CustomersMasterCustomergroupsQuery;
 		
 		
 		$data = [];
@@ -217,6 +218,7 @@ class CustomersMasterCustomergroupsConnector {
 		global $db;
 		global $id;
 		global $SystemMasterUsersQuery;
+		global $CustomersMasterCustomergroupsQuery;
 		
 		
 		$data = [];

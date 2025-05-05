@@ -153,11 +153,12 @@ class InventoryTransactionReceivingnotesConnector {
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['form_url'] 	= _SERVER."inventory/transaction_receivingnotes/create";
+			$data['supplier_create_url'] = $defCls->genURL("suppliers/master_suppliers/create");
+			$data['item_create_url'] = $defCls->genURL("inventory/master_items/create");
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 			
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
-			$data['supplier_list'] = $SuppliersMasterSuppliersQuery->gets("ORDER BY name ASC");
 				
 			$data['rn_no'] = 'New';
 			$data['po_no'] = 'None';
@@ -167,8 +168,16 @@ class InventoryTransactionReceivingnotesConnector {
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-			else{ $data['supplier_id'] = ''; }
+			if($db->request('supplier_id'))
+			{
+				$data['supplier_id'] = $db->request('supplier_id');
+				$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
+			}
+			else
+			{
+				$data['supplier_id'] = '';
+				$data['supplier_id_txt'] = '';
+			}
 			
 			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
@@ -355,6 +364,8 @@ class InventoryTransactionReceivingnotesConnector {
 				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 				
 				$data['form_url'] 	= _SERVER."inventory/transaction_receivingnotes/edit/".$id;
+				$data['supplier_create_url'] = $defCls->genURL("suppliers/master_suppliers/create");
+				$data['item_create_url'] = $defCls->genURL("inventory/master_items/create");
 				
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
@@ -373,8 +384,18 @@ class InventoryTransactionReceivingnotesConnector {
 				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getReceivingnoteInfo['location_id']; }
 				
-				if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-				else{ $data['supplier_id'] = $getReceivingnoteInfo['supplier_id']; }
+			
+				if($db->request('supplier_id'))
+				{
+					
+					$data['supplier_id'] = $db->request('supplier_id');
+					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
+				}
+				else
+				{
+					$data['supplier_id'] = $getReceivingnoteInfo['supplier_id'];
+					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($getReceivingnoteInfo['supplier_id'],'name');;
+				}
 				
 				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getReceivingnoteInfo['added_date']); }

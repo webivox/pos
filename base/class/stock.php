@@ -168,7 +168,34 @@ class stocktransactions
 		}
 		
 		
-		$db->query("UPDATE inventory_items SET closing_stocks='".$stocksAll."' WHERE item_id='".$itemId."'");
+		/////
+		
+		
+		$row = $db->fetch("SELECT 
+                     SUM(amount * qty_in) / SUM(qty_in) AS average_unit_cost 
+                   FROM inventory_stock_transactions 
+                   WHERE item_id = '".$itemId."' 
+                     AND qty_in > 0 
+                     AND transaction_type NOT IN ('TRNOUT', 'TRNIN')");
+		
+		// If no qty_in records exist, fallback to 0 or latest cost
+		if ($row && $row['average_unit_cost'] !== null) {
+			$averageCost = $row['average_unit_cost'];
+		} else {
+			// Fallback: get latest amount
+			$lastIn = $db->fetch("SELECT amount 
+								  FROM inventory_stock_transactions 
+								  WHERE item_id = '$itemId' AND qty_in > 0  AND transaction_type NOT IN ('TRNOUT', 'TRNIN')
+								  ORDER BY transaction_id DESC 
+								  LIMIT 1");
+		
+			$averageCost = $lastIn ? 222 : 0;
+		}
+				
+		///
+		
+		
+		$db->query("UPDATE inventory_items SET cost='".$averageCost."', closing_stocks='".$stocksAll."' WHERE item_id='".$itemId."'");
 	}
 	
 	

@@ -28,7 +28,7 @@ class SalesTransactionGiftcardsQuery {
 	{
 		global $db;
 		
-		$res = $db->fetchOne("SELECT ".$column." FROM ".$this->tableName." WHERE gift_card_id='".$gcId."'");
+		$res = $db->fetch("SELECT ".$column." FROM ".$this->tableName." WHERE gift_card_id='".$gcId."'");
 		$count = count($res);
 		if($count)
 		{
@@ -128,6 +128,16 @@ class SalesTransactionGiftcardsQuery {
 		
 		
     }
+    
+    public function addUsedAmount($giftCardId,$usedAmount) {
+		
+		global $db;
+		global $dateCls;
+		global $defCls;
+		
+		$db->query("UPDATE ".$this->tableName." SET used_amount = used_amount+".$usedAmount.", balance_amount = balance_amount-".$usedAmount." WHERE gift_card_id = '".$giftCardId."'");
+		
+	}
 }
 
 // Instantiate the blogsModels class

@@ -425,7 +425,8 @@ class CustomersMasterCustomersConnector {
 				
 				$json[]=array(
 						'value'=> $itm['customer_id'],
-						'label'=> $itm['name']. ' ('.$itm['phone_number'].')'
+						'label'=> $itm['name']. ' ('.$itm['phone_number'].')',
+						'points'=> $defCls->num($itm['loyalty_points'])
 							);
 			}
 		}

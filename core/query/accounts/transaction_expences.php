@@ -110,6 +110,7 @@ class AccountsTransactionsExpencesQuery {
 		global $stockTransactionsCls;
 		
 		$addedDate = $dateCls->dateToDB($data['added_date']);
+		$chequeDate = $dateCls->dateToDB($data['cheque_date']);
 		
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
@@ -121,6 +122,8 @@ class AccountsTransactionsExpencesQuery {
 						user_id='".$data['user_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
+						cheque_no='".$data['cheque_no']."',
+						cheque_date='".$chequeDate."',
 						details='".$data['details']."'
 						
 				";
@@ -145,6 +148,7 @@ class AccountsTransactionsExpencesQuery {
 		global $stockTransactionsCls;
 		
 		$addedDate = $dateCls->dateToDB($data['added_date']);
+		$chequeDate = $dateCls->dateToDB($data['cheque_date']);
 
         // Query to fetch all blogs
         $sql = "UPDATE ".$this->tableName." SET 
@@ -156,6 +160,8 @@ class AccountsTransactionsExpencesQuery {
 						account_id='".$data['account_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
+						cheque_no='".$data['cheque_no']."',
+						cheque_date='".$chequeDate."',
 						details='".$data['details']."'
 						
 						WHERE

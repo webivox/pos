@@ -158,8 +158,13 @@ class SuppliersTransactionDebitnotesConnector {
 			
 			$data['debit_note_no'] = 'New';
 			
-			if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-			else{ $data['supplier_id'] = ''; }
+			if($db->request('supplier_id'))
+			{
+				$data['supplier_id'] = $db->request('supplier_id');
+				$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+				$data['outstanding'] = $defCls->num($closing_balance);
+			}
+			else{ $data['supplier_id'] = ''; $data['outstanding'] = '0.00'; }
 			
 			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -183,6 +188,7 @@ class SuppliersTransactionDebitnotesConnector {
 				if(!$SuppliersMasterSuppliersQuery->has($data['supplier_id'])){ $error_msg[]="You must choose a supplier"; $error_no++; }
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+				if($data['amount']>$data['outstanding']){ $error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++; }
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 				
 				
@@ -298,8 +304,18 @@ class SuppliersTransactionDebitnotesConnector {
 				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getDebitNoteInfo['location_id']; }
 				
-				if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
-				else{ $data['supplier_id'] = $getDebitNoteInfo['supplier_id']; }
+				if($db->request('supplier_id'))
+				{
+					$data['supplier_id'] = $db->request('supplier_id');
+					$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
+				else
+				{
+					$data['supplier_id'] = $getDebitNoteInfo['supplier_id'];
+					$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
+					$data['outstanding'] = $defCls->num($closing_balance);
+				}
 				
 				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getDebitNoteInfo['added_date']); }
@@ -319,6 +335,11 @@ class SuppliersTransactionDebitnotesConnector {
 					if(!$SuppliersMasterSuppliersQuery->has($data['supplier_id'])){ $error_msg[]="You must choose a supplier"; $error_no++; }
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 					if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
+					if($data['amount']>$data['outstanding']+$getDebitNoteInfo['amount'])
+					{
+						$error_msg[]="You can't enter an amount higher than the outstanding amount!"; $error_no++;
+					}
+					
 					if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
 					
 						

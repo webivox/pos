@@ -82,6 +82,22 @@
 
 </div>
 
+<div id="popup_form_sub">
+
+
+	<div id="popup_form_in_sub">
+    
+    	<a id="popup_form_in_close_sub">X</a>
+    
+    	<div id="popup_form_in_form_sub">
+        
+        
+        </div>
+    
+    </div>
+
+</div>
+
 
 <div id="modal_loading"><div id="modal_loading_in"><div id="modal_loading_in_icon"></div></div></div>
 

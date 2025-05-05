@@ -48,6 +48,7 @@ class AccountsRLedgerListingConnector {
 	{
 		global $db;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
@@ -83,6 +84,17 @@ class AccountsRLedgerListingConnector {
 			
 			if($db->request('search_user')!==''){ $search_user=$db->request('search_user'); }
 			else{ $search_user=''; }
+			
+			$filter_heading = '';
+			if($search_date_from){ $filter_heading .= ' | From : '.$search_date_from; }
+			if($search_date_to){ $filter_heading .= ' | To : '.$search_date_to; }
+			if($search_location){ $filter_heading .= ' | Location : '.$SystemMasterLocationsQuery->data($search_location,'name'); }
+			if($search_account){ $filter_heading .= ' | Account : '.$AccountsMasterAccountsQuery->data($search_account,'name'); }
+			if($search_user){ $filter_heading .= ' | User : '.$SystemMasterUsersQuery->data($search_user,'name'); }
+			
+			$data['title_tag'] = 'Account Ledger Listing Report | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+			$data['filter_heading'] = trim($filter_heading,',');
+			$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');;
 			
 			/////////////
 			
@@ -124,7 +136,7 @@ class AccountsRLedgerListingConnector {
 			
 			$data['tDebit'] = $defCls->money($tDebit);
 			$data['tCredit'] = $defCls->money($tCredit);
-			$data['tBalance'] = $defCls->money($tBalance);
+			$data['tBalance'] = $defCls->money($tDebit-$tCredit);
 
 	
 			$this_required_file = _HTML.'accounts/r_ledger_listing_view.php';

@@ -29,17 +29,11 @@
     </div>
     
     <div class="col_4">
-        <label for="supplier_id">Supplier ID</label>
-        <select name="supplier_id" id="supplier_id">
-            
-            <option value="">- Choose -</option>
-            <?php
-			foreach($data['supplier_list'] as $cat){
-			?>
-            <option value="<?php echo $cat['supplier_id']; ?>" <?php if($data['supplier_id']==$cat['supplier_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
-            <?php } ?>
+        <label for="supplier_id">Supplier ID <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['supplier_create_url']; ?>" data-width="950" data-height="450">[Create]</a></label>
         
-        </select>
+        <input type="text" name="supplier_id_txt" id="supplier_id_txt" data-setid="supplier_id" placeholder="" class="supplierAjax" value="<?php echo $data['supplier_id_txt']; ?>">
+        <input type="hidden" id="supplier_id" name="supplier_id" value="<?php echo $data['supplier_id']; ?>" />
+        
     </div>
     
     <div class="col_4">
@@ -74,7 +68,7 @@
             	<tr>
             
             		<td style="width:50px">No</td>
-            		<td>Item Name</td>
+            		<td>Item Name <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['item_create_url']; ?>" data-width="950" data-height="450">[Create a New]</a></td>
             		<td style="width:75px">Qty</td>
             		<td style="width:85px">Amount</td>
             		<td style="width:85px">Buying Price</td>
@@ -114,8 +108,7 @@
 				{
 					$ino+=1;
 					$lineDisc = $i['buying_price']*$i['discount']/100;
-					$total_saved += $lineDisc;
-					$total_saved += $i['price']-$i['buying_price'];
+					$total_saved += ($i['price']-$i['final_price'])*$i['qty'];
 					?>
                     <tr id="rowe<?php echo $i['receiving_note_item_id']; ?>" class="linerows">
             

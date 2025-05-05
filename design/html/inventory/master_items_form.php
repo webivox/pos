@@ -57,7 +57,9 @@
     
     <div class="col_4">
         <label for="supplier_id">Supplier</label>
-        <input type="text" name="supplier_id" id="supplier_id" placeholder="Supplier" value="<?php echo $data['supplier_id']; ?>">
+        
+        <input type="text" name="supplier_id_txt" id="supplier_id_txt" data-setid="supplier_id" placeholder="" class="supplierAjax">
+        <input type="hidden" id="supplier_id" name="supplier_id" />
     </div>
     
     <div class="col_4">
@@ -96,11 +98,6 @@
     </div>
     
     <div class="col_4">
-        <label for="expiry_date">Expiry Date</label>
-        <input type="date" name="expiry_date" id="expiry_date" value="<?php echo $data['expiry_date']; ?>">
-    </div>
-    
-    <div class="col_4">
         <label for="re_order_qty">Reorder Quantity</label>
         <input type="text" name="re_order_qty" id="re_order_qty" placeholder="Reorder Quantity" value="<?php echo $data['re_order_qty']; ?>">
     </div>
@@ -111,8 +108,8 @@
     </div>
     
     <div class="col_4">
-        <label for="subtract_stock">Subtract Stock</label>
-        <input type="text" name="subtract_stock" id="subtract_stock" placeholder="Subtract Stock" value="<?php echo $data['subtract_stock']; ?>">
+        <label for="minimum_qty">Min Order Quantity</label>
+        <input type="text" name="minimum_qty" id="minimum_qty" placeholder="Min Order Quantity" value="<?php echo $data['minimum_qty']; ?>">
     </div>
     
     <div class="col_4">

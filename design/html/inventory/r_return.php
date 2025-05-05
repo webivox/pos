@@ -62,22 +62,6 @@
         
         <div class="col_4">
         
-            <label for="search_sales_rep">Sales Rep</label>
-            <select name="search_sales_rep" id="search_sales_rep">
-                
-                <option value="">- Choose -</option>
-                <?php
-                foreach($data['sales_rep_list'] as $cat){
-                ?>
-                <option value="<?php echo $cat['rep_id']; ?>"><?php echo $cat['name']; ?></option>
-                <?php } ?>
-            
-            </select>
-        
-        </div>
-        
-        <div class="col_4">
-        
             <label for="search_user">User</label>
             <select name="search_user" id="search_user">
                 

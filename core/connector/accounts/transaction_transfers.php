@@ -151,6 +151,7 @@ class AccountsTransactionTransfersConnector {
 		global $AccountsMasterAccountsQuery;
 		global $SystemMasterUsersQuery;
 		global $SystemMasterLocationsQuery;
+		global $AccountsTransactionsTransfersQuery;
 		
 		
 		$data = [];
@@ -172,8 +173,13 @@ class AccountsTransactionTransfersConnector {
 			
 			$data['transfer_no'] = 'New';
 			
-			if($db->request('account_from_id')){ $data['account_from_id'] = $db->request('account_from_id'); }
-			else{ $data['account_from_id'] = ''; }
+			if($db->request('account_from_id'))
+			{
+				$data['account_from_id'] = $db->request('account_from_id');
+				$account_balance = $AccountsMasterAccountsQuery->data($data['account_from_id'],'closing_balance');
+				$data['account_balance'] = $defCls->num($account_balance);
+			}
+			else{ $data['account_from_id'] = 0; $data['account_balance'] = 0; }
 			
 			if($db->request('account_to_id')){ $data['account_to_id'] = $db->request('account_to_id'); }
 			else{ $data['account_to_id'] = ''; }
@@ -195,7 +201,9 @@ class AccountsTransactionTransfersConnector {
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 			{
+				if($data['account_from_id']==$data['account_to_id']){ $error_msg[]="You can't transfer between same account"; $error_no++; }
 				if(!$AccountsMasterAccountsQuery->has($data['account_from_id'])){ $error_msg[]="You must choose a account from"; $error_no++; }
+				if($data['amount']>$data['account_balance']){ $error_msg[]="Account balance is lower than the given amount!"; $error_no++; }
 				if(!$AccountsMasterAccountsQuery->has($data['account_to_id'])){ $error_msg[]="You must choose a account to"; $error_no++; }
 				if(!$SystemMasterLocationsQuery->has($data['location_id'])){ $error_msg[]="You must choose a location"; $error_no++; }
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
@@ -330,9 +338,18 @@ class AccountsTransactionTransfersConnector {
 					
 				$data['transfer_no'] = $defCls->docNo('ATRN-',$getDebitNoteInfo['transfer_id']);
 				
-			
-				if($db->request('account_from_id')){ $data['account_from_id'] = $db->request('account_from_id'); }
-				else{ $data['account_from_id'] = $getDebitNoteInfo['account_from_id']; }
+				
+				if($db->request('account_from_id'))
+				{
+					$data['account_from_id'] = $db->request('account_from_id');
+					$account_balance = $AccountsMasterAccountsQuery->data($data['account_from_id'],'closing_balance');
+					$data['account_balance'] = $defCls->num($account_balance);
+				}
+				else
+				{
+					$data['account_from_id'] = $getDebitNoteInfo['account_from_id'];
+					$data['account_balance'] = $AccountsMasterAccountsQuery->data($getDebitNoteInfo['account_from_id'],'closing_balance');
+				}
 				
 				if($db->request('account_to_id')){ $data['account_to_id'] = $db->request('account_to_id'); }
 				else{ $data['account_to_id'] = $getDebitNoteInfo['account_to_id']; }
@@ -354,7 +371,12 @@ class AccountsTransactionTransfersConnector {
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 				{
 					
+					if($data['account_from_id']==$data['account_to_id']){ $error_msg[]="You can't transfer between same account"; $error_no++; }
 					if(!$AccountsMasterAccountsQuery->has($data['account_from_id'])){ $error_msg[]="You must choose a account from"; $error_no++; }
+					if($data['amount']>$data['account_balance']+$getDebitNoteInfo['amount'])
+					{
+						$error_msg[]="Account balance is lower than the given amount!"; $error_no++;
+					}
 					if(!$AccountsMasterAccountsQuery->has($data['account_to_id'])){ $error_msg[]="You must choose a account to"; $error_no++; }
 					if(!$SystemMasterLocationsQuery->has($data['location_id'])){ $error_msg[]="You must choose a location"; $error_no++; }
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }

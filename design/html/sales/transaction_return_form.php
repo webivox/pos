@@ -66,8 +66,8 @@
             		<td style="width:50px">No</td>
             		<td>Item Name</td>
             		<td style="width:85px">Cost</td>
-            		<td style="width:75px">Qty</td>
             		<td style="width:85px">Amount</td>
+            		<td style="width:75px">Qty</td>
             		<td style="width:95px">Total</td>
             		<td style="width:55px">Action</td>
             
@@ -81,13 +81,13 @@
             
             		<td><input type="text" id="no" name="no" disabled="disabled" value="<?php echo $data['no_of_items']+1; ?>" /></td>
             		<td>
-                    	<input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="cost" data-setid="item_name_id" />
+                    	<input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="cost" data-setid="item_name_id" data-sendcustomer="customer_id" data-focus="qty" data-setid="item_name_id" data-priceset="amount" data-costset="cost" />
                     	<input type="hidden" id="item_name_id" name="item_name_id" />
                         
                     </td>
             		<td><input type="text" id="cost" name="cost" class="text-right" value="" /></td>
-            		<td><input type="text" id="qty" name="qty" class="text-right addlinechange" value="" /></td>
             		<td><input type="text" id="amount" name="amount" class="text-right addlinechange" value="" /></td>
+            		<td><input type="text" id="qty" name="qty" class="text-right addlinechange" value="" /></td>
             		<td><input type="text" id="total" name="total" disabled value="" class="text-right" value="" /></td>
             		<td><a class="btn btn-primary" id="addItem" accesskey="a">+</a></td>
             
@@ -104,8 +104,8 @@
                         <td><input type="text" id="eno<?php echo $i['sales_return_item_id']; ?>" name="no" disabled="disabled" value="<?php echo $ino; ?>" /></td>
                         <td><input type="text" id="eitem_name<?php echo $i['sales_return_item_id']; ?>" disabled name="eitem_name<?php echo $i['sales_return_item_id']; ?>" value="<?php echo $InventoryMasterItemsQuery->data($i['item_id'],'name'); ?>" /></td>
                         <td><input type="text" id="ecost<?php echo $i['sales_return_item_id']; ?>" name="ecost<?php echo $i['sales_return_item_id']; ?>" class="text-right" value="<?php echo $defCls->num($i['cost']); ?>" /></td>
-                        <td><input type="text" id="eqty<?php echo $i['sales_return_item_id']; ?>" name="eqty<?php echo $i['sales_return_item_id']; ?>" class="text-right editlinechange eqty" value="<?php echo $defCls->num($i['qty']); ?>" /></td>
                         <td><input type="text" id="eamount<?php echo $i['sales_return_item_id']; ?>" name="eamount<?php echo $i['sales_return_item_id']; ?>" class="text-right editlinechange eprice" value="<?php echo $defCls->num($i['price']); ?>" /></td>
+                        <td><input type="text" id="eqty<?php echo $i['sales_return_item_id']; ?>" name="eqty<?php echo $i['sales_return_item_id']; ?>" class="text-right editlinechange eqty" value="<?php echo $defCls->num($i['qty']); ?>" /></td>
                         
                         <td><input type="text" id="etotal<?php echo $i['sales_return_item_id']; ?>" name="etotal<?php echo $i['sales_return_item_id']; ?>" disabled class="text-right etotal" value="<?php echo $defCls->num($i['total']); ?>" /></td>
                         <td><a class="btn btn-danger removeItem" data-id="e<?php echo $i['sales_return_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a></td>

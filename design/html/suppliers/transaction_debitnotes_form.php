@@ -15,11 +15,6 @@
     </div>
     
     <div class="col_3">
-        <label for="amount">Amount</label>
-        <input type="text" name="amount" id="amount" placeholder="0.00" value="<?php echo $data['amount']; ?>">
-    </div>
-    
-    <div class="col_2">
         <label for="location_id">Location</label>
         <select name="location_id" id="location_id">
             
@@ -33,7 +28,7 @@
         </select>
     </div>
     
-    <div class="col_2">
+    <div class="col_3">
         <label for="supplier_id">Supplier ID</label>
         <select name="supplier_id" id="supplier_id">
             
@@ -41,10 +36,40 @@
             <?php
 			foreach($data['supplier_list'] as $cat){
 			?>
-            <option value="<?php echo $cat['supplier_id']; ?>" <?php if($data['supplier_id']==$cat['supplier_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
+            <option value="<?php echo $cat['supplier_id']; ?>" data-outstanding="<?php echo $defCls->num($cat['closing_balance']); ?>" <?php if($data['supplier_id']==$cat['supplier_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
             <?php } ?>
         
         </select>
+        <script>
+		
+		$("#supplier_id").change(function(){
+			var outstanding = $(this).find('option:selected').data('outstanding');
+	
+			$("#outstanding").val(outstanding);
+		});
+		
+		
+		
+		$("#amount").change(function(){
+			
+			var outstanding = parseFloat($("#supplier_id").find('option:selected').data('outstanding')) || 0;
+			var amount = parseFloat($("#amount").val());
+			
+			if(outstanding<amount){ alert("You can't enter an amount higher than the outstanding amount!"); }
+			
+		});
+		
+		</script>
+    </div>
+    
+    <div class="col_3">
+        <label for="outstanding">Outstanding</label>
+        <input type="text" name="outstanding" id="outstanding" placeholder="0.00" value="<?php echo $data['outstanding']; ?>" disabled="disabled">
+    </div>
+    
+    <div class="col_3">
+        <label for="amount">Amount</label>
+        <input type="text" name="amount" id="amount" placeholder="0.00" value="<?php echo $data['amount']; ?>">
     </div>
     
     <div class="col_1">
