@@ -19,6 +19,7 @@ class SuppliersTransactionPaymentsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Supplier Payments | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -60,23 +61,23 @@ class SuppliersTransactionPaymentsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('SPMNT-','',$search_no);
 				$search_no=ltrim($search_no,'SPMNT-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_supplier_id')!==''){ $search_supplier_id=$db->request('search_supplier_id'); }
+			if(isset($_REQUEST['search_supplier_id'])){ $search_supplier_id=$db->request('search_supplier_id'); }
 			else{ $search_supplier_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -165,7 +166,7 @@ class SuppliersTransactionPaymentsConnector {
 			
 			$data['payment_no'] = 'New';
 			
-			if($db->request('supplier_id'))
+			if(isset($_REQUEST['supplier_id']))
 			{
 				$data['supplier_id'] = $db->request('supplier_id');
 				$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
@@ -173,16 +174,16 @@ class SuppliersTransactionPaymentsConnector {
 			}
 			else{ $data['supplier_id'] = ''; $data['outstanding'] = '0.00'; }
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('account_id'))
+			if(isset($_REQUEST['account_id']))
 			{
 				$data['account_id'] = $db->request('account_id');
 				$account_balance = $AccountsMasterAccountsQuery->data($data['account_id'],'closing_balance');
@@ -190,13 +191,13 @@ class SuppliersTransactionPaymentsConnector {
 			}
 			else{ $data['account_id'] = 0; $data['account_balance'] = 0; }
 			
-			if($db->request('cheque_date')){ $data['cheque_date'] = $db->request('cheque_date'); }
+			if(isset($_REQUEST['cheque_date'])){ $data['cheque_date'] = $db->request('cheque_date'); }
 			else{ $data['cheque_date'] = ''; }
 			
-			if($db->request('cheque_no')){ $data['cheque_no'] = $db->request('cheque_no'); }
+			if(isset($_REQUEST['cheque_no'])){ $data['cheque_no'] = $db->request('cheque_no'); }
 			else{ $data['cheque_no'] = ''; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
 			
 			$data['user_id'] = $userInfo['user_id'];
@@ -369,10 +370,10 @@ class SuppliersTransactionPaymentsConnector {
 					
 				$data['payment_no'] = $defCls->docNo('SPMNT-',$paymentInfo['payment_id']);
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $paymentInfo['location_id']; }
 				
-				if($db->request('supplier_id'))
+				if(isset($_REQUEST['supplier_id']))
 				{
 					$data['supplier_id'] = $db->request('supplier_id');
 					$closing_balance = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'closing_balance');
@@ -385,13 +386,13 @@ class SuppliersTransactionPaymentsConnector {
 					$data['outstanding'] = $defCls->num($closing_balance);
 				}
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($paymentInfo['added_date']); }
 				
-				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 				else{ $data['amount'] = $defCls->num($paymentInfo['amount']); }
 				
-				if($db->request('account_id'))
+				if(isset($_REQUEST['account_id']))
 				{
 					$data['account_id'] = $db->request('account_id');
 					$account_balance = $AccountsMasterAccountsQuery->data($data['account_id'],'closing_balance');
@@ -409,7 +410,7 @@ class SuppliersTransactionPaymentsConnector {
 				if(isset($_REQUEST['cheque_no'])){$data['cheque_no'] = $db->request('cheque_no'); }
 				else{ $data['cheque_no'] = $paymentInfo['cheque_no']; }
 				
-				if($db->request('details')){ $data['details'] = $db->request('details'); }
+				if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 				else{ $data['details'] = $paymentInfo['details']; }
 				
 

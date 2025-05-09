@@ -38,85 +38,88 @@
     
     <div class="col_1">
     
+    	<div id="addingItemTable">
     
-    	<table class="multi-table">
-        
-        	<thead>
+    
+            <table class="multi-table">
             
-            	<tr>
-            
-            		<td style="width:50px">No</td>
-            		<td>Item Name</td>
-            		<td style="width:95px">Type</td>
-            		<td style="width:75px">Qty</td>
-            		<td style="width:75px">Amount</td>
-            		<td style="width:75px">Total</td>
-            		<td style="width:55px">Action</td>
-            
-            	</tr>
-            
-            </thead>  
-        
-        	<tbody id="addedItemsList">
-            
-            	<tr>
-            
-            		<td><input type="text" id="no" name="no" disabled="disabled" value="<?php echo $data['no_of_items']+1; ?>" /></td>
-            		<td>
-                    	<input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="type" data-setid="item_name_id" />
-                    	<input type="hidden" id="item_name_id" name="item_name_id" />
-                        
-                    </td>
-            		<td>
-                    
-                    	<select id="type" name="type">
-                        
-                        	<option value="">- Choose -</option>
-                        	<option value="+">+</option>
-                        	<option value="-">-</option>
-                        
-                        </select>
-                    
-                    </td>
-            		<td><input type="text" id="qty" name="qty" class="text-right addlinechange" value="" /></td>
-            		<td><input type="text" id="amount" name="amount" class="text-right addlinechange" value="" /></td>
-            		<td><input type="text" id="total" name="total" class="text-right addlinechange" value="" disabled="disabled" /></td>
-            		<td><a class="btn btn-primary" id="addItem" accesskey="a">+</a></td>
-            
-            	</tr>
+                <thead>
                 
-                <?php
-				$ino = 0;
-				foreach($data['item_lists'] as $i)
-				{
-					$ino+=1;
-					
-					?>
-                    <tr id="rowe<?php echo $i['adjustment_note_item_id']; ?>" class="linerows">
-            
-                        <td><input type="text" id="eno<?php echo $i['adjustment_note_item_id']; ?>" name="no" disabled="disabled" value="<?php echo $ino; ?>" /></td>
-                        <td><input type="text" id="eitem_name<?php echo $i['adjustment_note_item_id']; ?>" disabled name="eitem_name<?php echo $i['adjustment_note_item_id']; ?>" value="<?php echo $InventoryMasterItemsQuery->data($i['item_id'],'name'); ?>" /></td>
-                        
-                        <td>
-                        
-                    		<input type="text" disabled="disabled" value="<?php echo $i['type']; ?>" />
-                        
-                        </td>
-                    
-                        <td><input type="text" id="eqty<?php echo $i['adjustment_note_item_id']; ?>" name="eqty<?php echo $i['adjustment_note_item_id']; ?>" class="text-right editlinechange eqty" value="<?php echo $defCls->num($i['qty']); ?>" /></td>
-                        <td><input type="text" id="eamount<?php echo $i['adjustment_note_item_id']; ?>" name="eamount<?php echo $i['adjustment_note_item_id']; ?>" class="text-right editlinechange eamount" value="<?php echo $defCls->num($i['amount']); ?>" /></td>
-                        <td><input type="text" id="etotal<?php echo $i['adjustment_note_item_id']; ?>" name="etotal<?php echo $i['adjustment_note_item_id']; ?>" disabled class="text-right etotal" value="<?php echo $defCls->num($i['total']); ?>" /></td>
-                        <td><a class="btn btn-danger removeItem" data-id="e<?php echo $i['adjustment_note_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a></td>
+                    <tr>
+                
+                        <td style="width:50px">No</td>
+                        <td>Item Name</td>
+                        <td style="width:95px">Type</td>
+                        <td style="width:75px">Qty</td>
+                        <td style="width:75px">Amount</td>
+                        <td style="width:75px">Total</td>
+                        <td style="width:55px">Action</td>
                 
                     </tr>
-                <?php } ?>
+                
+                </thead>  
             
-            </tbody>
+                <tbody id="addedItemsList">
+                
+                    <tr>
+                
+                        <td><input type="text" id="no" name="no" disabled="disabled" value="<?php echo $data['no_of_items']+1; ?>" /></td>
+                        <td>
+                            <input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="type" data-setid="item_name_id" />
+                            <input type="hidden" id="item_name_id" name="item_name_id" />
+                            
+                        </td>
+                        <td>
+                        
+                            <select id="type" name="type">
+                            
+                                <option value="">- Choose -</option>
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                            
+                            </select>
+                        
+                        </td>
+                        <td><input type="text" id="qty" name="qty" class="text-right addlinechange" value="" /></td>
+                        <td><input type="text" id="amount" name="amount" class="text-right addlinechange" value="" /></td>
+                        <td><input type="text" id="total" name="total" class="text-right addlinechange" value="" disabled="disabled" /></td>
+                        <td><a class="btn btn-primary" id="addItem" accesskey="a">+</a></td>
+                
+                    </tr>
+                    
+                    <?php
+                    $ino = 0;
+                    foreach($data['item_lists'] as $i)
+                    {
+                        $ino+=1;
+                        
+                        ?>
+                        <tr id="rowe<?php echo $i['adjustment_note_item_id']; ?>" class="linerows">
+                
+                            <td><input type="text" id="eno<?php echo $i['adjustment_note_item_id']; ?>" name="no" disabled="disabled" value="<?php echo $ino; ?>" /></td>
+                            <td><input type="text" id="eitem_name<?php echo $i['adjustment_note_item_id']; ?>" disabled name="eitem_name<?php echo $i['adjustment_note_item_id']; ?>" value="<?php echo $InventoryMasterItemsQuery->data($i['item_id'],'name'); ?>" /></td>
+                            
+                            <td>
+                            
+                                <input type="text" disabled="disabled" value="<?php echo $i['type']; ?>" />
+                            
+                            </td>
+                        
+                            <td><input type="text" id="eqty<?php echo $i['adjustment_note_item_id']; ?>" name="eqty<?php echo $i['adjustment_note_item_id']; ?>" class="text-right editlinechange eqty" value="<?php echo $defCls->num($i['qty']); ?>" /></td>
+                            <td><input type="text" id="eamount<?php echo $i['adjustment_note_item_id']; ?>" name="eamount<?php echo $i['adjustment_note_item_id']; ?>" class="text-right editlinechange eamount" value="<?php echo $defCls->num($i['amount']); ?>" /></td>
+                            <td><input type="text" id="etotal<?php echo $i['adjustment_note_item_id']; ?>" name="etotal<?php echo $i['adjustment_note_item_id']; ?>" disabled class="text-right etotal" value="<?php echo $defCls->num($i['total']); ?>" /></td>
+                            <td><a class="btn btn-danger removeItem" data-id="e<?php echo $i['adjustment_note_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a></td>
+                    
+                        </tr>
+                    <?php } ?>
+                
+                </tbody>
+                
             
-        
-        
-        </table>
-    
+            
+            </table>
+    	
+        </div>
     
     </div>
 

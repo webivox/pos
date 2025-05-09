@@ -42,6 +42,7 @@
                         <li><a href="<?php echo $defCls->genURL('sales/r_calcelled'); ?>">Cancelled Sales</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/r_salesreturn'); ?>">Sales Return</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/r_loyalty'); ?>">Loyalty</a></li>
+                        <li><a href="<?php echo $defCls->genURL('sales/r_giftcard'); ?>">Gift Card</a></li>
                     
                     </ul>
                 
@@ -88,6 +89,8 @@
                         <li><a href="<?php echo $defCls->genURL('accounts/r_transfers'); ?>">Transfers</a></li>
                         <li><a href="<?php echo $defCls->genURL('accounts/r_adjustments'); ?>">Adjustments</a></li>
                         <li><a href="<?php echo $defCls->genURL('accounts/r_ledger_listing'); ?>">Ledger Listing</a></li>
+                        <li><a href="<?php echo $defCls->genURL('accounts/r_cheques'); ?>">Cheques</a></li>
+                        <li><a href="<?php echo $defCls->genURL('accounts/r_pnl'); ?>">PNL</a></li>
                     
                     </ul>
                 

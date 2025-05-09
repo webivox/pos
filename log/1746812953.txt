@@ -1,0 +1,1 @@
+[09-May-2025 17:49:13 UTC] PHP Parse error:  Unmatched '}' in D:\wamp64\www\pos\core\connector\accounts\r_expences.php on line 142

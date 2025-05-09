@@ -7,10 +7,13 @@ class CommonDashboardConnector {
 		
 		
 		
+		global $db;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
+		global $AccountsTransactionChequeQuery;
 		
 		
 		$data = [];
@@ -20,6 +23,7 @@ class CommonDashboardConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Dashboard | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			

@@ -19,6 +19,7 @@ class InventoryTransactionAdjustmentnotesConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Stock Adjustments | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -60,20 +61,20 @@ class InventoryTransactionAdjustmentnotesConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('ADJ-','',$search_no);
 				$search_no=ltrim($search_no,'ADJ-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -147,19 +148,19 @@ class InventoryTransactionAdjustmentnotesConnector {
 			
 			$data['form_url'] 	= _SERVER."inventory/transaction_adjustmentnotes/create";
 			
-			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId']));
 			
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				
 			$data['adjustment_no'] = 'New';
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+			if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 			else{ $data['remarks'] = ''; }
 
 			
@@ -316,13 +317,13 @@ class InventoryTransactionAdjustmentnotesConnector {
 					
 				$data['adjustment_no'] = $defCls->docNo('ADJ-',$getAdjustmentnoteInfo['adjustment_note_id']);;
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getAdjustmentnoteInfo['location_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getAdjustmentnoteInfo['added_date']); }
 				
-				if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+				if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 				else{ $data['remarks'] = $getAdjustmentnoteInfo['remarks']; }
 				
 				

@@ -129,4 +129,4 @@
 </div>
 
 
-<script type="text/javascript" src="<?php echo _JS; ?>core/sales_rn.js"></script>
+<script type="text/javascript" src="<?php echo _JS; ?>core/sales_invoice.js"></script>

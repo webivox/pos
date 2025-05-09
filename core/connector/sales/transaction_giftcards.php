@@ -18,6 +18,7 @@ class SalesTransactionGiftcardsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Gift Cards | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -57,10 +58,10 @@ class SalesTransactionGiftcardsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){ $search_no=$db->request('search_no'); }
+			if(isset($_REQUEST['search_no'])){ $search_no=$db->request('search_no'); }
 			else{ $search_no=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -87,7 +88,8 @@ class SalesTransactionGiftcardsConnector {
 										'expiry_date' => $dateCls->showDate($gc['expiry_date']),
 										'amount' => $defCls->num($gc['amount']),
 										'used_amount' => $defCls->num($gc['used_amount']),
-										'balance_amount' => $defCls->num($gc['balance_amount'])
+										'balance_amount' => $defCls->num($gc['balance_amount']),
+										'updateURL' => $defCls->genURL('sales/transaction_giftcards/edit/'.$gc['gift_card_id'])
 											);
 			}
 			
@@ -131,13 +133,13 @@ class SalesTransactionGiftcardsConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('no')){ $data['no'] = $db->request('no');}
+			if(isset($_REQUEST['no'])){ $data['no'] = $db->request('no');}
 			else{ $data['no'] = ''; }
 				
-			if($db->request('expiry_date')){ $data['expiry_date'] = $db->request('expiry_date');}
+			if(isset($_REQUEST['expiry_date'])){ $data['expiry_date'] = $db->request('expiry_date');}
 			else{ $data['expiry_date'] = ''; }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount');}
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount');}
 			else{ $data['amount'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -148,7 +150,7 @@ class SalesTransactionGiftcardsConnector {
 				
 				if(strlen($data['no'])<6){ $error_msg[]="No must be minimum 6 letters"; $error_no++; }
 				if($countGCsByNO){ $error_msg[]="The no already exists"; $error_no++; }
-				if($data['amount']<1){  $error_msg[]="You must enter gift boucher"; $error_no++; }
+				if($data['amount']<1){  $error_msg[]="You must enter gift voucher"; $error_no++; }
 				
 				if(!$error_no)
 				{
@@ -193,6 +195,137 @@ class SalesTransactionGiftcardsConnector {
 					
 				}
 			}			
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+
+    public function edit() {
+		
+		
+		global $defCls;
+		global $dateCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionGiftcardsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getGCInfo = $SalesTransactionGiftcardsQuery->get($id);
+			
+			if($getGCInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+				
+				$data['form_url'] 	= _SERVER."sales/transaction_giftcards/edit/".$id;
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				$data['gift_card_id'] = $getGCInfo['gift_card_id'];
+				
+				if(isset($_REQUEST['no'])){ $data['no'] = $db->request('no');}
+				else{ $data['no'] = $getGCInfo['no']; }
+					
+				if(isset($_REQUEST['expiry_date'])){ $data['expiry_date'] = $db->request('expiry_date');}
+				else{ $data['expiry_date'] = $dateCls->showDate($getGCInfo['expiry_date']); }
+				
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount');}
+				else{ $data['amount'] = $getGCInfo['amount']; }
+				
+				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
+				{
+					
+					if(strlen($data['no'])<6){ $error_msg[]="No must be minimum 6 letters"; $error_no++; }
+					
+					if($db->request('no')!==$getGCInfo['no'])
+					{
+						$countGCsByNO = $SalesTransactionGiftcardsQuery->gets("WHERE no='".$data['no']."'");
+						$countGCsByNO = count($countGCsByNO);
+						
+						if($countGCsByNO){ $error_msg[]="The no already exists"; $error_no++; }
+					}
+					if($data['amount']<1){  $error_msg[]="You must enter gift voucher"; $error_no++; }
+					if($getGCInfo['used_amount']>0){  $error_msg[]="Gift voucher already used!"; $error_no++; }
+					
+					if(!$error_no)
+					{
+						
+						$SalesTransactionGiftcardsQuery->edit($data);
+						$firewallCls->addLog("Gift Voucher Updated: ".$data['no']);
+						
+						$json['success']=true;
+						$json['success_msg']="Sucessfully Updated";
+						
+					}
+					
+					if($error_no)
+					{
+						
+						$error_msg_list='';
+						foreach($error_msg as $e)
+						{
+							if($e)
+							{
+								$error_msg_list.='<li>'.$e.'</li>';
+							}
+						}
+						$json['error']=true;
+						$json['error_msg']=$error_msg_list;
+					}
+					echo json_encode($json);
+					
+				}
+				else
+				{
+		
+					$this_required_file = _HTML.'sales/transaction_giftcards_form.php';
+					if (!file_exists($this_required_file)) {
+						error_log("File not found: ".$this_required_file);
+						die('File not found:'.$this_required_file);
+					}
+					else {
+		
+						require_once($this_required_file);
+						
+					}
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid gift voucher Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
 		}
 		else
 		{

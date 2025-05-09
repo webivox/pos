@@ -1,0 +1,7 @@
+[09-May-2025 03:32:30 UTC] PHP Warning:  Trying to access array offset on value of type null in D:\wamp64\www\pos\core\query\accounts\transaction_cheque.php on line 252
+[09-May-2025 03:32:30 UTC] PHP Stack trace:
+[09-May-2025 03:32:30 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[09-May-2025 03:32:30 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[09-May-2025 03:32:30 UTC] PHP   3. SalesTransactionInvoicesConnector->cancellation('cancellation', '33') D:\wamp64\www\pos\base\load.php:22
+[09-May-2025 03:32:30 UTC] PHP   4. SalesTransactionInvoicesQuery->cancellation($data = ['companyName' => 'Webivox Itnernational pvt ltd', 'logo' => 'http://127.0.0.1/pos/ux/uploads/company/logo.png', 'form_url' => 'http://127.0.0.1/pos/suppliers/master_suppliers/edit/33', 'invoice_id' => 33]) D:\wamp64\www\pos\core\connector\sales\transaction_invoices.php:164
+[09-May-2025 03:32:30 UTC] PHP   5. AccountsTransactionChequeQuery->chequeRemove($chequeData = ['reference_id' => 36, 'transaction_type' => 'INV', 'type' => 'Received']) D:\wamp64\www\pos\core\query\sales\transaction_invoices.php:233

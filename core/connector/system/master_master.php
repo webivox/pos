@@ -19,6 +19,7 @@ class SystemMasterMasterConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Master | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -58,10 +59,10 @@ class SystemMasterMasterConnector {
 		{
 			////////////////
 			
-			if($db->request('search_key')){ $search_key=$db->request('search_key'); }
+			if(isset($_REQUEST['search_key'])){ $search_key=$db->request('search_key'); }
 			else{ $search_key=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -131,13 +132,13 @@ class SystemMasterMasterConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('key')){ 
+			if(isset($_REQUEST['key'])){ 
 				$data['key'] = $db->request('key');
 			} else { 
 				$data['key'] = ''; 
 			}
 			
-			if($db->request('values')){ 
+			if(isset($_REQUEST['values'])){ 
 				$data['values'] = $db->request('values');
 			} else { 
 				$data['values'] = ''; 
@@ -238,13 +239,13 @@ class SystemMasterMasterConnector {
 				
 				$data['master_id'] = $getMasterInfo['master_id'];
 				
-				if($db->request('key')){ 
+				if(isset($_REQUEST['key'])){ 
 					$data['key'] = $db->request('key');
 				} else { 
 					$data['key'] = $getMasterInfo['key']; 
 				}
 				
-				if($db->request('values')){ 
+				if(isset($_REQUEST['values'])){ 
 					$data['values'] = $db->request('values');
 				} else { 
 					$data['values'] = $getMasterInfo['values']; 

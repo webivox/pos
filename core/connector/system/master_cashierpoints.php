@@ -19,6 +19,7 @@ class SystemMasterCashierpointsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Cashier Points | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -58,20 +59,20 @@ class SystemMasterCashierpointsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE cashierpoint_id!=0";
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -140,26 +141,26 @@ class SystemMasterCashierpointsConnector {
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 			$data['account_list'] = $AccountsMasterAccountsQuery->gets("ORDER BY name ASC");
 				
-			if($db->request('name')){ 
+			if(isset($_REQUEST['name'])){ 
 				$data['name'] = $db->request('name');
 			} else { 
 				$data['name'] = ''; 
 			}
 			
-			if($db->request('location_id')){ 
+			if(isset($_REQUEST['location_id'])){ 
 				$data['location_id'] = $db->request('location_id');
 			} else { 
 				$data['location_id'] = ''; 
 			}
 			
-			if($db->request('cash_account_id')){ 
+			if(isset($_REQUEST['cash_account_id'])){ 
 				$data['cash_account_id'] = $db->request('cash_account_id');
 			} else { 
 				$data['cash_account_id'] = ''; 
 			}
 			
 			
-			if($db->request('transfer_account_id')){ 
+			if(isset($_REQUEST['transfer_account_id'])){ 
 				$data['transfer_account_id'] = $db->request('transfer_account_id');
 			} else { 
 				$data['transfer_account_id'] = ''; 
@@ -167,13 +168,13 @@ class SystemMasterCashierpointsConnector {
 			
 			for($x=1;$x<6;$x++){
 				
-				if($db->request('card_account_'.$x.'_name')){ 
+				if(isset($_REQUEST['card_account_'.$x.'_name'])){ 
 					$data['card_account_'.$x.'_name'] = $db->request('card_account_'.$x.'_name');
 				} else { 
 					$data['card_account_'.$x.'_name'] = ''; 
 				}
 				
-				if($db->request('card_account_'.$x.'_id')){ 
+				if(isset($_REQUEST['card_account_'.$x.'_id'])){ 
 					$data['card_account_'.$x.'_id'] = $db->request('card_account_'.$x.'_id');
 				} else { 
 					$data['card_account_'.$x.'_id'] = ''; 
@@ -181,11 +182,10 @@ class SystemMasterCashierpointsConnector {
 			
 			}
 			
-			if($db->request('status')){ 
+			if(isset($_REQUEST['status'])){ 
 				$data['status'] = $db->request('status');
 			}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
-			 else { 
+			else { 
 				$data['status'] = 0; 
 			}
 
@@ -291,26 +291,26 @@ class SystemMasterCashierpointsConnector {
 				$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				$data['account_list'] = $AccountsMasterAccountsQuery->gets("ORDER BY name ASC");
 					
-				if($db->request('name')){ 
+				if(isset($_REQUEST['name'])){ 
 					$data['name'] = $db->request('name');
 				} else { 
 					$data['name'] = $getCashierpointInfo['name']; 
 				}
 				
-				if($db->request('location_id')){ 
+				if(isset($_REQUEST['location_id'])){ 
 					$data['location_id'] = $db->request('location_id');
 				} else { 
 					$data['location_id'] = $getCashierpointInfo['location_id']; 
 				}
 				
-				if($db->request('cash_account_id')){ 
+				if(isset($_REQUEST['cash_account_id'])){ 
 					$data['cash_account_id'] = $db->request('cash_account_id');
 				} else { 
 					$data['cash_account_id'] = $getCashierpointInfo['cash_account_id']; 
 				}
 				
 				
-				if($db->request('transfer_account_id')){ 
+				if(isset($_REQUEST['transfer_account_id'])){ 
 					$data['transfer_account_id'] = $db->request('transfer_account_id');
 				} else { 
 					$data['transfer_account_id'] = $getCashierpointInfo['transfer_account_id']; 
@@ -318,13 +318,13 @@ class SystemMasterCashierpointsConnector {
 				
 				for($x=1;$x<6;$x++){
 					
-					if($db->request('card_account_'.$x.'_name')){ 
+					if(isset($_REQUEST['card_account_'.$x.'_name'])){ 
 						$data['card_account_'.$x.'_name'] = $db->request('card_account_'.$x.'_name');
 					} else { 
 						$data['card_account_'.$x.'_name'] = $getCashierpointInfo['card_account_'.$x.'_name']; 
 					}
 					
-					if($db->request('card_account_'.$x.'_id')){ 
+					if(isset($_REQUEST['card_account_'.$x.'_id'])){ 
 						$data['card_account_'.$x.'_id'] = $db->request('card_account_'.$x.'_id');
 					} else { 
 						$data['card_account_'.$x.'_id'] = $getCashierpointInfo['card_account_'.$x.'_id']; 
@@ -332,10 +332,9 @@ class SystemMasterCashierpointsConnector {
 				
 				}
 					
-				if($db->request('status')){ 
+				if(isset($_REQUEST['status'])){ 
 					$data['status'] = $db->request('status');
 				} 
-				elseif($db->request('status')==0){ $data['status'] = 0; }
 				else { 
 					$data['status'] = $getCashierpointInfo['status']; 
 				}

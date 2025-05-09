@@ -1,0 +1,8 @@
+[09-May-2025 03:30:28 UTC] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function CustomersMasterCustomersQuery::loyaltyTransactionDelete(), 1 passed in D:\wamp64\www\pos\core\query\sales\transaction_invoices.php on line 257 and exactly 2 expected in D:\wamp64\www\pos\core\query\customers\master_customers.php:334
+Stack trace:
+#0 D:\wamp64\www\pos\core\query\sales\transaction_invoices.php(257): CustomersMasterCustomersQuery->loyaltyTransactionDelete(Array)
+#1 D:\wamp64\www\pos\core\connector\sales\transaction_invoices.php(164): SalesTransactionInvoicesQuery->cancellation(Array)
+#2 D:\wamp64\www\pos\base\load.php(22): SalesTransactionInvoicesConnector->cancellation('cancellation', '33')
+#3 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
+#4 {main}
+  thrown in D:\wamp64\www\pos\core\query\customers\master_customers.php on line 334

@@ -21,6 +21,7 @@ class AccountsTransactionChequeConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Cheque | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -62,16 +63,16 @@ class AccountsTransactionChequeConnector {
 		{
 			////////////////
 			
-			if($db->request('search_cheque_no')){ $search_cheque_no=$db->request('search_cheque_no'); }
+			if(isset($_REQUEST['search_cheque_no'])){ $search_cheque_no=$db->request('search_cheque_no'); }
 			else{ $search_cheque_no=''; }
 			
-			if($db->request('search_cheque_type')){ $search_cheque_type=$db->request('search_cheque_type'); }
+			if(isset($_REQUEST['search_cheque_type'])){ $search_cheque_type=$db->request('search_cheque_type'); }
 			else{ $search_cheque_type=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -156,10 +157,10 @@ class AccountsTransactionChequeConnector {
 			
 			$todayDate = $dateCls->todayDate('Y-m-d');
 			
-			if($db->request('accountId')){ $accountId=$db->request('accountId'); }
+			if(isset($_REQUEST['accountId'])){ $accountId=$db->request('accountId'); }
 			else{ $accountId=''; }
 			
-			if($db->request('realized_date')){ $realized_date=$db->request('realized_date'); }
+			if(isset($_REQUEST['realized_date'])){ $realized_date=$db->request('realized_date'); }
 			else{ $realized_date=''; }
 			
 			$chequeInfo = $AccountsTransactionChequeQuery->get($id);

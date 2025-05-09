@@ -58,7 +58,19 @@
         </select>
     </div>
     
-    <div class="col_1">
+    <div class="col_3">
+        <label for="is_other_income">Is Other Income</label>
+        <select name="is_other_income" id="is_other_income">
+            
+            <option value="">- Choose -</option>
+            <option value="1" <?php if($data['is_other_income']==1){ echo 'selected'; } ?>>Yes</option>
+            <option value="0" <?php if($data['is_other_income']==0){ echo 'selected'; } ?>>No</option>
+            
+        
+        </select>
+    </div>
+    
+    <div class="col_2">
         <label for="details">Details</label>
         <input type="text" name="details" id="details" placeholder="Details" value="<?php echo $data['details']; ?>">
     </div>

@@ -18,6 +18,7 @@ class SystemMasterUsersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Users | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -56,20 +57,20 @@ class SystemMasterUsersConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE user_id!=0";
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -131,55 +132,54 @@ class SystemMasterUsersConnector {
 			
 			$data['form_url'] 	= _SERVER."system/master_users/create";
 			
-			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId']));
 			
 			$data['user_group_list'] = $SystemMasterUsergroupsQuery->gets("ORDER BY name ASC");
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				
-			if($db->request('group_id')){ 
+			if(isset($_REQUEST['group_id'])){ 
 				$data['group_id'] = $db->request('group_id'); 
 			} else { 
 				$data['group_id'] = 0; 
 			}
 			
-			if($db->request('location_id')){ 
+			if(isset($_REQUEST['location_id'])){ 
 				$data['location_id'] = $db->request('location_id'); 
 			} else { 
 				$data['location_id'] = 0; 
 			}
 			
-			if($db->request('name')){ 
+			if(isset($_REQUEST['name'])){ 
 				$data['name'] = $db->request('name'); 
 			} else { 
 				$data['name'] = ''; 
 			}
 			
-			if($db->request('username')){ 
+			if(isset($_REQUEST['username'])){ 
 				$data['username'] = $db->request('username'); 
 			} else { 
 				$data['username'] = ''; 
 			}
 			
-			if($db->request('password')){ 
+			if(isset($_REQUEST['password'])){ 
 				$data['password'] = $db->request('password'); 
 			} else { 
 				$data['password'] = ''; 
 			}
 				
-			if($db->request('confirm_password')){ 
+			if(isset($_REQUEST['confirm_password'])){ 
 				$data['confirm_password'] = $db->request('confirm_password'); 
 			} else { 
 				$data['confirm_password'] = ''; 
 			}
 				
-			if($db->request('loginRedirectTo')){ 
+			if(isset($_REQUEST['loginRedirectTo'])){ 
 				$data['loginRedirectTo'] = $db->request('loginRedirectTo'); 
 			} else { 
 				$data['loginRedirectTo'] = ''; 
 			}
 
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -288,50 +288,49 @@ class SystemMasterUsersConnector {
 				
 				$data['user_id'] = $getUserInfo['user_id'];
 					
-				if($db->request('group_id')){ 
+				if(isset($_REQUEST['group_id'])){ 
 					$data['group_id'] = $db->request('group_id'); 
 				} else { 
 					$data['group_id'] = $getUserInfo['group_id']; 
 				}
 				
-				if($db->request('location_id')){ 
+				if(isset($_REQUEST['location_id'])){ 
 					$data['location_id'] = $db->request('location_id'); 
 				} else { 
 					$data['location_id'] = $getUserInfo['location_id']; 
 				}
 				
-				if($db->request('name')){ 
+				if(isset($_REQUEST['name'])){ 
 					$data['name'] = $db->request('name'); 
 				} else { 
 					$data['name'] = $getUserInfo['name']; 
 				}
 				
-				if($db->request('username')){ 
+				if(isset($_REQUEST['username'])){ 
 					$data['username'] = $db->request('username'); 
 				} else { 
 					$data['username'] = $getUserInfo['username']; 
 				}
 				
-				if($db->request('password')){ 
+				if(isset($_REQUEST['password'])){ 
 					$data['password'] = $db->request('password'); 
 				} else { 
 					$data['password'] = ''; 
 				}
 				
-				if($db->request('confirm_password')){ 
+				if(isset($_REQUEST['confirm_password'])){ 
 					$data['confirm_password'] = $db->request('confirm_password'); 
 				} else { 
 					$data['confirm_password'] = ''; 
 				}
 				
-				if($db->request('loginRedirectTo')){ 
+				if(isset($_REQUEST['loginRedirectTo'])){ 
 					$data['loginRedirectTo'] = $db->request('loginRedirectTo'); 
 				} else { 
 					$data['loginRedirectTo'] = $getUserInfo['loginRedirectTo']; 
 				}
 				
-				if($db->request('status')){ $data['status'] = $db->request('status');}
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 				else{ $data['status'] = $getUserInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

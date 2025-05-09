@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo _CSS; ?>signin.css">
 <script src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
 <script src="<?php echo _JS; ?>signin.js"></script>
+<link id="page_favicon" href="<?php echo _IMAGES; ?>fav.png" rel="icon" type="image/x-icon" />
 </head>
 <body>
 

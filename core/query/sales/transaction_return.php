@@ -327,6 +327,16 @@ class  SalesTransactionsReturnQuery{
 		
 	}
     
+    public function removeUsedAmount($returnId,$usedAmount) {
+		
+		global $db;
+		global $dateCls;
+		global $defCls;
+		
+		$db->query("UPDATE ".$this->tableName." SET used_value = used_value-".$usedAmount.", balance_value = balance_value+".$usedAmount." WHERE sales_return_id = '".$returnId."'");
+		
+	}
+    
     public function updateTotals($rnId) {
 		
 		global $db;

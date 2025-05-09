@@ -19,6 +19,7 @@ class AccountsTransactionTransfersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Account Transfers | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -63,26 +64,26 @@ class AccountsTransactionTransfersConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('ATRN-','',$search_no);
 				$search_no=ltrim($search_no,'ATRN-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('account_from')){ $account_from=$db->request('account_from'); }
+			if(isset($_REQUEST['account_from'])){ $account_from=$db->request('account_from'); }
 			else{ $account_from=''; }
 			
-			if($db->request('account_to')){ $account_to=$db->request('account_to'); }
+			if(isset($_REQUEST['account_to'])){ $account_to=$db->request('account_to'); }
 			else{ $account_to=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -173,7 +174,7 @@ class AccountsTransactionTransfersConnector {
 			
 			$data['transfer_no'] = 'New';
 			
-			if($db->request('account_from_id'))
+			if(isset($_REQUEST['account_from_id']))
 			{
 				$data['account_from_id'] = $db->request('account_from_id');
 				$account_balance = $AccountsMasterAccountsQuery->data($data['account_from_id'],'closing_balance');
@@ -181,19 +182,19 @@ class AccountsTransactionTransfersConnector {
 			}
 			else{ $data['account_from_id'] = 0; $data['account_balance'] = 0; }
 			
-			if($db->request('account_to_id')){ $data['account_to_id'] = $db->request('account_to_id'); }
+			if(isset($_REQUEST['account_to_id'])){ $data['account_to_id'] = $db->request('account_to_id'); }
 			else{ $data['account_to_id'] = ''; }
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
 			
 			$data['user_id'] = $userInfo['user_id'];
@@ -339,7 +340,7 @@ class AccountsTransactionTransfersConnector {
 				$data['transfer_no'] = $defCls->docNo('ATRN-',$getDebitNoteInfo['transfer_id']);
 				
 				
-				if($db->request('account_from_id'))
+				if(isset($_REQUEST['account_from_id']))
 				{
 					$data['account_from_id'] = $db->request('account_from_id');
 					$account_balance = $AccountsMasterAccountsQuery->data($data['account_from_id'],'closing_balance');
@@ -351,19 +352,19 @@ class AccountsTransactionTransfersConnector {
 					$data['account_balance'] = $AccountsMasterAccountsQuery->data($getDebitNoteInfo['account_from_id'],'closing_balance');
 				}
 				
-				if($db->request('account_to_id')){ $data['account_to_id'] = $db->request('account_to_id'); }
+				if(isset($_REQUEST['account_to_id'])){ $data['account_to_id'] = $db->request('account_to_id'); }
 				else{ $data['account_to_id'] = $getDebitNoteInfo['account_to_id']; }
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getDebitNoteInfo['location_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getDebitNoteInfo['added_date']); }
 				
-				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 				else{ $data['amount'] = $defCls->num($getDebitNoteInfo['amount']); }
 				
-				if($db->request('details')){ $data['details'] = $db->request('details'); }
+				if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 				else{ $data['details'] = $getDebitNoteInfo['details']; }
 				
 

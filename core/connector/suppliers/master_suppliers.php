@@ -19,6 +19,7 @@ class SuppliersMasterSuppliersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Suppliers | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -57,19 +58,19 @@ class SuppliersMasterSuppliersConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_contact_person')){ $search_contact_person=$db->request('search_contact_person'); }
+			if(isset($_REQUEST['search_contact_person'])){ $search_contact_person=$db->request('search_contact_person'); }
 			else{ $search_contact_person=''; }
 			
-			if($db->request('search_phone_number')){ $search_phone_number=$db->request('search_phone_number'); }
+			if(isset($_REQUEST['search_phone_number'])){ $search_phone_number=$db->request('search_phone_number'); }
 			else{ $search_phone_number=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -78,7 +79,7 @@ class SuppliersMasterSuppliersConnector {
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
 			if($search_contact_person){ $sql.=" AND contact_person LIKE '%$search_contact_person%'"; }
 			if($search_phone_number){ $sql.=" AND phone_number LIKE '%$search_phone_number%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -181,41 +182,40 @@ class SuppliersMasterSuppliersConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('name')){ $data['name'] = $db->request('name');}
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
 				
-			if($db->request('contact_person')){ $data['contact_person'] = $db->request('contact_person');}
+			if(isset($_REQUEST['contact_person'])){ $data['contact_person'] = $db->request('contact_person');}
 			else{ $data['contact_person'] = ''; }
 				
-			if($db->request('phone_number')){ $data['phone_number'] = $db->request('phone_number');}
+			if(isset($_REQUEST['phone_number'])){ $data['phone_number'] = $db->request('phone_number');}
 			else{ $data['phone_number'] = ''; }
 				
-			if($db->request('email')){ $data['email'] = $db->request('email');}
+			if(isset($_REQUEST['email'])){ $data['email'] = $db->request('email');}
 			else{ $data['email'] = ''; }
 				
-			if($db->request('address')){ $data['address'] = $db->request('address');}
+			if(isset($_REQUEST['address'])){ $data['address'] = $db->request('address');}
 			else{ $data['address'] = ''; }
 				
-			if($db->request('city')){ $data['city'] = $db->request('city');}
+			if(isset($_REQUEST['city'])){ $data['city'] = $db->request('city');}
 			else{ $data['city'] = ''; }
 				
-			if($db->request('state')){ $data['state'] = $db->request('state');}
+			if(isset($_REQUEST['state'])){ $data['state'] = $db->request('state');}
 			else{ $data['state'] = ''; }
 				
-			if($db->request('country')){ $data['country'] = $db->request('country');}
+			if(isset($_REQUEST['country'])){ $data['country'] = $db->request('country');}
 			else{ $data['country'] = ''; }
 				
-			if($db->request('payment_terms')){ $data['payment_terms'] = $db->request('payment_terms');}
+			if(isset($_REQUEST['payment_terms'])){ $data['payment_terms'] = $db->request('payment_terms');}
 			else{ $data['payment_terms'] = ''; }
 				
-			if($db->request('bank_details')){ $data['bank_details'] = $db->request('bank_details');}
+			if(isset($_REQUEST['bank_details'])){ $data['bank_details'] = $db->request('bank_details');}
 			else{ $data['bank_details'] = ''; }
 				
-			if($db->request('tax_number')){ $data['tax_number'] = $db->request('tax_number');}
+			if(isset($_REQUEST['tax_number'])){ $data['tax_number'] = $db->request('tax_number');}
 			else{ $data['tax_number'] = ''; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -312,41 +312,40 @@ class SuppliersMasterSuppliersConnector {
 				
 				$data['supplier_id'] = $getSupplierInfo['supplier_id'];
 					
-				if($db->request('name')){ $data['name'] = $db->request('name');}
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 				else{ $data['name'] = $getSupplierInfo['name']; }
 					
-				if($db->request('contact_person')){ $data['contact_person'] = $db->request('contact_person');}
+				if(isset($_REQUEST['contact_person'])){ $data['contact_person'] = $db->request('contact_person');}
 				else{ $data['contact_person'] = $getSupplierInfo['contact_person']; }
 					
-				if($db->request('phone_number')){ $data['phone_number'] = $db->request('phone_number');}
+				if(isset($_REQUEST['phone_number'])){ $data['phone_number'] = $db->request('phone_number');}
 				else{ $data['phone_number'] =  $getSupplierInfo['phone_number']; }
 					
-				if($db->request('email')){ $data['email'] = $db->request('email');}
+				if(isset($_REQUEST['email'])){ $data['email'] = $db->request('email');}
 				else{ $data['email'] =  $getSupplierInfo['email']; }
 					
-				if($db->request('address')){ $data['address'] = $db->request('address');}
+				if(isset($_REQUEST['address'])){ $data['address'] = $db->request('address');}
 				else{ $data['address'] =  $getSupplierInfo['address']; }
 					
-				if($db->request('city')){ $data['city'] = $db->request('city');}
+				if(isset($_REQUEST['city'])){ $data['city'] = $db->request('city');}
 				else{ $data['city'] =  $getSupplierInfo['city']; }
 					
-				if($db->request('state')){ $data['state'] = $db->request('state');}
+				if(isset($_REQUEST['state'])){ $data['state'] = $db->request('state');}
 				else{ $data['state'] =  $getSupplierInfo['state']; }
 					
-				if($db->request('country')){ $data['country'] = $db->request('country');}
+				if(isset($_REQUEST['country'])){ $data['country'] = $db->request('country');}
 				else{ $data['country'] =  $getSupplierInfo['country']; }
 					
-				if($db->request('payment_terms')){ $data['payment_terms'] = $db->request('payment_terms');}
+				if(isset($_REQUEST['payment_terms'])){ $data['payment_terms'] = $db->request('payment_terms');}
 				else{ $data['payment_terms'] =  $getSupplierInfo['payment_terms']; }
 					
-				if($db->request('bank_details')){ $data['bank_details'] = $db->request('bank_details');}
+				if(isset($_REQUEST['bank_details'])){ $data['bank_details'] = $db->request('bank_details');}
 				else{ $data['bank_details'] =  $getSupplierInfo['bank_details']; }
 					
-				if($db->request('tax_number')){ $data['tax_number'] = $db->request('tax_number');}
+				if(isset($_REQUEST['tax_number'])){ $data['tax_number'] = $db->request('tax_number');}
 				else{ $data['tax_number'] =  $getSupplierInfo['tax_number']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status');}
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 				else{ $data['status'] = 0; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

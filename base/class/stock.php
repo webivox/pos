@@ -95,29 +95,33 @@ class stocktransactions
 		
 		$row = $db->fetch("SELECT * FROM inventory_stock_transactions WHERE `reference_id`='".$stockData['reference_id']."' AND `reference_row_id`='".$stockData['reference_row_id']."' AND `transaction_type`='".$stockData['transaction_type']."'");
 		
-		$itemId = $row['item_id'];
+		if($row)
+		{
 		
-		$sql = "DELETE FROM inventory_stock_transactions 
-												
-												WHERE
-												
-												`reference_id`='".$stockData['reference_id']."'
-												
-												AND
-												
-												`reference_row_id`='".$stockData['reference_row_id']."'
-												
-												AND
-												
-												`transaction_type`='".$stockData['transaction_type']."'
-												
-												
-												
-			";
+			$itemId = $row['item_id'];
+			
+			$sql = "DELETE FROM inventory_stock_transactions 
+													
+													WHERE
+													
+													`reference_id`='".$stockData['reference_id']."'
+													
+													AND
+													
+													`reference_row_id`='".$stockData['reference_row_id']."'
+													
+													AND
+													
+													`transaction_type`='".$stockData['transaction_type']."'
+													
+													
+													
+				";
+			
+			$db->query($sql);
 		
-		$db->query($sql);
-		
-		$this->stockUpdate($itemId);
+			$this->stockUpdate($itemId);
+		}
 	}
 	
 	

@@ -18,6 +18,7 @@ class SuppliersTransactionCreditnotesConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Supplier Credit Notes | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -58,23 +59,23 @@ class SuppliersTransactionCreditnotesConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('SCN-','',$search_no);
 				$search_no=ltrim($search_no,'SCN-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_supplier_id')!==''){ $search_supplier_id=$db->request('search_supplier_id'); }
+			if(isset($_REQUEST['search_supplier_id'])){ $search_supplier_id=$db->request('search_supplier_id'); }
 			else{ $search_supplier_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -159,19 +160,19 @@ class SuppliersTransactionCreditnotesConnector {
 			
 			$data['credit_note_no'] = 'New';
 			
-			if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
+			if(isset($_REQUEST['supplier_id'])){ $data['supplier_id'] = $db->request('supplier_id'); }
 			else{ $data['supplier_id'] = ''; }
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
 
 			
@@ -298,19 +299,19 @@ class SuppliersTransactionCreditnotesConnector {
 					
 				$data['credit_note_no'] = $defCls->docNo('SCN-',$getCreditNoteInfo['credit_note_id']);
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getCreditNoteInfo['location_id']; }
 				
-				if($db->request('supplier_id')){ $data['supplier_id'] = $db->request('supplier_id'); }
+				if(isset($_REQUEST['supplier_id'])){ $data['supplier_id'] = $db->request('supplier_id'); }
 				else{ $data['supplier_id'] = $getCreditNoteInfo['supplier_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getCreditNoteInfo['added_date']); }
 				
-				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 				else{ $data['amount'] = $defCls->num($getCreditNoteInfo['amount']); }
 				
-				if($db->request('details')){ $data['details'] = $db->request('details'); }
+				if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 				else{ $data['details'] = $getCreditNoteInfo['details']; }
 				
 

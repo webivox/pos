@@ -1,7 +1,7 @@
 <?php
 
 define("_SERVER","http://127.0.0.1/pos/");
-define("_IMAGES","http://127.0.0.1/pos/images/");
+define("_IMAGES","http://127.0.0.1/pos/ux/images/");
 define("_UPLOADS","http://127.0.0.1/pos/ux/uploads/");
 define("_JS","http://127.0.0.1/pos/ux/js/");
 define("_CSS","http://127.0.0.1/pos/ux/css/");

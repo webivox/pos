@@ -19,6 +19,7 @@ class InventoryMasterUnitsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Units | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -57,20 +58,20 @@ class InventoryMasterUnitsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE unit_id!=0";
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -133,11 +134,10 @@ class InventoryMasterUnitsConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('name')){ $data['name'] = $db->request('name');}
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -232,11 +232,10 @@ class InventoryMasterUnitsConnector {
 				
 				$data['unit_id'] = $getUnitInfo['unit_id'];
 					
-				if($db->request('name')){ $data['name'] = $db->request('name');}
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 				else{ $data['name'] = $getUnitInfo['name']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status');}
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 				else{ $data['status'] = $getUnitInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

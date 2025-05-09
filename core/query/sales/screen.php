@@ -151,6 +151,22 @@ class SalesScreenQuery {
 		}
 		else{ return false; }
     }
+	
+	
+    
+    public function endShift($userId) {
+		
+        global $db;
+        global $dateCls;
+		
+		$nowDateTime = $dateCls->todayDate('Y-m-d').' '.$dateCls->nowTimeDb();
+
+        if($db->query("UPDATE sales_shifts SET end_on='".$nowDateTime."' WHERE user_id='".$userId."' AND end_on='0000-00-00 00:00:00' ORDER BY shift_id DESC"))
+		{
+			return true;
+		}
+		else{ return false; }
+    }
     
     public function getItems($invoiceId) {
 		
@@ -243,10 +259,10 @@ class SalesScreenQuery {
                 	<td class="cart_item_no"><input type="text" disabled value="0"></td>
                 	<td class="cart_item_itemname"><input type="text" disabled value="'.$itemName.'"></td>
                 	<td class="cart_item_price"><input type="text" class="ciMasterPrice" disabled value="'.$masterPrice.'"></td>
-                	<td class="cart_item_amount"><input type="text" class="ciAmount" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemAmount'.$itemId.'" value="'.$amount.'"></td>
-                	<td class="cart_item_dsc"><input type="text" class="ciDiscount" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemDiscount'.$itemId.'" value="'.$discount.'"></td>
+                	<td class="cart_item_amount"><input type="text" class="ciAmount okeyboard" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemAmount'.$itemId.'" value="'.$amount.'"></td>
+                	<td class="cart_item_dsc"><input type="text" class="ciDiscount okeyboard" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemDiscount'.$itemId.'" value="'.$discount.'"></td>
                 	<td class="cart_item_uprice"><input type="text" class="ciPrice" disabled value="'.$unitPrice.'"></td>
-                	<td class="cart_item_qty"><input type="text" class="ciQty" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemQty'.$itemId.'" value="'.$qty.'"></td>
+                	<td class="cart_item_qty"><input type="text" class="ciQty okeyboard" data-id="'.$salesItemInfo['invoice_item_id'].'" id="itemQty'.$itemId.'" value="'.$qty.'"></td>
                 	<td class="cart_item_total"><input type="text" class="ciTotal" id="itemTotal'.$itemId.'"  value="'.$total.'"></td>
                 	<td class="cart_item_action">
                     
@@ -591,7 +607,8 @@ class SalesScreenQuery {
 			
 			$CustomersMasterCustomersQuery->transactionAdd($customerData);
 			
-			
+			$no_of_items = 0;
+			$no_of_qty = 0;
 			foreach($invoiceItemsInfo as $item)
 			{
 				$db->query("INSERT INTO sales_invoice_items SET
@@ -626,6 +643,9 @@ class SalesScreenQuery {
 				 
 				$stockTransactionsCls->add($stockData);
 				
+				$no_of_items += 1;
+				$no_of_qty += $item['qty'];
+			
 			}
 			
 			foreach($invoicePaymentsInfo as $pmnt)
@@ -792,10 +812,6 @@ class SalesScreenQuery {
 				if($pmnt['type'] == 'CREDIT')
 				{
 					
-					$SalesTransactionsReturnQuery->addUsedAmount($pmnt['return_id'],$pmnt['amount']);
-					
-					
-					
 					////Loyalty transactipn update
 					if($defCls->master('loyalty_points_credit'))
 					{
@@ -917,6 +933,8 @@ class SalesScreenQuery {
 					$CustomersMasterCustomersQuery->transactionAdd($customerData);
 				}
 			}
+			
+			$db->query("UPDATE sales_invoices SET no_of_items = '".$no_of_items."', no_of_qty='".$no_of_qty."' WHERE invoice_id = '".$lastId."'");
 			
 			
 			$db->query("DELETE FROM sales_pending_invoices WHERE invoice_id = '".$invoiceId."'");

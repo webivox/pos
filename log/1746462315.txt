@@ -1,8 +1,0 @@
-[05-May-2025 16:25:17 UTC] PHP Warning:  mysqli::__construct(): (HY000/2002): No connection could be made because the target machine actively refused it in D:\wamp64\www\pos\base\class\db.php on line 14
-[05-May-2025 16:25:17 UTC] PHP Stack trace:
-[05-May-2025 16:25:17 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[05-May-2025 16:25:17 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:15
-[05-May-2025 16:25:17 UTC] PHP   3. require_once() D:\wamp64\www\pos\base\class\class.inc.php:4
-[05-May-2025 16:25:17 UTC] PHP   4. db->__construct() D:\wamp64\www\pos\base\class\db.php:98
-[05-May-2025 16:25:17 UTC] PHP   5. mysqli->__construct($hostname = '127.0.0.1', $username = 'root', $password = '', $database = 'pos') D:\wamp64\www\pos\base\class\db.php:14
-[05-May-2025 16:25:17 UTC] Database Error: No connection could be made because the target machine actively refused it

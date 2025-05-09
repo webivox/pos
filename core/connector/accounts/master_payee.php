@@ -20,6 +20,7 @@ class accountsMasterPayeeConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Payee | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -59,13 +60,13 @@ class accountsMasterPayeeConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -136,11 +137,10 @@ class accountsMasterPayeeConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('name')){ $data['name'] = $db->request('name');}
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -237,11 +237,10 @@ class accountsMasterPayeeConnector {
 				
 				$data['payee_id'] = $getPayeeInfo['payee_id'];
 					
-				if($db->request('name')){ $data['name'] = $db->request('name');}
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 				else{ $data['name'] = $getPayeeInfo['name']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status'); }
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getPayeeInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

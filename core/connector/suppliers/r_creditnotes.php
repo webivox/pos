@@ -21,6 +21,7 @@ class SuppliersRCreditnotesConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Supplier Credit Note Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -67,24 +68,24 @@ class SuppliersRCreditnotesConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_supplier')!==''){ $search_supplier=$db->request('search_supplier'); }
+			if(isset($_REQUEST['search_supplier'])){ $search_supplier=$db->request('search_supplier'); }
 			else{ $search_supplier=''; }
 			
-			if($db->request('search_location')!==''){ $search_location=$db->request('search_location'); }
+			if(isset($_REQUEST['search_location'])){ $search_location=$db->request('search_location'); }
 			else{ $search_location=''; }
 			
-			if($db->request('search_user')!==''){ $search_user=$db->request('search_user'); }
+			if(isset($_REQUEST['search_user'])){ $search_user=$db->request('search_user'); }
 			else{ $search_user=''; }
 			
 			$filter_heading='';

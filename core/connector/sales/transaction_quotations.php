@@ -19,6 +19,7 @@ class SalesTransactionQuotationsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Quotations | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -61,26 +62,26 @@ class SalesTransactionQuotationsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('QTE-','',$search_no);
 				$search_no=ltrim($search_no,'QTE-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_customer_id')){ $search_customer_id=$db->request('search_customer_id'); }
+			if(isset($_REQUEST['search_customer_id'])){ $search_customer_id=$db->request('search_customer_id'); }
 			else{ $search_customer_id=''; }
 			
-			if($db->request('search_location_id')){ $search_location_id=$db->request('search_location_id'); }
+			if(isset($_REQUEST['search_location_id'])){ $search_location_id=$db->request('search_location_id'); }
 			else{ $search_location_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -167,7 +168,7 @@ class SalesTransactionQuotationsConnector {
 				
 			$data['quotation_no'] = 'New';
 			
-			if($db->request('customer_id'))
+			if(isset($_REQUEST['customer_id']))
 			{
 				$data['customer_id'] = $db->request('customer_id');
 				$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
@@ -178,13 +179,13 @@ class SalesTransactionQuotationsConnector {
 				$data['customer_id_txt'] = '';
 			}
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+			if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 			else{ $data['remarks'] = ''; }
 
 			
@@ -354,7 +355,7 @@ class SalesTransactionQuotationsConnector {
 					
 				$data['quotation_no'] = $defCls->docNo('QTE-',$getQuotationInfo['quotation_id']);;
 				
-				if($db->request('customer_id'))
+				if(isset($_REQUEST['customer_id']))
 				{
 					$data['customer_id'] = $db->request('customer_id');
 					$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
@@ -365,13 +366,13 @@ class SalesTransactionQuotationsConnector {
 					$data['customer_id_txt'] = $CustomersMasterCustomersQuery->data($data['customer_id'],'name');
 				}
 					
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getQuotationInfo['location_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getQuotationInfo['added_date']); }
 				
-				if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+				if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 				else{ $data['remarks'] = $getQuotationInfo['remarks']; }
 				
 				

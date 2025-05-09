@@ -26,6 +26,7 @@ class SalesRSaleslistingConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Sales Listing Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -82,48 +83,48 @@ class SalesRSaleslistingConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_customer')!==''){ $search_customer=$db->request('search_customer'); }
+			if(isset($_REQUEST['search_customer'])){ $search_customer=$db->request('search_customer'); }
 			else{ $search_customer=''; }
 			
-			if($db->request('search_location')!==''){ $search_location=$db->request('search_location'); }
+			if(isset($_REQUEST['search_location'])){ $search_location=$db->request('search_location'); }
 			else{ $search_location=''; }
 			
-			if($db->request('search_sales_rep')!==''){ $search_sales_rep=$db->request('search_sales_rep'); }
+			if(isset($_REQUEST['search_sales_rep'])){ $search_sales_rep=$db->request('search_sales_rep'); }
 			else{ $search_sales_rep=''; }
 			
-			if($db->request('search_user')!==''){ $search_user=$db->request('search_user'); }
+			if(isset($_REQUEST['search_user'])){ $search_user=$db->request('search_user'); }
 			else{ $search_user=''; }
 			
-			if($db->request('search_category')!==''){ $search_category=$db->request('search_category'); }
+			if(isset($_REQUEST['search_category'])){ $search_category=$db->request('search_category'); }
 			else{ $search_category=''; }
 			
-			if($db->request('search_brand')!==''){ $search_brand=$db->request('search_brand'); }
+			if(isset($_REQUEST['search_brand'])){ $search_brand=$db->request('search_brand'); }
 			else{ $search_brand=''; }
 			
-			if($db->request('search_unit')!==''){ $search_unit=$db->request('search_unit'); }
+			if(isset($_REQUEST['search_unit'])){ $search_unit=$db->request('search_unit'); }
 			else{ $search_unit=''; }
 			
-			if($db->request('search_supplier')!==''){ $search_supplier=$db->request('search_supplier'); }
+			if(isset($_REQUEST['search_supplier'])){ $search_supplier=$db->request('search_supplier'); }
 			else{ $search_supplier=''; }
 			
-			if($db->request('search_barcode')!==''){ $search_barcode=$db->request('search_barcode'); }
+			if(isset($_REQUEST['search_barcode'])){ $search_barcode=$db->request('search_barcode'); }
 			else{ $search_barcode=''; }
 			
-			if($db->request('search_barcode_name')!==''){ $search_barcode_name=$db->request('search_barcode_name'); }
+			if(isset($_REQUEST['search_barcode_name'])){ $search_barcode_name=$db->request('search_barcode_name'); }
 			else{ $search_barcode_name=''; }
 			
-			if($db->request('search_item_name')!==''){ $search_item_name=$db->request('search_item_name'); }
+			if(isset($_REQUEST['search_item_name'])){ $search_item_name=$db->request('search_item_name'); }
 			else{ $search_item_name=''; }
 			
 			$filter_heading = '';

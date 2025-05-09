@@ -46,12 +46,12 @@ class SalesTransactionGiftcardsQuery {
 		return $count;
 	}
 	
-	public function validate($no) {
+	public function validate($no,$addedDate) {
 		
         global $db;
 
         // Query to fetch all blogs
-        $row = $db->fetch("SELECT * FROM ".$this->tableName." WHERE no='".$no."'");
+        $row = $db->fetch("SELECT * FROM ".$this->tableName." WHERE no='".$no."' AND expiry_date>='".$addedDate."'");
 		
 		return !empty($row) ? $row : [];
     }
@@ -107,11 +107,13 @@ class SalesTransactionGiftcardsQuery {
 		global $db;
 		global $dateCls;
 		
+		$added_date = $dateCls->todayDate('Y-m-d');
 		$expiry_date = $dateCls->dateToDB($data['expiry_date']);
 
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
 						
+						added_date='".$added_date."',
 						no='".$data['no']."',
 						expiry_date='".$expiry_date."',
 						amount='".$data['amount']."',
@@ -136,6 +138,16 @@ class SalesTransactionGiftcardsQuery {
 		global $defCls;
 		
 		$db->query("UPDATE ".$this->tableName." SET used_amount = used_amount+".$usedAmount.", balance_amount = balance_amount-".$usedAmount." WHERE gift_card_id = '".$giftCardId."'");
+		
+	}
+    
+    public function removeUsedAmount($giftCardId,$usedAmount) {
+		
+		global $db;
+		global $dateCls;
+		global $defCls;
+		
+		$db->query("UPDATE ".$this->tableName." SET used_value = used_value-".$usedAmount.", balance_value = balance_value+".$usedAmount." WHERE gift_card_id = '".$giftCardId."'");
 		
 	}
 }

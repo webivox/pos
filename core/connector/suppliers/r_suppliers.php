@@ -19,6 +19,7 @@ class SuppliersRSuppliersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Supplier Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -62,12 +63,12 @@ class SuppliersRSuppliersConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_supplier')!==''){ $search_supplier=$db->request('search_supplier'); }
+			if(isset($_REQUEST['search_supplier'])){ $search_supplier=$db->request('search_supplier'); }
 			else{ $search_supplier=''; }
 			
 			$filter_heading='';

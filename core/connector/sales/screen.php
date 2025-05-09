@@ -25,13 +25,21 @@ class SalesScreenConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Sales | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['customer_create_url'] 	= $defCls->genURL("customers/master_customers/create");
 			$data['sales_return_url'] 	= $defCls->genURL("sales/transaction_return/create");
 			$data['cashout_url'] 	= $defCls->genURL("sales/screen/cashout");
+			$data['report_url'] 	= $defCls->genURL("sales/r_pos");
 			$data['load_table_url'] = $defCls->genURL('sales/master_rep/load');
+			
+			if($sessionCls->load('lastPrintedInvoiceNo'))
+			{
+				$data['reprint_url'] = 'href="'.$defCls->genURL("sales/screen/print/".$sessionCls->load('lastPrintedInvoiceNo')."/").'" target="_blank"';
+			}
+			else{ $data['reprint_url'] = 'id="noreprintinvfound"'; }
 			
 			$data['shift_status'] 	= count($SalesScreenQuery->getShift($userId));
 			
@@ -233,7 +241,6 @@ class SalesScreenConnector {
 			else
 			{
 				
-				
 				require_once _HTML."sales/screen.php";
 				
 			}
@@ -304,6 +311,78 @@ class SalesScreenConnector {
 				
 				$error_msg[]="Invalid Cashier Point!"; $error_no++;	
 				
+			}
+			
+				
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+		
+		
+	}
+
+    public function shiftEnd() {
+			
+		global $id;
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $SystemMasterUsersQuery;
+		global $SalesScreenQuery;
+		global $SystemMasterCashierpointsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			
+			$userId = $sessionCls->load('signedUserId');
+			$cashierPointId = $id;
+			
+			
+			if($SalesScreenQuery->getShift($userId))
+			{
+				
+				if($SalesScreenQuery->endShift($userId))
+				{
+					$firewallCls->addLog("Shift Ended");
+					
+					$json['success']=true;
+					$json['success_msg']="Shift successfully started.";
+					$json['reload']=_SERVER."sales/screen";
+					
+				}
+				else
+				{
+					$error_msg[]="An error was found during shift end!"; $error_no++;
+				}
+			
+			}
+			else
+			{
+				$error_msg[]="Shift not started started!"; $error_no++;
 			}
 			
 				
@@ -1446,6 +1525,7 @@ class SalesScreenConnector {
 		global $db;
 		global $id;
 		global $defCls;
+		global $dateCls;
 		global $sessionCls;
 		global $firewallCls;
 		global $SystemMasterUsersQuery;
@@ -1467,7 +1547,9 @@ class SalesScreenConnector {
 			{
 				if($sessionCls->load('invoiceId'))
 				{
-					$validateNoInfo = $SalesTransactionGiftcardsQuery->validate($id);
+						
+					$currentDate = $dateCls->todayDate('Y-m-d');
+					$validateNoInfo = $SalesTransactionGiftcardsQuery->validate($id,$currentDate);
 						
 					if($validateNoInfo)
 					{
@@ -1840,7 +1922,9 @@ class SalesScreenConnector {
 						}
 						else if($giftCardNo)
 						{
-							$validateNoInfo = $SalesTransactionGiftcardsQuery->validate($giftCardNo);
+							
+							$currentDate = $dateCls->todayDate('Y-m-d');
+							$validateNoInfo = $SalesTransactionGiftcardsQuery->validate($giftCardNo,$currentDate);
 							
 							if($validateNoInfo)
 							{
@@ -2134,6 +2218,7 @@ class SalesScreenConnector {
 							$data['added_date'] = $dateCls->todayDate('Y-m-d');
 							$data['details'] = 'CASH OUT';
 							$data['user_id'] = $sessionCls->load('signedUserId');
+							$data['shift_id'] = $shiftInfo['shift_id'];
 							
 							
 							$createdId = $AccountsTransactionsTransfersQuery->create($data);

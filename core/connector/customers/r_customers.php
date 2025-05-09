@@ -19,6 +19,7 @@ class CustomersRCustomersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Customer Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -62,12 +63,12 @@ class CustomersRCustomersConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_customer')!==''){ $search_customer=$db->request('search_customer'); }
+			if(isset($_REQUEST['search_customer'])){ $search_customer=$db->request('search_customer'); }
 			else{ $search_customer=''; }
 			
 			/////////////

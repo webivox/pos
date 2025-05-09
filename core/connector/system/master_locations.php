@@ -19,6 +19,7 @@ class SystemMasterLocationsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Locations | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -58,20 +59,20 @@ class SystemMasterLocationsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE location_id!=0";
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -172,40 +173,40 @@ class SystemMasterLocationsConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('name')){ 
+			if(isset($_REQUEST['name'])){ 
 				$data['name'] = $db->request('name');
 			} else { 
 				$data['name'] = ''; 
 			}
 			
-			if($db->request('address')){ 
+			if(isset($_REQUEST['address'])){ 
 				$data['address'] = $db->request('address');
 			} else { 
 				$data['address'] = ''; 
 			}
 			
-			if($db->request('phone_number')){ 
+			if(isset($_REQUEST['phone_number'])){ 
 				$data['phone_number'] = $db->request('phone_number');
 			} else { 
 				$data['phone_number'] = ''; 
 			}
 			
-			if($db->request('email')){ 
+			if(isset($_REQUEST['email'])){ 
 				$data['email'] = $db->request('email');
 			} else { 
 				$data['email'] = ''; 
 			}
 			
-			if($db->request('invoice_no_start')){ 
+			if(isset($_REQUEST['invoice_no_start'])){ 
 				$data['invoice_no_start'] = $db->request('invoice_no_start');
 			} else { 
 				$data['invoice_no_start'] = ''; 
 			}
 			
-			if($db->request('status')){ 
+			if(isset($_REQUEST['status'])){ 
 				$data['status'] = $db->request('status');
 			}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			elseif(isset($_REQUEST['status')==0){ $data['status'] = 0; }
 			else { 
 				$data['status'] = 0; 
 			}
@@ -306,46 +307,45 @@ class SystemMasterLocationsConnector {
 				
 				$data['location_id'] = $getLocationInfo['location_id'];
 					
-				if($db->request('name')){ 
+				if(isset($_REQUEST['name'])){ 
 					$data['name'] = $db->request('name');
 				} else { 
 					$data['name'] = $getLocationInfo['name']; 
 				}
 				
-				if($db->request('manager_id')){ 
+				if(isset($_REQUEST['manager_id'])){ 
 					$data['manager_id'] = $db->request('manager_id');
 				} else { 
 					$data['manager_id'] = $getLocationInfo['manager_id']; 
 				}
 				
-				if($db->request('address')){ 
+				if(isset($_REQUEST['address'])){ 
 					$data['address'] = $db->request('address');
 				} else { 
 					$data['address'] = $getLocationInfo['address']; 
 				}
 				
-				if($db->request('phone_number')){ 
+				if(isset($_REQUEST['phone_number'])){ 
 					$data['phone_number'] = $db->request('phone_number');
 				} else { 
 					$data['phone_number'] = $getLocationInfo['phone_number']; 
 				}
 				
-				if($db->request('email')){ 
+				if(isset($_REQUEST['email'])){ 
 					$data['email'] = $db->request('email');
 				} else { 
 					$data['email'] = $getLocationInfo['email']; 
 				}
 				
-				if($db->request('invoice_no_start')){ 
+				if(isset($_REQUEST['invoice_no_start'])){ 
 					$data['invoice_no_start'] = $db->request('invoice_no_start');
 				} else { 
 					$data['invoice_no_start'] = $getLocationInfo['invoice_no_start']; 
 				}
 				
-				if($db->request('status')){ 
+				if(isset($_REQUEST['status'])){ 
 					$data['status'] = $db->request('status');
 				}
-				elseif($db->request('status')==0){ $data['status'] = 0; }
 				else { 
 					$data['status'] = $getLocationInfo['status']; 
 				}

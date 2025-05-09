@@ -18,6 +18,7 @@ class AccountsMasterAccountsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Accounts | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -56,13 +57,13 @@ class AccountsMasterAccountsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -172,14 +173,13 @@ class AccountsMasterAccountsConnector {
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
-			if($db->request('name')){ $data['name'] = $db->request('name');}
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
 			
-			if($db->request('payment_method')){ $data['payment_method'] = $db->request('payment_method');}
+			if(isset($_REQUEST['payment_method'])){ $data['payment_method'] = $db->request('payment_method');}
 			else{ $data['payment_method'] = 0; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -276,15 +276,13 @@ class AccountsMasterAccountsConnector {
 				
 				$data['account_id'] = $getAccountInfo['account_id'];
 					
-				if($db->request('name')){ $data['name'] = $db->request('name');}
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name'); }
 				else{ $data['name'] = $getAccountInfo['name']; }
 				
-				if($db->request('payment_method')){ $data['payment_method'] = $db->request('payment_method');}
-				elseif($db->request('payment_method')=='0'){ $data['payment_method'] = 0; }
+				if(isset($_REQUEST['payment_method'])){ $data['payment_method'] = $db->request('payment_method'); }
 				else{ $data['payment_method'] = $getAccountInfo['payment_method']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status');}
-				elseif($db->request('status')=='0'){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getAccountInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

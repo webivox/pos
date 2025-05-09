@@ -19,6 +19,7 @@ class InventoryTransactionReceivingnotesConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Good Receiving | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -60,23 +61,23 @@ class InventoryTransactionReceivingnotesConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('RN-','',$search_no);
 				$search_no=ltrim($search_no,'RN-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_supplier_id')!==''){ $search_supplier_id=$db->request('search_supplier_id'); }
+			if(isset($_REQUEST['search_supplier_id'])){ $search_supplier_id=$db->request('search_supplier_id'); }
 			else{ $search_supplier_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -165,10 +166,10 @@ class InventoryTransactionReceivingnotesConnector {
 			
 			$data['po_id'] = 0;
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('supplier_id'))
+			if(isset($_REQUEST['supplier_id']))
 			{
 				$data['supplier_id'] = $db->request('supplier_id');
 				$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
@@ -179,16 +180,16 @@ class InventoryTransactionReceivingnotesConnector {
 				$data['supplier_id_txt'] = '';
 			}
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('invoice_no')){ $data['invoice_no'] = $db->request('invoice_no'); }
+			if(isset($_REQUEST['invoice_no'])){ $data['invoice_no'] = $db->request('invoice_no'); }
 			else{ $data['invoice_no'] = ''; }
 			
-			if($db->request('due_date')){ $data['due_date'] = $db->request('due_date'); }
+			if(isset($_REQUEST['due_date'])){ $data['due_date'] = $db->request('due_date'); }
 			else{ $data['due_date'] = ''; }
 			
-			if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+			if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 			else{ $data['remarks'] = ''; }
 			
 			$data['user_id'] = $userInfo['user_id'];
@@ -381,11 +382,11 @@ class InventoryTransactionReceivingnotesConnector {
 				
 				$data['po_id'] = $getReceivingnoteInfo['po_id'];
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getReceivingnoteInfo['location_id']; }
 				
 			
-				if($db->request('supplier_id'))
+				if(isset($_REQUEST['supplier_id']))
 				{
 					
 					$data['supplier_id'] = $db->request('supplier_id');
@@ -397,16 +398,16 @@ class InventoryTransactionReceivingnotesConnector {
 					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($getReceivingnoteInfo['supplier_id'],'name');;
 				}
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getReceivingnoteInfo['added_date']); }
 				
-				if($db->request('invoice_no')){ $data['invoice_no'] = $db->request('invoice_no'); }
+				if(isset($_REQUEST['invoice_no'])){ $data['invoice_no'] = $db->request('invoice_no'); }
 				else{ $data['invoice_no'] = $getReceivingnoteInfo['invoice_no']; }
 				
-				if($db->request('due_date')){ $data['due_date'] = $db->request('due_date'); }
+				if(isset($_REQUEST['due_date'])){ $data['due_date'] = $db->request('due_date'); }
 				else{ $data['due_date'] = $dateCls->showDate($getReceivingnoteInfo['due_date']); }
 				
-				if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+				if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 				else{ $data['remarks'] = $getReceivingnoteInfo['remarks']; }
 				
 				

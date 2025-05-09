@@ -120,7 +120,8 @@ class AccountsTransactionsAdjustmentsQuery {
 						user_id='".$data['user_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
-						details='".$data['details']."'
+						details='".$data['details']."',
+						is_other_income='".$data['is_other_income']."'
 						
 				";
 						
@@ -154,7 +155,8 @@ class AccountsTransactionsAdjustmentsQuery {
 						account_id='".$data['account_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',
-						details='".$data['details']."'
+						details='".$data['details']."',
+						is_other_income='".$data['is_other_income']."'
 						
 						WHERE
 						

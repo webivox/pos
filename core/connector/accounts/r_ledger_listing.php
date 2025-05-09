@@ -20,6 +20,7 @@ class AccountsRLedgerListingConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Account Ledger Listing Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -65,24 +66,24 @@ class AccountsRLedgerListingConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_location')!==''){ $search_location=$db->request('search_location'); }
+			if(isset($_REQUEST['search_location'])){ $search_location=$db->request('search_location'); }
 			else{ $search_location=''; }
 			
-			if($db->request('search_account')!==''){ $search_account=$db->request('search_account'); }
+			if(isset($_REQUEST['search_account'])){ $search_account=$db->request('search_account'); }
 			else{ $search_account=''; }
 			
-			if($db->request('search_user')!==''){ $search_user=$db->request('search_user'); }
+			if(isset($_REQUEST['search_user'])){ $search_user=$db->request('search_user'); }
 			else{ $search_user=''; }
 			
 			$filter_heading = '';

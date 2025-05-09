@@ -248,25 +248,29 @@ class CustomersMasterCustomersQuery {
 		
 		$row = $db->fetch("SELECT * FROM customer_transactions WHERE `reference_id`='".$customerData['reference_id']."' AND `transaction_type`='".$customerData['transaction_type']."'");
 		
-		$itemId = $row['item_id'];
-		
-		$sql = "DELETE FROM customer_transactions 
-												
-												WHERE
-												
-												`reference_id`='".$customerData['reference_id']."'
-												
-												AND
-												
-												`transaction_type`='".$customerData['transaction_type']."'
-												
-												
-												
-			";
-		
-		$db->query($sql);
-		
-		$this->transactionsBalanceUpdate($itemId);
+		if($row)
+		{
+			
+			$itemId = $row['customer_id'];
+			
+			$sql = "DELETE FROM customer_transactions 
+													
+													WHERE
+													
+													`reference_id`='".$customerData['reference_id']."'
+													
+													AND
+													
+													`transaction_type`='".$customerData['transaction_type']."'
+													
+													
+													
+				";
+			
+			$db->query($sql);
+			
+			$this->transactionsBalanceUpdate($itemId);
+		}
 	}
 	
 	
@@ -324,6 +328,40 @@ class CustomersMasterCustomersQuery {
 		
 		$this->loyaltyTransactionsBalanceUpdate($loyaltyData['customer_id']);
 		
+	}
+	
+	/////
+	public function loyaltyTransactionDelete($referenceId,$transactionType)
+	{
+		global $db;
+		global $dateCls;
+		
+		
+		
+		
+		$row = $db->fetch("SELECT * FROM customer_loyalty_transactions WHERE `reference_id`='".$referenceId."' AND `transaction_type`='".$transactionType."'");
+		
+		if($row)
+		{
+		
+			$sql = "DELETE FROM customer_loyalty_transactions 
+													
+													WHERE
+													
+													`reference_id`='".$referenceId."'
+													
+													AND
+													
+													`transaction_type`='".$transactionType."'
+													
+													
+													
+				";
+			
+			$db->query($sql);
+			
+			$this->loyaltyTransactionsBalanceUpdate($row['customer_id']);
+		}
 	}
 	
 	

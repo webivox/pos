@@ -19,6 +19,7 @@ class AccountsTransactionAdjustmentsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Account Adjustments | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -60,23 +61,23 @@ class AccountsTransactionAdjustmentsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('AADJ-','',$search_no);
 				$search_no=ltrim($search_no,'AADJ-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_account_id')!==''){ $search_account_id=$db->request('search_account_id'); }
+			if(isset($_REQUEST['search_account_id'])){ $search_account_id=$db->request('search_account_id'); }
 			else{ $search_account_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -164,26 +165,29 @@ class AccountsTransactionAdjustmentsConnector {
 			
 			$data['adjustment_no'] = 'New';
 			
-			if($db->request('type')){ $data['type'] = $db->request('type'); }
+			if(isset($_REQUEST['type'])){ $data['type'] = $db->request('type'); }
 			else{ $data['type'] = ''; }
 			
-			if($db->request('adjustments_type_id')){ $data['adjustments_type_id'] = $db->request('adjustments_type_id'); }
+			if(isset($_REQUEST['adjustments_type_id'])){ $data['adjustments_type_id'] = $db->request('adjustments_type_id'); }
 			else{ $data['adjustments_type_id'] = ''; }
 			
-			if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
+			if(isset($_REQUEST['account_id'])){ $data['account_id'] = $db->request('account_id'); }
 			else{ $data['account_id'] = ''; }
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
+			
+			if(isset($_REQUEST['is_other_income'])){ $data['is_other_income'] = $db->request('is_other_income'); }
+			else{ $data['is_other_income'] = ''; }
 			
 			$data['user_id'] = $userInfo['user_id'];
 
@@ -198,6 +202,7 @@ class AccountsTransactionAdjustmentsConnector {
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
+				if(!$data['is_other_income']){ $error_msg[]="You must choose income type"; $error_no++; }
 				
 				
 				if(!$error_no)
@@ -323,24 +328,27 @@ class AccountsTransactionAdjustmentsConnector {
 					
 				$data['adjustment_no'] = $defCls->docNo('AADJ-',$getDebitNoteInfo['adjustment_id']);
 			
-				if($db->request('type')){ $data['type'] = $db->request('type'); }
+				if(isset($_REQUEST['type'])){ $data['type'] = $db->request('type'); }
 				else{ $data['type'] = $getDebitNoteInfo['type']; }
 				
-				if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+				if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 				else{ $data['location_id'] = $getDebitNoteInfo['location_id']; }
 				
-				if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
+				if(isset($_REQUEST['account_id'])){ $data['account_id'] = $db->request('account_id'); }
 				else{ $data['account_id'] = $getDebitNoteInfo['account_id']; }
 				
-				if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+				if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 				else{ $data['added_date'] = $dateCls->showDate($getDebitNoteInfo['added_date']); }
 				
-				if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+				if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 				else{ $data['amount'] = $defCls->num($getDebitNoteInfo['amount']); }
 				
-				if($db->request('details')){ $data['details'] = $db->request('details'); }
+				if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 				else{ $data['details'] = $getDebitNoteInfo['details']; }
-				
+			
+				if(isset($_REQUEST['is_other_income'])){ $data['is_other_income'] = $db->request('is_other_income'); }
+				else{ $data['is_other_income'] = $getDebitNoteInfo['is_other_income']; }
+					
 
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -352,6 +360,7 @@ class AccountsTransactionAdjustmentsConnector {
 					if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 					if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
 					if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
+					if(!$data['is_other_income']){ $error_msg[]="You must choose income type"; $error_no++; }
 					
 						
 					if(!$error_no)

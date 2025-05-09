@@ -21,6 +21,7 @@ class InventoryMasterItemsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Inventory Items | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -62,28 +63,28 @@ class InventoryMasterItemsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_category_id')){ $search_category_id=$db->request('search_category_id'); }
+			if(isset($_REQUEST['search_category_id'])){ $search_category_id=$db->request('search_category_id'); }
 			else{ $search_category_id=''; }
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_barcode')!==''){ $search_barcode=$db->request('search_barcode'); }
+			if(isset($_REQUEST['search_barcode'])){ $search_barcode=$db->request('search_barcode'); }
 			else{ $search_barcode=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE item_id!=0";
 			
-			if($search_category_id!==''){ $sql.=" AND category_id='".$search_category_id."'"; }
+			if($search_category_id){ $sql.=" AND category_id='".$search_category_id."'"; }
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_barcode!==''){ $sql.=" AND barcode='".$search_barcode."'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_barcode){ $sql.=" AND barcode='".$search_barcode."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -208,16 +209,16 @@ class InventoryMasterItemsConnector {
 			$data['brand_list'] = $InventoryMasterBrandsQuery->gets("ORDER BY name ASC");
 			$data['unit_list'] = $InventoryMasterUnitsQuery->gets("ORDER BY name ASC");
 				
-			if($db->request('category_id')){ $data['category_id'] = $db->request('category_id'); }
+			if(isset($_REQUEST['category_id'])){ $data['category_id'] = $db->request('category_id'); }
 			else{ $data['category_id'] = 0; }
 			
-			if($db->request('brand_id')){ $data['brand_id'] = $db->request('brand_id'); }
+			if(isset($_REQUEST['brand_id'])){ $data['brand_id'] = $db->request('brand_id'); }
 			else{ $data['brand_id'] = 0; }
 			
-			if($db->request('unit_id')){ $data['unit_id'] = $db->request('unit_id'); }
+			if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 			else{ $data['unit_id'] = 0; }
 			
-			if($db->request('supplier_id'))
+			if(isset($_REQUEST['supplier_id']))
 			{
 				$data['supplier_id'] = $db->request('supplier_id');
 				$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
@@ -228,38 +229,37 @@ class InventoryMasterItemsConnector {
 				$data['supplier_id_txt'] = '';
 			}
 			
-			if($db->request('name')){ $data['name'] = $db->request('name'); }
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name'); }
 			else{ $data['name'] = ''; }
 			
-			if($db->request('description')){ $data['description'] = $db->request('description'); }
+			if(isset($_REQUEST['description'])){ $data['description'] = $db->request('description'); }
 			else{ $data['description'] = ''; }
 			
-			if($db->request('barcode')){ $data['barcode'] = $db->request('barcode'); }
+			if(isset($_REQUEST['barcode'])){ $data['barcode'] = $db->request('barcode'); }
 			else{ $data['barcode'] = ''; }
 			
-			if($db->request('barcode_name')){ $data['barcode_name'] = $db->request('barcode_name'); }
+			if(isset($_REQUEST['barcode_name'])){ $data['barcode_name'] = $db->request('barcode_name'); }
 			else{ $data['barcode_name'] = ''; }
 			
-			if($db->request('selling_price')){ $data['selling_price'] = $db->request('selling_price'); }
+			if(isset($_REQUEST['selling_price'])){ $data['selling_price'] = $db->request('selling_price'); }
 			else{ $data['selling_price'] = 0; }
 			
-			if($db->request('minimum_selling_price')){ $data['minimum_selling_price'] = $db->request('minimum_selling_price'); }
+			if(isset($_REQUEST['minimum_selling_price'])){ $data['minimum_selling_price'] = $db->request('minimum_selling_price'); }
 			else{ $data['minimum_selling_price'] = ''; }
 			
-			if($db->request('cost')){ $data['cost'] = $db->request('cost'); }
+			if(isset($_REQUEST['cost'])){ $data['cost'] = $db->request('cost'); }
 			else{ $data['cost'] = 0; }
 			
-			if($db->request('re_order_qty')){ $data['re_order_qty'] = $db->request('re_order_qty'); }
+			if(isset($_REQUEST['re_order_qty'])){ $data['re_order_qty'] = $db->request('re_order_qty'); }
 			else{ $data['re_order_qty'] = 0; }
 			
-			if($db->request('order_qty')){ $data['order_qty'] = $db->request('order_qty'); }
+			if(isset($_REQUEST['order_qty'])){ $data['order_qty'] = $db->request('order_qty'); }
 			else{ $data['order_qty'] = 0; }
 			
-			if($db->request('minimum_qty')){ $data['minimum_qty'] = $db->request('minimum_qty'); }
+			if(isset($_REQUEST['minimum_qty'])){ $data['minimum_qty'] = $db->request('minimum_qty'); }
 			else{ $data['minimum_qty'] = 1; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -378,16 +378,16 @@ class InventoryMasterItemsConnector {
 				
 				$data['item_id'] = $getItemInfo['item_id'];
 					
-				if($db->request('category_id')){ $data['category_id'] = $db->request('category_id'); }
+				if(isset($_REQUEST['category_id'])){ $data['category_id'] = $db->request('category_id'); }
 				else{ $data['category_id'] = $getItemInfo['category_id']; }
 				
-				if($db->request('brand_id')){ $data['brand_id'] = $db->request('brand_id'); }
+				if(isset($_REQUEST['brand_id'])){ $data['brand_id'] = $db->request('brand_id'); }
 				else{ $data['brand_id'] = $getItemInfo['brand_id']; }
 				
-				if($db->request('unit_id')){ $data['unit_id'] = $db->request('unit_id'); }
+				if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 				else{ $data['unit_id'] = $getItemInfo['unit_id']; }
 				
-				if($db->request('supplier_id'))
+				if(isset($_REQUEST['supplier_id']))
 				{
 					$data['supplier_id'] = $db->request('supplier_id');
 					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
@@ -398,38 +398,37 @@ class InventoryMasterItemsConnector {
 					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($getItemInfo['supplier_id'],'name');
 				}
 				
-				if($db->request('name')){ $data['name'] = $db->request('name'); }
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name'); }
 				else{ $data['name'] = $getItemInfo['name']; }
 				
-				if($db->request('description')){ $data['description'] = $db->request('description'); }
+				if(isset($_REQUEST['description'])){ $data['description'] = $db->request('description'); }
 				else{ $data['description'] = $getItemInfo['description']; }
 			
-				if($db->request('barcode')){ $data['barcode'] = $db->request('barcode'); }
+				if(isset($_REQUEST['barcode'])){ $data['barcode'] = $db->request('barcode'); }
 				else{ $data['barcode'] = $getItemInfo['barcode']; }
 				
-				if($db->request('barcode_name')){ $data['barcode_name'] = $db->request('barcode_name'); }
+				if(isset($_REQUEST['barcode_name'])){ $data['barcode_name'] = $db->request('barcode_name'); }
 				else{ $data['barcode_name'] = $getItemInfo['barcode_name']; }
 				
-				if($db->request('selling_price')){ $data['selling_price'] = $db->request('selling_price'); }
+				if(isset($_REQUEST['selling_price'])){ $data['selling_price'] = $db->request('selling_price'); }
 				else{ $data['selling_price'] = $getItemInfo['selling_price']; }
 				
-				if($db->request('minimum_selling_price')){ $data['minimum_selling_price'] = $db->request('minimum_selling_price'); }
+				if(isset($_REQUEST['minimum_selling_price'])){ $data['minimum_selling_price'] = $db->request('minimum_selling_price'); }
 				else{ $data['minimum_selling_price'] = $getItemInfo['minimum_selling_price']; }
 				
-				if($db->request('cost')){ $data['cost'] = $db->request('cost'); }
+				if(isset($_REQUEST['cost'])){ $data['cost'] = $db->request('cost'); }
 				else{ $data['cost'] = $getItemInfo['cost']; }
 				
-				if($db->request('re_order_qty')){ $data['re_order_qty'] = $db->request('re_order_qty'); }
+				if(isset($_REQUEST['re_order_qty'])){ $data['re_order_qty'] = $db->request('re_order_qty'); }
 				else{ $data['re_order_qty'] = $getItemInfo['re_order_qty']; }
 				
-				if($db->request('order_qty')){ $data['order_qty'] = $db->request('order_qty'); }
+				if(isset($_REQUEST['order_qty'])){ $data['order_qty'] = $db->request('order_qty'); }
 				else{ $data['order_qty'] = $getItemInfo['order_qty']; }
 			
-				if($db->request('minimum_qty')){ $data['minimum_qty'] = $db->request('minimum_qty'); }
+				if(isset($_REQUEST['minimum_qty'])){ $data['minimum_qty'] = $db->request('minimum_qty'); }
 				else{ $data['minimum_qty'] = $getItemInfo['minimum_qty']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status'); }
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getItemInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))

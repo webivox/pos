@@ -234,6 +234,34 @@ class AccountsTransactionChequeQuery {
 		else{ return false; }
 	
     }
+    
+    public function chequeRemove($chequeData) {
+		
+		global $db;
+		
+		$row = $db->fetch("SELECT * FROM ".$this->tableName." WHERE `reference_id`='".$chequeData['reference_id']."' AND `transaction_type`='".$chequeData['transaction_type']."' AND `type`='".$chequeData['type']."'");
+		
+		
+		if($row)
+		{
+		
+			// Query to fetch all blogs
+			$sql = "DELETE FROM ".$this->tableName." 
+							
+							WHERE
+							
+							cheque_id = ".$row['cheque_id']."
+							
+					";
+							
+			if($db->query($sql))
+			{
+				return true;
+			}
+			else{ return false; }
+		}
+		else{ return false; }
+    }
 	
 }
 

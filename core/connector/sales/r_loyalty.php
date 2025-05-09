@@ -21,14 +21,13 @@ class SalesRLoyaltyConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Loyalty Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['view_url'] = $defCls->genURL('sales/r_loyalty/view/');
 			
-			$data['location_list']	= $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
-			$data['customer_list']	= $SalesLoyaltyQuery->gets("ORDER BY name ASC");
-			$data['user_list']	= $SystemMasterUsersQuery->gets("ORDER BY name ASC");
+			$data['customer_list']	= $CustomersMasterCustomersQuery->gets("ORDER BY name ASC");
 			
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
@@ -67,19 +66,21 @@ class SalesRLoyaltyConnector {
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_customer')!==''){ $search_customer=$db->request('search_customer'); }
+			if(isset($_REQUEST['search_customer'])){ $search_customer=$db->request('search_customer'); }
 			else{ $search_customer=''; }
+			
+			$search_type=$db->request('search_type');
 			
 			$filter_heading = '';
 			if($search_date_from){ $filter_heading .= ' | From : '.$search_date_from; }
@@ -92,48 +93,85 @@ class SalesRLoyaltyConnector {
 			
 			/////////////
 			
-			$sql=" WHERE transaction_id != 0";
-			
-			if($search_date_from){ $sql.=" AND DATE(added_date)>='".$dateCls->dateToDB($search_date_from)."'"; }
-			if($search_date_to){ $sql.=" AND DATE(added_date)<='".$dateCls->dateToDB($search_date_to)."'"; }
-			$sql.=" AND customer_id='".$search_customer."'";
-			
-			///////////
-			
-			$sql.="  ORDER BY added_date ASC";
-			
-			$getRows = $SalesLoyaltyQuery->gets($sql);
-			
-			$data['rows'] = array();
-			
-			$tDebit = 0;
-			$tCredit = 0;
-			$tBalance = 0;
-			
-			foreach($getRows as $cat)
+			$this_required_file = '';
+
+			if($search_type=='S')
 			{
 				
-				$tDebit += $cat['debit'];
-				$tCredit += $cat['credit'];
-				$tBalance += $cat['balance'];
 				
-				$data['rows'][] = array(
-										'added_date' => date('d-m-Y',strtotime($cat['added_date'])),
-										'remarks' => $defCls->showText($cat['remarks']),
-										'debit' => $defCls->money($cat['debit']),
-										'credit' => $defCls->money($cat['credit']),
-										'balance' => $defCls->money($cat['balance']),
-										'customer' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name')
-									);
-											
+				$sql=" WHERE transaction_id != 0";
+			
+				if($search_date_from){ $sql.=" AND DATE(added_date)>='".$dateCls->dateToDB($search_date_from)."'"; }
+				if($search_date_to){ $sql.=" AND DATE(added_date)<='".$dateCls->dateToDB($search_date_to)."'"; }
+				if($search_customer){ $sql.=" AND customer_id='".$search_customer."'"; }
+				
+				///////////
+				
+				$sql.="  ORDER BY added_date ASC";
+				
+				
+				$rows = $db->fetchAll("SELECT 
+					SUM(debit) AS total_debit, 
+					SUM(credit) AS total_credit 
+				FROM customer_loyalty_transactions");
+				
+				$total_debit = $rows[0]['total_debit'] ?? 0;
+				$total_credit = $rows[0]['total_credit'] ?? 0;
+				
+				$balance =  $total_debit-$total_credit ;
+				
+				$data['tDebit'] = $defCls->money($total_debit);
+				$data['tCredit'] = $defCls->money($total_credit);
+				$data['tBalance'] = $defCls->money($balance);
+				
+				$this_required_file = _HTML.'sales/r_loyalty_summary_view.php';
+			}
+			elseif($search_type=='C')
+			{
+				
+				$sql=" WHERE transaction_id != 0";
+			
+				$sql.=" AND customer_id='".$search_customer."'";
+				
+				$sql.="  ORDER BY added_date ASC";
+				
+				$getRows = $SalesLoyaltyQuery->gets($sql);
+				$data['rows'] = array();
+				
+				if(count($getRows))
+				{
+					
+					$tDebit = 0;
+					$tCredit = 0;
+					$tBalance = 0;
+					
+					foreach($getRows as $cat)
+					{
+						
+						$tDebit += $cat['debit'];
+						$tCredit += $cat['credit'];
+						$tBalance += $cat['balance'];
+						
+						$data['rows'][] = array(
+												'added_date' => date('d-m-Y',strtotime($cat['added_date'])),
+												'remarks' => $defCls->showText($cat['remarks']),
+												'debit' => $defCls->money($cat['debit']),
+												'credit' => $defCls->money($cat['credit']),
+												'balance' => $defCls->money($cat['balance']),
+												'customer' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name')
+											);
+													
+					}
+					
+					$data['tDebit'] = $defCls->money($tDebit);
+					$data['tCredit'] = $defCls->money($tCredit);
+					$data['tBalance'] = $defCls->money($tDebit-$tCredit);
+					
+					
+					$this_required_file = _HTML.'sales/r_loyalty_customer_view.php';
+				}
 			}
 			
-			$data['tDebit'] = $defCls->money($tDebit);
-			$data['tCredit'] = $defCls->money($tCredit);
-			$data['tBalance'] = $defCls->money($tDebit-$tCredit);
-
-	
-			$this_required_file = _HTML.'sales/r_loyalty_view.php';
 			if (!file_exists($this_required_file)) {
 				error_log("File not found: ".$this_required_file);
 				die('File not found:'.$this_required_file);

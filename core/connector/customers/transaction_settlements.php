@@ -19,6 +19,7 @@ class CustomersTransactionSettlementsConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Customer Settlements | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -60,23 +61,23 @@ class CustomersTransactionSettlementsConnector {
 		{
 			////////////////
 			
-			if($db->request('search_no')){
+			if(isset($_REQUEST['search_no'])){
 				$search_no=$db->request('search_no');
 				$search_no=str_replace('CSETT-','',$search_no);
 				$search_no=ltrim($search_no,'CSETT-');
 			}
 			else{ $search_no=''; }
 			
-			if($db->request('search_date_from')){ $search_date_from=$db->request('search_date_from'); }
+			if(isset($_REQUEST['search_date_from'])){ $search_date_from=$db->request('search_date_from'); }
 			else{ $search_date_from=''; }
 			
-			if($db->request('search_date_to')){ $search_date_to=$db->request('search_date_to'); }
+			if(isset($_REQUEST['search_date_to'])){ $search_date_to=$db->request('search_date_to'); }
 			else{ $search_date_to=''; }
 			
-			if($db->request('search_customer_id')!==''){ $search_customer_id=$db->request('search_customer_id'); }
+			if(isset($_REQUEST['search_customer_id'])){ $search_customer_id=$db->request('search_customer_id'); }
 			else{ $search_customer_id=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -166,7 +167,7 @@ class CustomersTransactionSettlementsConnector {
 			
 			$data['settlement_no'] = 'New';
 			
-			if($db->request('customer_id'))
+			if(isset($_REQUEST['customer_id']))
 			{
 				$data['customer_id'] = $db->request('customer_id');
 				$closing_balance = $CustomersMasterCustomersQuery->data($data['customer_id'],'closing_balance');
@@ -174,31 +175,31 @@ class CustomersTransactionSettlementsConnector {
 			}
 			else{ $data['customer_id'] = ''; $data['outstanding'] = '0.00'; }
 			
-			if($db->request('location_id')){ $data['location_id'] = $db->request('location_id'); }
+			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
 			
-			if($db->request('account_id')){ $data['account_id'] = $db->request('account_id'); }
+			if(isset($_REQUEST['account_id'])){ $data['account_id'] = $db->request('account_id'); }
 			else{ $data['account_id'] = 0; }
 			
-			if($db->request('added_date')){ $data['added_date'] = $db->request('added_date'); }
+			if(isset($_REQUEST['added_date'])){ $data['added_date'] = $db->request('added_date'); }
 			else{ $data['added_date'] = $dateCls->todayDate('d-m-Y'); }
 			
-			if($db->request('amount')){ $data['amount'] = $db->request('amount'); }
+			if(isset($_REQUEST['amount'])){ $data['amount'] = $db->request('amount'); }
 			else{ $data['amount'] = 0; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
 			
-			if($db->request('bank_code')){ $data['bank_code'] = $db->request('bank_code'); }
+			if(isset($_REQUEST['bank_code'])){ $data['bank_code'] = $db->request('bank_code'); }
 			else{ $data['bank_code'] = ''; }
 			
-			if($db->request('cheque_date')){ $data['cheque_date'] = $db->request('cheque_date'); }
+			if(isset($_REQUEST['cheque_date'])){ $data['cheque_date'] = $db->request('cheque_date'); }
 			else{ $data['cheque_date'] = ''; }
 			
-			if($db->request('cheque_no')){ $data['cheque_no'] = $db->request('cheque_no'); }
+			if(isset($_REQUEST['cheque_no'])){ $data['cheque_no'] = $db->request('cheque_no'); }
 			else{ $data['cheque_no'] = ''; }
 			
-			if($db->request('details')){ $data['details'] = $db->request('details'); }
+			if(isset($_REQUEST['details'])){ $data['details'] = $db->request('details'); }
 			else{ $data['details'] = ''; }
 
 			

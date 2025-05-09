@@ -102,6 +102,163 @@ class SalesTransactionInvoicesQuery{
 		
 		return !empty($row) ? $row : [];
     }
+	
+	
+    public function getPayments($sql = '') {
+		
+		global $db;
+
+		$row = $db->fetchAll("SELECT * FROM sales_invoice_payments ".$sql);
+		
+		return !empty($row) ? $row : [];
+    }
+	
+	
+    public function cancellation($data) {
+		
+		global $db;
+		global $CustomersMasterCustomersQuery;
+		global $SalesTransactionInvoicesQuery;
+		global $stockTransactionsCls;
+		global $SalesTransactionsReturnQuery;
+		global $SalesTransactionGiftcardsQuery;
+		global $AccountsTransactionChequeQuery;
+
+        // Query to fetch all blogs
+        $sql = "UPDATE ".$this->tableName." SET 
+						
+						status='0'
+						
+						WHERE
+						
+						invoice_id = ".$data['invoice_id']."
+						
+				";
+					
+        if($db->query($sql))
+		{
+			$customerData = [];
+			$customerData['reference_id'] = $data['invoice_id'];
+			$customerData['transaction_type'] = 'INV';
+			
+			$CustomersMasterCustomersQuery->transactionDelete($customerData);
+			
+			///////////
+			
+			$itemsInfo = $SalesTransactionInvoicesQuery->getItems("WHERE invoice_id='".$data['invoice_id']."'");
+			
+			foreach($itemsInfo as $item)
+			{
+			
+				$stockData = [];
+				
+				$stockData['item_id'] = $item['item_id'];
+				$stockData['reference_id'] = $data['invoice_id'];
+				$stockData['reference_row_id'] = $item['invoice_item_id'];
+				$stockData['transaction_type'] = 'INV';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			///////////
+			
+			$paymentsInfo = $SalesTransactionInvoicesQuery->getPayments("WHERE invoice_id='".$data['invoice_id']."'");
+			
+			foreach($paymentsInfo as $pmnt)
+			{
+				
+				if($pmnt['type'] == 'CASH')
+				{
+				
+					$accountData = [];
+					$accountData['reference_id'] = $pmnt['invoice_payment_id'];
+					$accountData['transaction_type'] = 'INV';
+					
+					$AccountsMasterAccountsQuery->transactionDelete($accountData);
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+					
+				
+				}
+				if($pmnt['type'] == 'CARD')
+				{
+				
+					$accountData = [];
+					$accountData['reference_id'] = $pmnt['invoice_payment_id'];
+					$accountData['transaction_type'] = 'INV';
+					
+					$AccountsMasterAccountsQuery->transactionDelete($accountData);
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+				}
+				
+				if($pmnt['type'] == 'RETURN')
+				{
+					$SalesTransactionsReturnQuery->removeUsedAmount($pmnt['return_id'],$pmnt['amount']);
+					
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+				}
+				
+				if($pmnt['type'] == 'GIFT CARD')
+				{
+					$SalesTransactionGiftcardsQuery->removeUsedAmount($pmnt['gift_card_id'],$pmnt['amount']);
+					
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+				}
+				
+				if($pmnt['type'] == 'CREDIT')
+				{
+					
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+					
+				}
+				
+				if($pmnt['type'] == 'CHEQUE')
+				{
+					
+					$chequeData = [];
+					$chequeData['reference_id'] = $pmnt['invoice_payment_id'];
+					$chequeData['transaction_type'] = 'INV';
+					$chequeData['type'] = 'Received';
+					
+					$AccountsTransactionChequeQuery->chequeRemove($chequeData);
+					
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+					
+				}
+				
+				if($pmnt['type'] == 'LOYALTY')
+				{
+					//Remove loyalty
+					$CustomersMasterCustomersQuery->loyaltyTransactionDelete($pmnt['invoice_payment_id'],'INV');
+				}
+				
+				
+				
+				if($pmnt['type'] !== 'CREDIT')
+				{
+					////Customer transactipn update
+					$customerData = [];
+					$customerData['reference_id'] = $pmnt['invoice_payment_id'];
+					$customerData['transaction_type'] = 'INVPMNT';
+					
+					$CustomersMasterCustomersQuery->transactionDelete($customerData);
+				}
+			}
+			
+		}
+		else{ return false; }
+    }
 }
 
 // Instantiate the blogsModels class

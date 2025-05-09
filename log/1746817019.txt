@@ -1,0 +1,1 @@
+[09-May-2025 18:56:59 UTC] PHP Parse error:  Unclosed '[' does not match ')' in D:\wamp64\www\pos\core\connector\inventory\master_items.php on line 66

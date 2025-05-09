@@ -18,6 +18,7 @@ class InventoryMasterCategoryConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Inventory Category | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -58,24 +59,24 @@ class InventoryMasterCategoryConnector {
 		{
 			////////////////
 	
-			if($db->request('search_parent_category')){ $search_parent_category=$db->request('search_parent_category'); }
+			if(isset($_REQUEST['search_parent_category'])){ $search_parent_category=$db->request('search_parent_category'); }
 			else{ $search_parent_category=''; }
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
 			$sql=" WHERE category_id!=0";
 			
-			if($search_parent_category!==''){ $sql.=" AND parent_category_id='".$search_parent_category."'"; }
+			if($search_parent_category){ $sql.=" AND parent_category_id='".$search_parent_category."'"; }
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -142,14 +143,13 @@ class InventoryMasterCategoryConnector {
 			
 			$data['parent_category_list'] = $InventoryMasterCategoryQuery->gets("WHERE parent_category_id=0");
 			
-			if($db->request('parent_category_id')){ $data['parent_category_id'] = $db->request('parent_category_id');}
+			if(isset($_REQUEST['parent_category_id'])){ $data['parent_category_id'] = $db->request('parent_category_id');}
 			else{ $data['parent_category_id'] = 0; }
 				
-			if($db->request('name')){ $data['name'] = $db->request('name');}
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -247,14 +247,13 @@ class InventoryMasterCategoryConnector {
 				
 				$data['category_id'] = $getCategoryInfo['category_id'];
 				
-				if($db->request('parent_category_id')){ $data['parent_category_id'] = $db->request('parent_category_id');}
+				if(isset($_REQUEST['parent_category_id'])){ $data['parent_category_id'] = $db->request('parent_category_id');}
 				else{ $data['parent_category_id'] = $getCategoryInfo['parent_category_id']; }
 					
-				if($db->request('name')){ $data['name'] = $db->request('name');}
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 				else{ $data['name'] = $getCategoryInfo['name']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status');}
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 				else{ $data['status'] = $getCategoryInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -262,7 +261,7 @@ class InventoryMasterCategoryConnector {
 					
 					if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 					
-					if($db->request('name')!==$getCategoryInfo['name'])
+					if(isset($_REQUEST['name')!==$getCategoryInfo['name'])
 					{
 						$countCategoriesByName = $InventoryMasterCategoryQuery->gets("WHERE name='".$data['name']."'");
 						$countCategoriesByName = count($countCategoriesByName);

@@ -1,0 +1,81 @@
+/* CSS Document */
+#keyboard_main
+{
+	width:100%; height:205px; position:fixed; left:0px; bottom:0px; z-index:1005;
+	background:#1d1f20;
+	padding:2px 2% 2px 2%;
+}
+#keyboard_main_in
+{
+	width:1019px; min-height:5px; margin:0 auto;
+}
+#keyboard_main a
+{
+	width:71px; height:calc(194px / 4); float:left;
+	margin-left:1px; margin-bottom:1px;
+	background:#4d4d4e;
+	font-size:18px; color:#fefeff; font-weight:600; text-align:center; line-height:calc(194px / 4);
+}
+#keyboard_main a:active
+{
+	box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.75) inset;
+	-webkit-box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.75) inset;
+	-moz-box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.75) inset;
+}
+
+#keyboard_close
+{
+	width:131px; height:calc(194px / 4); margin-bottom:5px;
+	font-size:12px; color:#F00; font-weight:600; text-align:center;
+}
+
+a#keyboard_change
+{
+	width:206px; height:calc(194px / 4);
+	background:#4d4d4e;
+	font-size:18px; color:#fefeff; font-weight:600; text-align:center; line-height:calc(194px / 4);
+}
+
+a#del
+{
+	width:115px; height:calc(194px / 4);
+	background:#4d4d4e;
+	font-size:18px; color:#fefeff; font-weight:600; text-align:center; line-height:calc(194px / 4);
+}
+
+a#clr
+{
+	width:115px; height:calc(194px / 4);
+	background:#4d4d4e;
+	font-size:18px; color:#fefeff; font-weight:600; text-align:center; line-height:calc(194px / 4);
+}
+
+#keyboard_main_alp
+{
+	width:720px; height:auto; float:left; margin-right:5px;
+}
+
+#keyboard_main_num
+{
+	width:216px; height:auto; float:left;
+	margin-right:5px;
+}
+
+a#keyboardspace
+{
+	width:280px; height:calc(194px / 4);
+	background:#4d4d4e;
+	font-size:18px; color:#fefeff; font-weight:600; text-align:center; line-height:calc(194px / 4);
+}
+
+a#keyboard_main_enter
+{
+	width:72px; height:197px; float:left;
+	font-size:12px; line-height:197px;
+}
+
+
+@media(max-width: 1050px)
+{
+	#keyboard_main{ padding:0px; }
+}

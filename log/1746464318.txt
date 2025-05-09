@@ -1,6 +1,0 @@
-[05-May-2025 16:58:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method SalesLoyaltyQuery::data() in D:\wamp64\www\pos\core\connector\sales\r_loyalty.php:87
-Stack trace:
-#0 D:\wamp64\www\pos\base\load.php(22): SalesRLoyaltyConnector->view('view')
-#1 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
-#2 {main}
-  thrown in D:\wamp64\www\pos\core\connector\sales\r_loyalty.php on line 87

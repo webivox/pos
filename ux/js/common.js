@@ -35,12 +35,27 @@ $(document).on('click','.open_popup_form',function(){
 	var height = parseFloat($(this).data('height'));
 	var url = $(this).data('url');
 	
-	var formheight = height-135;
+	var windowwidth = window.innerWidth;
 	
+	if(windowwidth<728){ 
+	
+	
+		var height = window.innerHeight;
+		var maxformheight = window.innerHeight - 185;
+	
+	}
+	else
+	{
+	
+		var formheight = height-135;
+		var maxformheight = window.innerHeight - 155;
+	}
 	
 	$("#popup_form_in").css({
 		"width": width,
-		"height": height
+		"height": height,
+		'max-width': '96%',
+		'max-height': '92vh'
 	});
 	
 	$("#popup_form_in_form").load(url, function () {
@@ -49,7 +64,8 @@ $(document).on('click','.open_popup_form',function(){
 			mask();
 			
 			$("#popup_form_in_form_in").css({
-				"height": formheight
+				"height": formheight,
+				"max-height": maxformheight
 			});
 					
 			$("#popup_form_in_form .autofocus").focus();

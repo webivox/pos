@@ -110,12 +110,16 @@ class AccountsTransactionsTransfersQuery {
 		
 		$addedDate = $dateCls->dateToDB($data['added_date']);
 		
+		if(isset($data['shift_id'])){ $shift_id = $data['shift_id']; }
+		else{ $shift_id = 0; }
+		
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
 						
 						location_id='".$data['location_id']."',
 						account_from_id='".$data['account_from_id']."',
 						account_to_id='".$data['account_to_id']."',
+						shift_id='".$shift_id."',
 						user_id='".$data['user_id']."',
 						added_date='".$addedDate."',
 						amount='".$data['amount']."',

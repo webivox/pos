@@ -264,6 +264,64 @@ $(document).on('click', '#shift_modal_start', function() {
 });
 
 
+$(document).on('click', '#end_shift', function() {
+
+	event.preventDefault(); // Make sure 'event' is defined properly
+	
+	$.ajax({
+		url: 'sales/screen/shiftEnd/',
+		type: 'POST',
+		data: {}, // You can send an empty object if you don't need to send anything
+		dataType: 'json',
+		contentType: 'application/x-www-form-urlencoded', // Not multipart, since no files
+		cache: false,
+		processData: true,
+		beforeSend: function() {
+			$('#saveFormBtn').attr('disabled', true).text('Loading...');
+			$("#modal_loading").fadeIn(1);
+		},
+		success: function(json) {
+			console.log(json);
+	
+			$('#saveFormBtn').attr('disabled', false).text('Save');
+			$("#modal_loading").fadeOut(1);
+	
+			if (json['error']) {
+				$("#modal ul").html(json['error_msg']);
+				$("#modal").fadeIn(1);
+				return;
+			}
+	
+			if (json['success_reopen']) {
+				$("#right_form_in").attr('class', json['success_class']);
+				
+				$("#right_form_in_load").html('').load(json['success_reopen_url']);
+				$("#right_form").fadeIn(1);
+			}
+	
+			if (json['success']) {
+				
+				location.reload();
+					
+	
+				$("#popup_form_in_close").trigger('click');
+				$("#modal_success p").text(json['success_msg']);
+				$("#modal_success").fadeIn(1);
+				$("#popup_form_in_form").html('');
+				
+				$("#shift_modal").fadeIn(10);
+			}
+		},
+		error: function(xhr, status, error) {
+			$('#saveFormBtn').attr('disabled', false).text('Save');
+			$("#modal_loading").fadeOut(1);
+			console.error("AJAX Error:", error);
+		}
+	});
+
+	
+});
+
 
 
 $(document).on('click', '#suspend', function() {
@@ -378,6 +436,17 @@ $(document).on('change', '#pendinginvoicedd', function() {
 		}
 	});
 
+	
+});
+
+
+
+
+$(document).on('click', '#noreprintinvfound', function() {
+	
+	
+	$("#modal ul").html('<li>Invoice not found</li>');
+	$("#modal").fadeIn(1);
 	
 });
 
@@ -615,19 +684,34 @@ $(document).on("click", "#modal_success_in_close", function (e) {
 
 
 ///Add Edit
-	
+		
 $(document).on('click','.open_popup_form',function(){
 
 	var width = parseFloat($(this).data('width'));
 	var height = parseFloat($(this).data('height'));
 	var url = $(this).data('url');
 	
-	var formheight = height-135;
+	var windowwidth = window.innerWidth;
 	
+	if(windowwidth<728){ 
+	
+	
+		var height = window.innerHeight;
+		var maxformheight = window.innerHeight - 185;
+	
+	}
+	else
+	{
+	
+		var formheight = height-135;
+		var maxformheight = window.innerHeight - 155;
+	}
 	
 	$("#popup_form_in").css({
 		"width": width,
-		"height": height
+		"height": height,
+		'max-width': '96%',
+		'max-height': '92vh'
 	});
 	
 	$("#popup_form_in_form").load(url, function () {
@@ -636,7 +720,8 @@ $(document).on('click','.open_popup_form',function(){
 			mask();
 			
 			$("#popup_form_in_form_in").css({
-				"height": formheight
+				"height": formheight,
+				"max-height": maxformheight
 			});
 					
 			$("#popup_form_in_form .autofocus").focus();
@@ -645,7 +730,6 @@ $(document).on('click','.open_popup_form',function(){
 
 	$("#popup_form").fadeIn(10);
 });
-	
 $(document).on('click', '#popup_form_in_close',function(e) {
 		
 	$("#SearchFormBtn").trigger('click');

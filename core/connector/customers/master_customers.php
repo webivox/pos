@@ -18,6 +18,7 @@ class CustomersMasterCustomersConnector {
 			
 			$data = [];
 			
+			$data['titleTag'] 	= 'Customer Report | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
@@ -57,16 +58,16 @@ class CustomersMasterCustomersConnector {
 		{
 			////////////////
 			
-			if($db->request('search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if($db->request('search_phone_number')){ $search_phone_number=$db->request('search_phone_number'); }
+			if(isset($_REQUEST['search_phone_number'])){ $search_phone_number=$db->request('search_phone_number'); }
 			else{ $search_phone_number=''; }
 			
-			if($db->request('search_status')!==''){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if($db->request('pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -74,7 +75,7 @@ class CustomersMasterCustomersConnector {
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
 			if($search_phone_number){ $sql.=" AND phone_number LIKE '%$search_phone_number%'"; }
-			if($search_status!==''){ $sql.=" AND status='".$search_status."'"; }
+			if($search_status){ $sql.=" AND status='".$search_status."'"; }
 			///////////
 	
 			$per_page=$defCls->master('per_page_results');
@@ -151,36 +152,35 @@ class CustomersMasterCustomersConnector {
 			
 			$data['customer_group_list'] = $CustomersMasterCustomergroupsQuery->gets("ORDER BY name ASC");
 				
-			if($db->request('customer_group_id')){ $data['customer_group_id'] = $db->request('customer_group_id'); }
+			if(isset($_REQUEST['customer_group_id'])){ $data['customer_group_id'] = $db->request('customer_group_id'); }
 			else{ $data['customer_group_id'] = ''; }
 			
-			if($db->request('name')){ $data['name'] = $db->request('name'); }
+			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name'); }
 			else{ $data['name'] = ''; }
 			
-			if($db->request('phone_number')){ $data['phone_number'] = $db->request('phone_number'); }
+			if(isset($_REQUEST['phone_number'])){ $data['phone_number'] = $db->request('phone_number'); }
 			else{ $data['phone_number'] = ''; }
 			
-			if($db->request('email')){ $data['email'] = $db->request('email'); }
+			if(isset($_REQUEST['email'])){ $data['email'] = $db->request('email'); }
 			else{ $data['email'] = ''; }
 			
-			if($db->request('address')){ $data['address'] = $db->request('address'); }
+			if(isset($_REQUEST['address'])){ $data['address'] = $db->request('address'); }
 			else{ $data['address'] = ''; }
 			
-			if($db->request('credit_limit')){ $data['credit_limit'] = $db->request('credit_limit'); }
+			if(isset($_REQUEST['credit_limit'])){ $data['credit_limit'] = $db->request('credit_limit'); }
 			else{ $data['credit_limit'] = ''; }
 			
-			if($db->request('settlement_days')){ $data['settlement_days'] = $db->request('settlement_days'); }
+			if(isset($_REQUEST['settlement_days'])){ $data['settlement_days'] = $db->request('settlement_days'); }
 			else{ $data['settlement_days'] = ''; }
 			
-			if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+			if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 			else{ $data['remarks'] = ''; }
 			
-			if($db->request('card_no')){ $data['card_no'] = $db->request('card_no'); }
+			if(isset($_REQUEST['card_no'])){ $data['card_no'] = $db->request('card_no'); }
 			else{ $data['card_no'] = ''; }
 
 			
-			if($db->request('status')){ $data['status'] = $db->request('status');}
-			elseif($db->request('status')==0){ $data['status'] = 0; }
+			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
@@ -281,35 +281,34 @@ class CustomersMasterCustomersConnector {
 			
 				$data['customer_group_list'] = $CustomersMasterCustomergroupsQuery->gets("ORDER BY name ASC");
 					
-				if($db->request('customer_group_id')){ $data['customer_group_id'] = $db->request('customer_group_id'); }
+				if(isset($_REQUEST['customer_group_id'])){ $data['customer_group_id'] = $db->request('customer_group_id'); }
 				else{ $data['customer_group_id'] = $getCustomerInfo['customer_group_id']; }
 				
-				if($db->request('name')){ $data['name'] = $db->request('name'); }
+				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name'); }
 				else{ $data['name'] = $getCustomerInfo['name']; }
 				
-				if($db->request('phone_number')){ $data['phone_number'] = $db->request('phone_number'); }
+				if(isset($_REQUEST['phone_number'])){ $data['phone_number'] = $db->request('phone_number'); }
 				else{ $data['phone_number'] = $getCustomerInfo['phone_number']; }
 				
-				if($db->request('email')){ $data['email'] = $db->request('email'); }
+				if(isset($_REQUEST['email'])){ $data['email'] = $db->request('email'); }
 				else{ $data['email'] = $getCustomerInfo['email']; }
 				
-				if($db->request('address')){ $data['address'] = $db->request('address'); }
+				if(isset($_REQUEST['address'])){ $data['address'] = $db->request('address'); }
 				else{ $data['address'] = $getCustomerInfo['address']; }
 				
-				if($db->request('credit_limit')){ $data['credit_limit'] = $db->request('credit_limit'); }
+				if(isset($_REQUEST['credit_limit'])){ $data['credit_limit'] = $db->request('credit_limit'); }
 				else{ $data['credit_limit'] = $getCustomerInfo['credit_limit']; }
 				
-				if($db->request('settlement_days')){ $data['settlement_days'] = $db->request('settlement_days'); }
+				if(isset($_REQUEST['settlement_days'])){ $data['settlement_days'] = $db->request('settlement_days'); }
 				else{ $data['settlement_days'] = $getCustomerInfo['settlement_days']; }
 				
-				if($db->request('remarks')){ $data['remarks'] = $db->request('remarks'); }
+				if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks'); }
 				else{ $data['remarks'] = $getCustomerInfo['remarks']; }
 				
-				if($db->request('card_no')){ $data['card_no'] = $db->request('card_no'); }
+				if(isset($_REQUEST['card_no'])){ $data['card_no'] = $db->request('card_no'); }
 				else{ $data['card_no'] = $getCustomerInfo['card_no']; }
 				
-				if($db->request('status')){ $data['status'] = $db->request('status'); }
-				elseif($db->request('status')==0){ $data['status'] = 0; }
+				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getCustomerInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
