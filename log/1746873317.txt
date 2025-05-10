@@ -1,0 +1,18 @@
+[10-May-2025 16:05:18 Asia/Colombo] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\wamp64\www\pos\base\class\defCls.php on line 64
+[10-May-2025 16:05:18 Asia/Colombo] PHP Stack trace:
+[10-May-2025 16:05:18 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[10-May-2025 16:05:18 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[10-May-2025 16:05:18 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:22
+[10-May-2025 16:05:18 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[10-May-2025 16:05:18 Asia/Colombo] PHP   5. require_once() D:\wamp64\www\pos\design\html\common\dashboard.php:11
+[10-May-2025 16:05:18 Asia/Colombo] PHP   6. defCls->money($money = NULL) D:\wamp64\www\pos\design\html\common\dashboard\today_sales.php:15
+[10-May-2025 16:05:18 Asia/Colombo] PHP   7. number_format($num = NULL, $decimals = 2) D:\wamp64\www\pos\base\class\defCls.php:64
+[10-May-2025 16:05:18 Asia/Colombo] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in D:\wamp64\www\pos\base\class\defCls.php on line 64
+[10-May-2025 16:05:18 Asia/Colombo] PHP Stack trace:
+[10-May-2025 16:05:18 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[10-May-2025 16:05:18 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[10-May-2025 16:05:18 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:22
+[10-May-2025 16:05:18 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[10-May-2025 16:05:18 Asia/Colombo] PHP   5. require_once() D:\wamp64\www\pos\design\html\common\dashboard.php:13
+[10-May-2025 16:05:18 Asia/Colombo] PHP   6. defCls->money($money = NULL) D:\wamp64\www\pos\design\html\common\dashboard\today_expenses.php:15
+[10-May-2025 16:05:18 Asia/Colombo] PHP   7. number_format($num = NULL, $decimals = 2) D:\wamp64\www\pos\base\class\defCls.php:64

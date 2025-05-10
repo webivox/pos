@@ -1,1 +1,0 @@
-[10-May-2025 08:12:29 UTC] PHP Parse error:  Unclosed '[' does not match ')' in D:\wamp64\www\pos\core\connector\inventory\master_warranty.php on line 60

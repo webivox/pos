@@ -1,6 +1,0 @@
-[10-May-2025 08:13:03 UTC] PHP Warning:  Undefined array key "no_of_qty" in D:\wamp64\www\pos\design\html\sales\transaction_quotations_form.php on line 120
-[10-May-2025 08:13:03 UTC] PHP Stack trace:
-[10-May-2025 08:13:03 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[10-May-2025 08:13:03 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
-[10-May-2025 08:13:03 UTC] PHP   3. SalesTransactionQuotationsConnector->create('create') D:\wamp64\www\pos\base\load.php:22
-[10-May-2025 08:13:03 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\transaction_quotations.php:302
