@@ -1060,6 +1060,7 @@ $(document).on('click', '.remove', function() {
 	
 			if (json['success']) {
 				$("#cart_item_row"+id).remove();
+				$("#cart_item_row_sl"+id).remove();
 				$("#itemSearchInput").focus().select();
 				
 			}
