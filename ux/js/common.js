@@ -40,8 +40,8 @@ $(document).on('click','.open_popup_form',function(){
 	if(windowwidth<728){ 
 	
 	
-		var height = window.innerHeight;
-		var maxformheight = window.innerHeight - 185;
+		var height = window.innerHeight-100;
+		var maxformheight = height - 185;
 	
 	}
 	else

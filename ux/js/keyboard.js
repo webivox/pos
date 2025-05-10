@@ -2,7 +2,6 @@
 
 $(document).on("click", ".okeyboard", function() {
 
-	$("#keyboard_main").slideDown(100);
 	
 	var inputid=$(this).attr('id');
 	

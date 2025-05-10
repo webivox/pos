@@ -7,6 +7,7 @@
 <script src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
 <script src="<?php echo _JS; ?>signin.js"></script>
 <link id="page_favicon" href="<?php echo _IMAGES; ?>fav.png" rel="icon" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 

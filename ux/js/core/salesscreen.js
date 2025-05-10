@@ -696,8 +696,8 @@ $(document).on('click','.open_popup_form',function(){
 	if(windowwidth<728){ 
 	
 	
-		var height = window.innerHeight;
-		var maxformheight = window.innerHeight - 185;
+		var height = window.innerHeight-100;
+		var maxformheight = height - 185;
 	
 	}
 	else
@@ -730,6 +730,7 @@ $(document).on('click','.open_popup_form',function(){
 
 	$("#popup_form").fadeIn(10);
 });
+
 $(document).on('click', '#popup_form_in_close',function(e) {
 		
 	$("#SearchFormBtn").trigger('click');

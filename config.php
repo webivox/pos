@@ -22,3 +22,5 @@ define("_DBPASS","");
 define('_TIMEZONE','Asia/Colombo');
 
 define("_SESSIONPREFIX","xsz8_");
+
+define("_SESSIONPREFIX","xsz8_");

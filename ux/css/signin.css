@@ -220,3 +220,12 @@ button:disabled { background:#5c5c5c; cursor:not-allowed; }
 	height:40px;
 	font-size:14px;
 }
+
+
+@media(max-width:601px)
+{
+	body{ 
+	background-size:auto 100vh;
+	}
+	#login_form{ width:94%; margin-left:3%; margin-right:3%; }
+}
