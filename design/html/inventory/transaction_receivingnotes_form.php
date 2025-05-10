@@ -29,7 +29,7 @@
     </div>
     
     <div class="col_4">
-        <label for="supplier_id">Supplier ID <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['supplier_create_url']; ?>" data-width="950" data-height="450">[Create]</a></label>
+        <label for="supplier_id">Supplier ID <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['supplier_create_url']; ?>"  data-formsizeclass="popup_form_in_size_large_sub">[Create]</a></label>
         
         <input type="text" name="supplier_id_txt" id="supplier_id_txt" data-setid="supplier_id" placeholder="" class="supplierAjax" value="<?php echo $data['supplier_id_txt']; ?>">
         <input type="hidden" id="supplier_id" name="supplier_id" value="<?php echo $data['supplier_id']; ?>" />
@@ -69,7 +69,7 @@
                     <tr>
                 
                         <td style="width:50px">No</td>
-                        <td>Item Name <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['item_create_url']; ?>" data-width="950" data-height="450">[Create a New]</a></td>
+                        <td>Item Name <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['item_create_url']; ?>"  data-formsizeclass="popup_form_in_size_large_sub">[Create a New]</a></td>
                         <td style="width:75px">Qty</td>
                         <td style="width:85px">Amount</td>
                         <td style="width:85px">Buying Price</td>
