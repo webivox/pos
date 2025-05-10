@@ -1,0 +1,7 @@
+[10-May-2025 10:30:49 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in D:\wamp64\www\pos\base\class\db.php:14
+Stack trace:
+#0 D:\wamp64\www\pos\base\class\db.php(105): db->__construct()
+#1 D:\wamp64\www\pos\base\class\class.inc.php(4): require_once('D:\\wamp64\\www\\p...')
+#2 D:\wamp64\www\pos\index.php(15): require_once('D:\\wamp64\\www\\p...')
+#3 {main}
+  thrown in D:\wamp64\www\pos\base\class\db.php on line 14
