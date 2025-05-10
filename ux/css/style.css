@@ -1202,21 +1202,21 @@ textarea{ padding-top:7px; }
 
 	.popup_form_in_size_large
 	{
-		width:96%; height:98vh; float:left;
+		width:96%; height:90vh; float:left;
 	}
-	.popup_form_in_size_large #popup_form_in_form_in{ height:calc(98vh - 145px); }
+	.popup_form_in_size_large #popup_form_in_form_in{ height:calc(90vh - 145px); }
 	
 	.popup_form_in_size_medium
 	{
-		width:96%; height:98vh; float:left;
+		width:96%; height:90vh; float:left;
 	}
-	.popup_form_in_size_medium #popup_form_in_form_in{ height:calc(98vh - 145px); }
+	.popup_form_in_size_medium #popup_form_in_form_in{ height:calc(90vh - 145px); }
 	
 	.popup_form_in_size_small
 	{
-		width:96%; height:98vh; float:left;
+		width:96%; height:90vh; float:left;
 	}
-	.popup_form_in_size_small #popup_form_in_form_in{ height:calc(98vh - 145px); }
+	.popup_form_in_size_small #popup_form_in_form_in{ height:calc(90vh - 145px); }
 	
 	
 	
@@ -1230,19 +1230,19 @@ textarea{ padding-top:7px; }
 	{
 		width:92%; height:94vh; float:left;
 	}
-	.popup_form_in_size_large_sub #popup_form_in_form_in{ height:calc(98vh - 155px); }
+	.popup_form_in_size_large_sub #popup_form_in_form_in{ height:calc(86vh - 155px); }
 	
 	.popup_form_in_size_medium_sub
 	{
 		width:92%; height:94vh; float:left;
 	}
-	.popup_form_in_size_medium_sub #popup_form_in_form_in{ height:calc(98vh - 155px); }
+	.popup_form_in_size_medium_sub #popup_form_in_form_in{ height:calc(86vh - 155px); }
 	
 	.popup_form_in_size_small_sub
 	{
-		width:92%; height:94vh; float:left;
+		width:92%; height:86vh; float:left;
 	}
-	.popup_form_in_size_small_sub #popup_form_in_form_in{ height:calc(94vh - 155px); }
+	.popup_form_in_size_small_sub #popup_form_in_form_in{ height:calc(86vh - 155px); }
 }
 
 
