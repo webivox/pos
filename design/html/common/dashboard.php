@@ -1,7 +1,7 @@
 <div id="right">
 
 
-	<div id="filter_head">
+	<div id="filter_head" style="margin-bottom:10px;">
     
     	<h1>DASHBOARD</h1>
         
