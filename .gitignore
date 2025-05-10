@@ -1,2 +1,4 @@
 config.php
 .htaccess
+pos.sql
+dw_php_codehinting.config
