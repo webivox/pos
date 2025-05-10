@@ -92,6 +92,16 @@ class  InventoryTransactionsReceivingnotesQuery{
 		
 		return array('total'=>$count_pn,'html'=>$pagination,'limit_start'=>$limit_start,'limit_end'=>$limit_end);
 	}
+    
+    public function getItem($receivingnoteItemId) {
+		
+        global $db;
+
+        // Query to fetch all blogs
+        $row = $db->fetch("SELECT * FROM ".$this->itemTableName." WHERE receiving_note_item_id='".$receivingnoteItemId."'");
+		
+		return !empty($row) ? $row : [];
+    }
 	
 	
     public function getItems($sql = '') {

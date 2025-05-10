@@ -114,6 +114,18 @@
     
     <div class="col_4">
     
+        <label for="unique_no">Unique No</label>
+        <select name="unique_no" id="unique_no">
+        
+        	<option value="1" <?php if($data['unique_no']==1){ echo 'selected'; } ?>>Required</option>
+        	<option value="0" <?php if($data['unique_no']==0){ echo 'selected'; } ?>>NO Need</option>
+        
+        </select>
+    
+    </div>
+    
+    <div class="col_4">
+    
         <label for="status">Status</label>
         <select name="status" id="status">
         

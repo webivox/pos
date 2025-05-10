@@ -80,7 +80,7 @@ class SalesTransactionReturnConnector {
 			if(isset($_REQUEST['search_location_id'])){ $search_location_id=$db->request('search_location_id'); }
 			else{ $search_location_id=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

@@ -76,7 +76,7 @@ class CustomersTransactionDebitnotesConnector {
 			if(isset($_REQUEST['search_customer_id'])){ $search_customer_id=$db->request('search_customer_id'); }
 			else{ $search_customer_id=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

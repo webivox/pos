@@ -61,7 +61,7 @@ class SalesTransactionGiftcardsConnector {
 			if(isset($_REQUEST['search_no'])){ $search_no=$db->request('search_no'); }
 			else{ $search_no=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

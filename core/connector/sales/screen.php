@@ -1044,6 +1044,116 @@ class SalesScreenConnector {
 	}
 
 
+
+
+	
+	
+
+    public function updateuniqueno() {
+			
+		global $db;
+		global $id;
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $SystemMasterUsersQuery;
+		global $SalesScreenQuery;
+		global $SystemMasterCashierpointsQuery;
+		global $InventoryMasterItemsQuery;
+		global $InventoryTransactionUniquenosQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			
+			$userId = $sessionCls->load('signedUserId');
+			
+			if($SalesScreenQuery->getShift($userId))
+			{
+				$salesItemInfo = $SalesScreenQuery->getItem($id);
+				$itemInfo = $InventoryMasterItemsQuery->get($salesItemInfo['item_id']);
+			
+				$invoiceId = $sessionCls->load('invoiceId');
+				
+				$val = $db->request('val');
+				
+				if($invoiceId && $id && !$val)
+				{
+					$SalesScreenQuery->updateItemUniqueNo($invoiceId,$id,'');
+								
+					$json['success']=true;
+								
+				}
+				
+				elseif($invoiceId && $id && $val)
+				{
+					$uniqueNoInfo = $InventoryTransactionUniquenosQuery->getByUniqueNo($val);
+					
+					if($uniqueNoInfo)
+					{
+						
+						if($uniqueNoInfo['status']==0)
+						{
+							if($itemInfo['item_id']==$salesItemInfo['item_id'])
+							{
+								
+								$SalesScreenQuery->updateItemUniqueNo($invoiceId,$id,$val);
+								
+								$json['success']=true;
+								
+							}
+							else{ $error_msg[]="Item did not matched!"; $error_no++; }
+						}
+						else{ $error_msg[]="Unique No Already Used!"; $error_no++; }
+						
+					}
+					else{ $error_msg[]="Invalid Unique No!"; $error_no++; }
+					
+				}
+				else
+				{
+			
+					$error_msg[]="Invalid Invoice number!"; $error_no++;	
+				
+				}
+					
+				
+				
+				
+			}
+			else
+			{
+		
+				$error_msg[]="Invalid Cashier Point!"; $error_no++;	
+			
+			}
+			
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 	
 	
 
@@ -2321,6 +2431,8 @@ class SalesScreenConnector {
 		global $AccountsMasterAccountsQuery;
 		global $SalesTransactionsReturnQuery;
 		global $SalesTransactionGiftcardsQuery;
+		global $InventoryTransactionUniquenosQuery;
+		global $InventoryMasterItemsQuery;
 		
 		
 		$data = [];
@@ -2341,8 +2453,40 @@ class SalesScreenConnector {
 				if($invoiceId)
 				{
 					$invoiceInfo = $SalesScreenQuery->get($invoiceId);
+					$invoiceItemsInfo = $SalesScreenQuery->getItems($invoiceId);
 					$invoicePaymentsInfo = $SalesScreenQuery->getPayments($invoiceId);
 					$customerInfo = $CustomersMasterCustomersQuery->get($invoiceInfo['customer_id']);
+					
+					$unique_no_matching = [];
+					foreach($invoiceItemsInfo as $ii)
+					{
+						if($ii['unique_no'])
+						{
+						
+							$itemInfo = $InventoryMasterItemsQuery->get($ii['item_id']);
+						
+							$uniqueNoInfo = $InventoryTransactionUniquenosQuery->getByUniqueNo($ii['unique_no']);
+						
+							if($uniqueNoInfo)
+							{
+								
+								if($uniqueNoInfo['status']==0)
+								{
+									if($itemInfo['item_id']==$ii['item_id'])
+									{
+										$unique_no_matching[]=$ii['unique_no'];
+									}
+									else{ $error_msg[]="Item did not matched!"; $error_no++; }
+								}
+								else{ $error_msg[]="Unique No Already Used!"; $error_no++; }
+								
+							}
+							else{ $error_msg[]="Invalid Unique No!".$ii['unique_no']; $error_no++; }
+						}
+					}
+					if (count($unique_no_matching) !== count(array_unique($unique_no_matching))) {
+						$error_msg[]="Unique no used multiple times!"; $error_no++;
+					}
 					
 					$totalPaid = 0;
 					

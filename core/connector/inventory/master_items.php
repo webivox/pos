@@ -75,7 +75,7 @@ class InventoryMasterItemsConnector {
 			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
@@ -259,6 +259,9 @@ class InventoryMasterItemsConnector {
 			if(isset($_REQUEST['minimum_qty'])){ $data['minimum_qty'] = $db->request('minimum_qty'); }
 			else{ $data['minimum_qty'] = 1; }
 			
+			if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no'); }
+			else{ $data['minimum_qty'] = 0; }
+			
 			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
@@ -427,6 +430,9 @@ class InventoryMasterItemsConnector {
 			
 				if(isset($_REQUEST['minimum_qty'])){ $data['minimum_qty'] = $db->request('minimum_qty'); }
 				else{ $data['minimum_qty'] = $getItemInfo['minimum_qty']; }
+			
+				if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no'); }
+				else{ $data['unique_no'] = $getItemInfo['unique_no']; }
 				
 				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getItemInfo['status']; }

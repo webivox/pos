@@ -81,7 +81,7 @@ class AccountsTransactionExpencesConnector {
 			if(isset($_REQUEST['search_account_id'])){ $search_account_id=$db->request('search_account_id'); }
 			else{ $search_account_id=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

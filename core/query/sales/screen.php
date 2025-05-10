@@ -243,8 +243,11 @@ class SalesScreenQuery {
 		
 		
 		$salesItemInfo = $SalesScreenQuery->getItem($itemId);
+		$itemInfo = $InventoryMasterItemsQuery->get($salesItemInfo['item_id']);
 		
-		$itemName = $defCls->showText($InventoryMasterItemsQuery->data($salesItemInfo['item_id'],'name'));
+		$itemName = $defCls->showText($itemInfo['name']);
+		$itemDescription = $defCls->showText($itemInfo['description']);
+		$closingStock = $defCls->num($itemInfo['closing_stocks']);
 		
 		$masterPrice = $defCls->num($salesItemInfo['master_price']);
 		$amount = $defCls->num($salesItemInfo['price']);
@@ -253,8 +256,10 @@ class SalesScreenQuery {
 		$qty = $defCls->num($salesItemInfo['qty']);
 		$total = $defCls->num($salesItemInfo['total']);
 		
+		$uniqueNo = $defCls->showText($salesItemInfo['unique_no']);
 		
-		return '<tr class="cart_item_row" id="cart_item_row'.$itemId.'">
+		
+		$html = '<tr class="cart_item_row" id="cart_item_row'.$itemId.'">
                 
                 	<td class="cart_item_no"><input type="text" disabled value="0"></td>
                 	<td class="cart_item_itemname"><input type="text" disabled value="'.$itemName.'"></td>
@@ -272,8 +277,26 @@ class SalesScreenQuery {
                     
                     </td>
                 
-                </tr>';
-		
+                </tr>
+				<tr class="cart_item_row_sl" id="cart_item_row_sl'.$itemId.'">';
+				
+				if($itemInfo['unique_no'])
+				{ 
+					
+					$html .= '<td colspan="2"><input type="text" value="'.$uniqueNo.'" placeholder="Unique No" class="ciUniqueNo okeyboard" data-id="'.$salesItemInfo['invoice_item_id'].'"></td>
+								<td colspan="2"><input type="text" disabled value="AV.Qty: '.$closingStock.'"></td>
+								<td colspan="5"><input type="text" disabled value="'.$itemDescription.'"></td>';
+					
+				}
+				else
+				{
+                	$html .= '
+							<td colspan="2"><input type="text" disabled value="AV.Qty: '.$closingStock.'"></td>
+							<td colspan="7"><input type="text" disabled value="'.$itemDescription.'"></td>';
+				}
+                
+               $html .= ' </tr>';
+		return $html;
 	}
 	
 	
@@ -405,6 +428,23 @@ class SalesScreenQuery {
 		global $SalesScreenQuery;
 		
         if($db->query("UPDATE ".$this->itemTableName." SET qty = '".$val."' WHERE invoice_item_id = '".$invoiceItemId."'"))
+		{
+			return true;
+			
+		}
+		else{ return false; }
+		
+    }
+	
+	
+    
+    public function updateItemUniqueNo($invoiceId, $invoiceItemId, $val) {
+		
+        global $db;
+		global $dateCls;
+		global $SalesScreenQuery;
+		
+        if($db->query("UPDATE ".$this->itemTableName." SET unique_no = '".$val."' WHERE invoice_item_id = '".$invoiceItemId."'"))
 		{
 			return true;
 			
@@ -621,11 +661,29 @@ class SalesScreenQuery {
 											`unit_price`='".$item['unit_price']."',
 											`qty`='".$item['qty']."',
 											`total`='".$item['total']."',
+											`unique_no`='".$item['unique_no']."',
 											`created_on`='".$item['created_on']."'
 							");
 							
-				$itemastId = $db->last_id();
 							
+							
+				$itemastId = $db->last_id();
+				
+				if($item['unique_no'])
+				{
+				
+					$db->query("UPDATE inventory_unique_nos SET 
+							
+									used_invoice_id='".$lastId."',
+									used_date='".$dateToday."',
+									status='1'
+									
+									WHERE
+									
+									unique_no = '".$item['unique_no']."'
+									
+							");
+				}
 				//// UPDATE STOCKS
 					 
 				 $stockData = [];

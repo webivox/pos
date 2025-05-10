@@ -62,7 +62,7 @@ class SystemMasterMasterConnector {
 			if(isset($_REQUEST['search_key'])){ $search_key=$db->request('search_key'); }
 			else{ $search_key=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

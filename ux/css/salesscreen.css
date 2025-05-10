@@ -820,6 +820,9 @@ textarea{ padding-top:7px; }
 	overflow-y:scroll;
 }
 
+.cart_item_row_sl{}
+.cart_item_row_sl input{ height:32px; }
+
 .cart_item_row{}
 .cart_item_row input{ height:32px; }
 .cart_item_no{ width:5%; height:auto; }

@@ -112,6 +112,7 @@ class InventoryMasterItemsQuery {
 						re_order_qty='".$data['re_order_qty']."',
 						order_qty='".$data['order_qty']."',
 						minimum_qty='".$data['minimum_qty']."',
+						unique_no='".$data['unique_no']."',
 						status='".$data['status']."'
 						
 				";
@@ -146,6 +147,7 @@ class InventoryMasterItemsQuery {
 						re_order_qty='".$data['re_order_qty']."',
 						order_qty='".$data['order_qty']."',
 						minimum_qty='".$data['minimum_qty']."',
+						unique_no='".$data['unique_no']."',
 						status='".$data['status']."'
 						
 						WHERE

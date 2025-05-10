@@ -836,6 +836,59 @@ $(document).on('change', '.ciAmount', function() {
 
 
 
+
+
+$(document).on('change', '.ciUniqueNo', function() {
+	event.preventDefault(); // Make sure 'event' is defined properly
+	
+	var id = $(this).data('id');
+	var val = $(this).val();
+	
+	$.ajax({
+		url: 'sales/screen/updateuniqueno/'+id+'/',
+		type: 'POST',
+		data: {val:val}, // You can send an empty object if you don't need to send anything
+		dataType: 'json',
+		contentType: 'application/x-www-form-urlencoded', // Not multipart, since no files
+		cache: false,
+		processData: true,
+		beforeSend: function() {
+			
+			$("#modal_loading").fadeIn(1);
+		},
+		success: function(json) {
+		
+			console.log(json);
+	
+			$("#modal_loading").fadeOut(1);
+	
+			if (json['error']) {
+				
+				$("#itemAmount"+id).val(json['oldValue']);
+				
+				$("#modal ul").html(json['error_msg']);
+				$("#modal").fadeIn(1);
+				return;
+			}
+	
+	
+			if (json['success']) {
+				total();
+				$("#itemSearchInput").focus().select();
+				
+			}
+		},
+		error: function(xhr, status, error) {
+			console.error("AJAX Error:", error);
+		}
+	});
+
+	
+});
+
+
+
+
 $(document).on('change', '.ciDiscount', function() {
 	event.preventDefault(); // Make sure 'event' is defined properly
 	

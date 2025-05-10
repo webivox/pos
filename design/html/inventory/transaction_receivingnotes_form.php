@@ -121,7 +121,12 @@
                             <td><input type="text" id="ediscount<?php echo $i['receiving_note_item_id']; ?>" name="ediscount<?php echo $i['receiving_note_item_id']; ?>" class="text-right editlinechange ediscount" value="<?php echo $defCls->num($i['discount']); ?>" /></td>
                             <td><input type="text" id="efinal_price<?php echo $i['receiving_note_item_id']; ?>" name="efinal_price<?php echo $i['receiving_note_item_id']; ?>" class="text-right efinal_price" disabled="disabled" value="<?php echo $defCls->num($i['final_price']); ?>" /></td>
                             <td><input type="text" id="etotal<?php echo $i['receiving_note_item_id']; ?>" name="etotal<?php echo $i['receiving_note_item_id']; ?>" disabled class="text-right etotal" value="<?php echo $defCls->num($i['total']); ?>" /></td>
-                            <td><a class="btn btn-danger removeItem" data-id="e<?php echo $i['receiving_note_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a></td>
+                            <td>
+                            	
+                                
+                                <a class="btn btn-danger actionbtn removeItem" data-id="e<?php echo $i['receiving_note_item_id']; ?>"><i class="fa-light fa-trash-xmark"></i></a>
+                                
+                            </td>
                     
                         </tr>
                     <?php } ?>

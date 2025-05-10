@@ -61,7 +61,11 @@ class defCls
 	
 	public function money($money)
 	{
-		return number_format($money,2);
+		if($money)
+		{
+			return number_format($money,2);
+		}
+		else{ return 0.00; }
 	}
 	
 	public function uppercase($text)

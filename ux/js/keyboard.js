@@ -8,7 +8,6 @@ $(document).on("click", ".okeyboard", function() {
 	
 	$("#keyboard_id").val("#"+inputid);
 	
-	$(this).val('');
 	
 });
 

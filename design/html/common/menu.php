@@ -20,6 +20,7 @@
                         <li><a href="<?php echo $defCls->genURL('sales/transaction_return'); ?>">Return</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/transaction_giftcards'); ?>">Gift Card</a></li>
                         <li><a href="<?php echo $defCls->genURL('sales/transaction_quotations'); ?>">Quotations</a></li>
+                        <li><a href="<?php echo $defCls->genURL('sales/transaction_kot_print'); ?>">KOT Print</a></li>
                     
                     </ul>
                 
@@ -161,6 +162,7 @@
                         <li><a href="<?php echo $defCls->genURL('inventory/transaction_returnnotes'); ?>">Return Note</a></li>
                         <li><a href="<?php echo $defCls->genURL('inventory/transaction_transfernotes'); ?>">Transfer Note</a></li>
                         <li><a href="<?php echo $defCls->genURL('inventory/transaction_adjustmentnotes'); ?>">Adjustment Note</a></li>
+                        <li><a href="<?php echo $defCls->genURL('inventory/transaction_uniquenos'); ?>">Unique No's</a></li>
                     
                     </ul>
                 

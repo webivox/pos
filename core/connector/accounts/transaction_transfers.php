@@ -83,7 +83,7 @@ class AccountsTransactionTransfersConnector {
 			if(isset($_REQUEST['account_to'])){ $account_to=$db->request('account_to'); }
 			else{ $account_to=''; }
 			
-			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
+			if($pageno=$db->request('pageno')){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			
