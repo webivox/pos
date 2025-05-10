@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title><?php echo $data['titleTag']; ?></title>
-<link href="<?php echo _CSS; ?>style.css?v=1" rel="stylesheet" type="text/css">
+<link href="<?php echo _CSS; ?>style.css?v=2" rel="stylesheet" type="text/css">
 <link href="<?php echo _CSS; ?>jquery-ui.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="<?php echo _JS; ?>jquery-ui.js"></script>
