@@ -5,7 +5,7 @@
     	<h1>Receiving Notes</h1>
         
         
-        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="1024" data-height="550">Create New</a>
+        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-formsizeclass="popup_form_in_size_large">Create New</a>
     
     </div>
     

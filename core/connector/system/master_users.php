@@ -132,7 +132,7 @@ class SystemMasterUsersConnector {
 			
 			$data['form_url'] 	= _SERVER."system/master_users/create";
 			
-			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId']));
+			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 			
 			$data['user_group_list'] = $SystemMasterUsergroupsQuery->gets("ORDER BY name ASC");
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");

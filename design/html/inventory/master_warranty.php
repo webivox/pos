@@ -5,7 +5,7 @@
     	<h1>Warranty</h1>
         
         
-        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="420" data-height="300">Create New</a>
+        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-formsizeclass="popup_form_in_size_small">Create New</a>
     
     </div>
     

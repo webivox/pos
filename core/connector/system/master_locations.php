@@ -206,7 +206,7 @@ class SystemMasterLocationsConnector {
 			if(isset($_REQUEST['status'])){ 
 				$data['status'] = $db->request('status');
 			}
-			elseif(isset($_REQUEST['status')==0){ $data['status'] = 0; }
+			elseif(isset($_REQUEST['status'])){ $data['status'] = 0; }
 			else { 
 				$data['status'] = 0; 
 			}

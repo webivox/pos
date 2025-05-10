@@ -56,7 +56,8 @@
     
     <div class="col_1">
     
-    
+    	<div id="addingItemTable">
+        
     	<table class="multi-table">
         
         	<thead>
@@ -131,7 +132,7 @@
         
         
         </table>
-    
+    	</div>
     
     </div>
 

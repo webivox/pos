@@ -11,7 +11,7 @@
     
     
     <div class="col_3">
-        <label for="customer_id">Customer <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['customer_create_url']; ?>" data-width="950" data-height="450">[Create]</a></label>
+        <label for="customer_id">Customer <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['customer_create_url']; ?>" data-formsizeclass="popup_form_in_size_large_sub">[Create]</a></label>
         
         <input type="text" name="customer_id_txt" id="customer_id_txt" data-setid="customer_id" placeholder="" class="customerAjax" value="<?php echo $data['customer_id_txt']; ?>">
         <input type="hidden" id="customer_id" name="customer_id" value="<?php echo $data['customer_id']; ?>" />
@@ -46,6 +46,8 @@
     
     
     <div class="col_1">
+    
+    	<div id="addingItemTable">
     
     
     	<table class="multi-table">
@@ -127,7 +129,8 @@
         
         </table>
     
-    
+    	</div>
+        
     </div>
 
    

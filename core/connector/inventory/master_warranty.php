@@ -57,13 +57,13 @@ class InventoryMasterWarrantyConnector {
 		{
 			////////////////
 			
-			if(isset($_REQUEST['search_name')){ $search_name=$db->request('search_name'); }
+			if(isset($_REQUEST['search_name'])){ $search_name=$db->request('search_name'); }
 			else{ $search_name=''; }
 			
-			if(isset($_REQUEST['search_status')){ $search_status=$db->request('search_status'); }
+			if(isset($_REQUEST['search_status'])){ $search_status=$db->request('search_status'); }
 			else{ $search_status=''; }
 			
-			if(isset($_REQUEST['pageno')){ $pageno=$db->request('pageno'); }
+			if(isset($_REQUEST['pageno'])){ $pageno=$db->request('pageno'); }
 			else{ $pageno = 1; }
 			/////////////
 			

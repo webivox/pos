@@ -19,7 +19,7 @@
         
             <div class="col-10 action">
             
-                <a class="btn btn-primary open_popup_form" data-url="<?php echo $warranty['updateURL']; ?>" data-width="420" data-height="300"><i class="fa-light fa-pen-to-square"></i></a>
+                <a class="btn btn-primary open_popup_form" data-url="<?php echo $warranty['updateURL']; ?>" data-formsizeclass="popup_form_in_size_small"><i class="fa-light fa-pen-to-square"></i></a>
                 
             
                 <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>

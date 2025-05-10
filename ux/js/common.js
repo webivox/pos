@@ -31,42 +31,17 @@ $(document).ready(function(e) {
 	
 $(document).on('click','.open_popup_form',function(){
 
-	var width = parseFloat($(this).data('width'));
-	var height = parseFloat($(this).data('height'));
+	var size = $(this).data('formsizeclass');
 	var url = $(this).data('url');
 	
-	var windowwidth = window.innerWidth;
-	
-	if(windowwidth<728){ 
+	$("#popup_form_in").addClass(size);
 	
 	
-		var height = window.innerHeight-100;
-		var maxformheight = height - 185;
-	
-	}
-	else
-	{
-	
-		var formheight = height-135;
-		var maxformheight = window.innerHeight - 155;
-	}
-	
-	$("#popup_form_in").css({
-		"width": width,
-		"height": height,
-		'max-width': '96%',
-		'max-height': '92vh'
-	});
 	
 	$("#popup_form_in_form").load(url, function () {
 		setTimeout(function () {
 			
 			mask();
-			
-			$("#popup_form_in_form_in").css({
-				"height": formheight,
-				"max-height": maxformheight
-			});
 					
 			$("#popup_form_in_form .autofocus").focus();
 		}, 100); // Small delay to ensure content is fully loaded
@@ -155,43 +130,31 @@ $(document).on("submit", "#saveForm", function (e) {
 $(document).on('click', '.open_popup_form_sub', function (e) {
 
 	
-    var url = $(this).data('url');
-		
+	var size = $(this).data('formsizeclass');
+	var url = $(this).data('url');
 	
-	if(url)
-	{
-
-		var width = parseFloat($(this).data('width'));
-		var height = parseFloat($(this).data('height'));
-		
-		
-		var formheight = height-135;
-		
-		
-		$("#popup_form_in_sub").css({
-			"width": width,
-			"height": height
-		});
-		
-		$("#popup_form_in_form_sub").load(url, function () {
-			setTimeout(function () {
-				
-				$("#popup_form_in_form_sub #popup_form_in_form_in").css({
-					"height": formheight
-				});
-		
-				$("#popup_form_in_form_sub #saveForm").attr('id','saveFormSub');
-				$("#popup_form_in_form_sub #saveFormBtn").attr('form','saveFormSub');
-				$("#popup_form_in_form_sub #saveFormBtn").attr('id','saveFormBtnSub');
+	$("#popup_form_in_sub").addClass(size);
+	
+	
+	
+	$("#popup_form_in_form_sub").load(url, function () {
+		setTimeout(function () {
+			
+			mask();
+			
+			
+		$("#popup_form_in_form_sub #saveForm").attr('id','saveFormSub');
+		$("#popup_form_in_form_sub #saveFormBtn").attr('form','saveFormSub');
+		$("#popup_form_in_form_sub #saveFormBtn").attr('id','saveFormBtnSub');
 					
-				mask();
-						
-				$("#popup_form_in_form_sub .autofocus").focus();
-			}, 100); // Small delay to ensure content is fully loaded
-		});
+			$("#popup_form_in_form_sub .autofocus").focus();
+		}, 100); // Small delay to ensure content is fully loaded
+	});
+
+	$("#popup_form_sub").fadeIn(10);
 	
-		$("#popup_form_sub").fadeIn(10);
-	}
+	
+    
 });
 	
 $(document).on('click', '#popup_form_in_close_sub',function(e) {

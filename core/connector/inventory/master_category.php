@@ -261,7 +261,7 @@ class InventoryMasterCategoryConnector {
 					
 					if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 					
-					if(isset($_REQUEST['name')!==$getCategoryInfo['name'])
+					if($db->request('name')!==$getCategoryInfo['name'])
 					{
 						$countCategoriesByName = $InventoryMasterCategoryQuery->gets("WHERE name='".$data['name']."'");
 						$countCategoriesByName = count($countCategoriesByName);

@@ -148,7 +148,7 @@ class InventoryTransactionAdjustmentnotesConnector {
 			
 			$data['form_url'] 	= _SERVER."inventory/transaction_adjustmentnotes/create";
 			
-			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId']));
+			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 			
 			$data['location_list'] = $SystemMasterLocationsQuery->gets("ORDER BY name ASC");
 				

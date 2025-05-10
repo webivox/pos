@@ -78,8 +78,15 @@ class db
 	{
 		if(isset($_REQUEST[$field]))
 		{
-			$var=trim(htmlentities($_REQUEST[$field], ENT_QUOTES, 'utf-8'));
-			return $this->conn->real_escape_string(trim($var));
+			if($_REQUEST[$field]==0)
+			{
+				return 0;
+			}
+			else
+			{
+				$var=trim(htmlentities($_REQUEST[$field], ENT_QUOTES, 'utf-8'));
+				return $this->conn->real_escape_string(trim($var));
+			}
 		}
 		else
 		{

@@ -193,6 +193,7 @@ class SalesTransactionQuotationsConnector {
 			
 			$data['total_qty'] = 0;
 			$data['total_tiotal'] = 0;
+			$data['no_of_qty'] = $defCls->num(0);
 			
 			$data['no_of_items'] = 0;
 			

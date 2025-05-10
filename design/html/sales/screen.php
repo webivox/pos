@@ -154,8 +154,8 @@
         <ul>
         
             <li><a id="suspend">SUSPEND</a></li>
-            <li><a class="open_popup_form" data-url="<?php echo $data['sales_return_url']; ?>" data-width="1024" data-height="550">RETURN</a></li>
-            <li><a class="open_popup_form" data-url="<?php echo $data['cashout_url']; ?>" data-width="450" data-height="220">CASHOUT</a></li>
+            <li><a class="open_popup_form" data-url="<?php echo $data['sales_return_url']; ?>" data-formsizeclass="popup_form_in_size_large">RETURN</a></li>
+            <li><a class="open_popup_form" data-url="<?php echo $data['cashout_url']; ?>" data-formsizeclass="popup_form_in_size_small">CASHOUT</a></li>
             <li><a href="<?php echo $data['report_url']; ?>" target="_blank">REPORT</a></li>
             <li><a id="end_shift">SHIFT END</a></li>
             <li><a>DRAWER</a></li>
@@ -408,7 +408,7 @@
                     foreach($data['categoryList'] as $c)
                     {
                     ?>
-                    <li><a class="open_popup_form" data-url="<?php echo $c['url']; ?>" data-width="1024" data-height="550"><?php echo $c['name']; ?></a></li>
+                    <li><a class="open_popup_form" data-url="<?php echo $c['url']; ?>" data-formsizeclass="popup_form_in_size_large"><?php echo $c['name']; ?></a></li>
                     <?php } ?>
                 
                 </ul>
