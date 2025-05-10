@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Sales Screen | <?php echo $data['companyName']; ?></title>
 
-<link href="<?php echo _CSS; ?>salesscreen.css" rel="stylesheet" type="text/css">
+<link href="<?php echo _CSS; ?>salesscreen.css?v=2" rel="stylesheet" type="text/css">
 
 <link href="<?php echo _CSS; ?>jquery-ui.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
