@@ -105,7 +105,8 @@ class InventoryTransactionTransfernotesConnector {
 										'location_from' => $SystemMasterLocationsQuery->data($cat['location_from_id'],'name'),
 										'location_to' => $SystemMasterLocationsQuery->data($cat['location_to_id'],'name'),
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
-										'updateURL' => $defCls->genURL('inventory/transaction_transfernotes/edit/'.$cat['transfer_note_id'])
+										'updateURL' => $defCls->genURL('inventory/transaction_transfernotes/edit/'.$cat['transfer_note_id']),
+										'printURL' => $defCls->genURL('inventory/transaction_transfernotes/printView/'.$cat['transfer_note_id'])
 											);
 			}
 			
@@ -470,6 +471,104 @@ class InventoryTransactionTransfernotesConnector {
 						
 					}
 				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid transfer note Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsTransfernotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$transferNoteInfo = $InventoryTransactionsTransfernotesQuery->get($id);
+			
+			if($transferNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Inventory Transfer Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['transfer_note_id'] = $transferNoteInfo['transfer_note_id'];
+					
+				$data['transfer_note_no'] = $defCls->docNo('TRN-',$transferNoteInfo['transfer_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($transferNoteInfo['added_date']);
+				
+				$data['location_from'] = $SystemMasterLocationsQuery->data($transferNoteInfo['location_from_id'],'name');
+				
+				$data['location_to'] = $SystemMasterLocationsQuery->data($transferNoteInfo['location_to_id'],'name');
+				
+				$data['remarks'] = $defCls->showText($transferNoteInfo['remarks']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($transferNoteInfo['user_id'],'name');
+				
+				$data['totalQty'] = $transferNoteInfo['no_of_qty'];
+				
+				
+				$data['item_lists'] = $InventoryTransactionsTransfernotesQuery->getItems("WHERE transfer_note_id='".$id."' ORDER BY transfer_note_item_id ASC");
+
+				$this_required_file = _HTML.'inventory/transaction_transfernotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
 			}
 			else
 			{

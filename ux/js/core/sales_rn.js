@@ -71,8 +71,8 @@ $(document).on('click', '#addItem', function () {
             '<td><input type="text" name="added_item_name[]" data-focus="qty" value="' + itemName + '" disabled />' +
             '<input type="hidden" name="added_item_id[]" value="' + itemId + '"></td>' +
             '<td><input type="text" name="added_cost[]" class="text-right" value="' + cost + '" /></td>' +
-            '<td><input type="text" name="added_qty[]" class="text-right editlinechange eqty" value="' + qty + '" /></td>' +
             '<td><input type="text" name="added_amount[]" class="text-right editlinechange eamount" value="' + amount + '" /></td>' +
+            '<td><input type="text" name="added_qty[]" class="text-right editlinechange eqty" value="' + qty + '" /></td>' +
             '<td><input type="text" name="added_total[]" disabled class="text-right etotal" value="' + total + '" /></td>' +
             '<td><a class="btn btn-danger removeItem" data-id="' + no + '"><i class="fa-light fa-trash-xmark"></i></a></td>' +
             '</tr>'

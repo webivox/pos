@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><?php echo $data['title_tag']; ?></title>
+<link href="<?php echo _CSS; ?>report.css" rel="stylesheet" type="text/css">
+<link href="<?php echo _CSS; ?>jquery-ui.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo _JS; ?>jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="<?php echo _JS; ?>jquery-ui.js"></script>
+<script type="text/javascript" src="<?php echo _JS; ?>jquery.inputmask.bundle.js"></script>
+<script type="text/javascript" src="<?php echo _JS; ?>common.js"></script>
+<link href="<?php echo _FONTS; ?>fa/css/all.css" rel="stylesheet" type="text/css">
+<link href="<?php echo _FONTS; ?>fa/css/all.min.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+<base href="<?php echo _SERVER; ?>">
+<script>
+window.onload = function () {
+    window.print();
+}
+</script>
+</head>
+
+<body>
+
+<div id="report_cont">
+
+    <table class="table">
+    
+    	<thead>
+    
+        <tr>
+        
+            <td colspan="8">
+            
+            	<div id="logo"><img src="<?php echo $data['logo']; ?>" alt="<?php echo $data['companyName']; ?>"></div>
+            
+            </td>
+        
+        </tr>
+    
+        <tr>
+        
+            <td colspan="8" id="sales_report_head">
+            
+            	<h1>Inventory Adjustment Note</h1>
+                <h3><?php echo $data['print_by_n_date']; ?></h3>
+            
+            </td>
+        
+        </tr>
+        
+        </thead>
+        
+        <tbody>
+    
+    
+            <tr>
+            
+                <td>Date</td>
+                <td><?php echo $data['added_date']; ?></td>
+                
+                <td>ADJ No</td>
+                <td><?php echo $data['adjustment_note_no']; ?></td>
+                
+                <td>Location</td>
+                <td><?php echo $data['location_id']; ?></td>
+                
+             </tr>
+             <tr>
+                
+                <td>User</td>
+                <td><?php echo $data['user']; ?></td>
+                
+                <td>Details</td>
+                <td colspan="3"><?php echo $data['remarks']; ?></td>
+             
+                
+             </tr>
+             <tr>
+            
+            </tr>
+            
+            <tr>
+            
+            	<td colspan="6">
+                
+                	<table class="table">
+                    
+                    	<thead>
+                        
+                            <tr>
+                            
+                                <td>No</td>
+                                <td>Item Name</td>
+                                <td>Type</td>
+                                <td class="text-right">Qty</td>
+                                <td class="text-right">Amount</td>
+                                <td class="text-right">Total</td>
+                            
+                            </tr>
+                        
+                        </thead>
+                    
+                    	<tbody>
+                        
+                        	<?php
+							$i=1;
+							
+							foreach($data['item_lists'] as $il){
+								
+							?>
+                            <tr>
+                            
+                                <td><?php echo $defCls->docNo('',$i); ?></td>
+                                <td><?php echo $defCls->showText($InventoryMasterItemsQuery->data($il['item_id'],'name')); ?></td>
+                                <td class="text-right"><?php echo $il['type']; ?></td>
+                                <td class="text-right"><?php echo $defCls->num($il['amount']); ?></td>
+                                <td class="text-right"><?php echo $defCls->num($il['total']); ?></td>
+                            
+                            </tr>
+                            <?php } ?>
+                        
+                        </tbody>
+                      
+                    
+                    </table>
+                
+                
+                </td>
+            
+            </tr>
+            
+       
+        
+             <tr>
+                
+                <td colspan="3" class="text-center"><br><Br><br>--------------------------<br>Authorized By</td>
+                
+                <td colspan="3" class="text-center"><br><Br><br>--------------------------<br>Received By</td>
+            
+            </tr>
+    
+    
+    	</tbody>
+    
+    </table>
+
+</div>
+
+</body>
+</html>

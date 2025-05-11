@@ -321,15 +321,15 @@ textarea{ padding-top:7px; }
 
 #popup_form
 {
-	width:100%; height:100vh; position:fixed; left:0px; top:0px; z-index:1010; display:none;
+	width:100%; height:100vh; position:fixed; left:0px; top:0px; z-index:990; display:none;
 	background: rgba(255, 255, 255, 0.2); /* Transparent background */
     backdrop-filter: blur(5px); /* Apply blur effect */
     -webkit-backdrop-filter: blur(5px); /* Safari support */
 }
 #popup_form_in
 {
-	position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%); /* Moves back by half its size */
+	position: absolute; top: 20px; left: 50%;
+    transform: translate(-50%, 0%); /* Moves back by half its size */
     padding: 20px;
      background: #424242;
 	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.47);
@@ -344,9 +344,9 @@ textarea{ padding-top:7px; }
 
 .popup_form_in_size_large
 {
-	width:1024px; height:550px; float:left;
+	width:1024px; height:calc(100vh - 255px); float:left;
 }
-.popup_form_in_size_large #popup_form_in_form_in{ height:405px; }
+.popup_form_in_size_large #popup_form_in_form_in{ height:calc(100vh - 405px); }
 
 .popup_form_in_size_medium
 {

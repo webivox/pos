@@ -5,7 +5,7 @@
     	<h1>Cashier Points</h1>
         
         
-        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-width="1024" data-height="540">Create New</a>
+        <a class="open_popup_form btn btn-primary" id="filter_head_create" data-url="<?php echo $data['create_url']; ?>" data-formsizeclass="popup_form_in_size_large">Create New</a>
     
     </div>
     
@@ -66,6 +66,23 @@
     	<a id="popup_form_in_close">X</a>
     
     	<div id="popup_form_in_form">
+        
+        
+        </div>
+    
+    </div>
+
+</div>
+
+
+<div id="popup_form_sub">
+
+
+	<div id="popup_form_in_sub">
+    
+    	<a id="popup_form_in_close_sub">X</a>
+    
+    	<div id="popup_form_in_form_sub">
         
         
         </div>

@@ -125,7 +125,7 @@ class SuppliersRDebitnotesConnector {
 				$amount += $cat['amount'];
 				
 				$data['rows'][] = array(
-										'no' => $defCls->docNo('CDN-',$cat['debit_note_id']),
+										'no' => $defCls->docNo('SDN-',$cat['debit_note_id']),
 										'supplier' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'added_date' => date('d-m-Y',strtotime($cat['added_date'])),
 										'amount' => $defCls->money($cat['amount']),

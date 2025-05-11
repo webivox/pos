@@ -36,7 +36,7 @@
             <?php
 			foreach($data['supplier_list'] as $cat){
 			?>
-            <option value="<?php echo $cat['supplier_id']; ?>" data-outstanding="<?php echo $defCls->num($cat['closing_balance']); ?>" <?php if($data['supplier_id']==$cat['supplier_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
+            <option value="<?php echo $cat['supplier_id']; ?>" data-outstanding="<?php echo $defCls->num($cat['closing_balance']+$data['amount']); ?>" <?php if($data['supplier_id']==$cat['supplier_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
             <?php } ?>
         
         </select>
@@ -52,6 +52,7 @@
 		
 		$("#amount").change(function(){
 			
+			
 			var outstanding = parseFloat($("#supplier_id").find('option:selected').data('outstanding')) || 0;
 			var amount = parseFloat($("#amount").val());
 			
@@ -59,12 +60,15 @@
 			
 		});
 		
+		
+		
+		
 		</script>
     </div>
     
     <div class="col_3">
         <label for="outstanding">Outstanding</label>
-        <input type="text" name="outstanding" id="outstanding" placeholder="0.00" value="<?php echo $data['outstanding']; ?>" disabled="disabled">
+        <input type="text" name="outstanding" id="outstanding" placeholder="0.00" value="<?php echo $data['outstanding']+$data['amount']; ?>" disabled="disabled">
     </div>
     
     <div class="col_3">

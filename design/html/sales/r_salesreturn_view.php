@@ -126,7 +126,23 @@
 						<td class="text-right"><?php echo $r['profit_percentage']; ?></td>
 					   
 					</tr>
-            <?php }} ?>
+          <?php } if ($r === end($data['rows'])) { ?>
+			
+			<tr class="grey">
+		
+						<td><?php echo $r['totalNoOfItem']; ?></td>
+                        <td colspan="2"></td>
+                        <td colspan="1" class="text-right"><?php echo $r['totalQty']; ?></td>
+                        <td colspan="1" class="text-right"><?php echo $r['totalPrice']; ?></td>
+                        <td colspan="1" class="text-right"><?php echo $r['totalCost']; ?></td>
+                        <td colspan="1" class="text-right"><?php echo $r['totalProfit']; ?></td>
+                        <td colspan="1" class="text-right"><?php echo $r['totalProfitPercentage']; ?></td>
+                      
+                        
+					
+					</tr>
+			
+		<?php	}} ?>
     
     
     	</tbody>

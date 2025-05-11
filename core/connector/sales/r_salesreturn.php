@@ -286,6 +286,9 @@ class SalesRSalesreturnConnector {
 				$totalProfit += $profit;
 				
 				
+				
+				$lineTotalProfit = $totalPrice-$totalCost;
+				$lineTotalProfitPercentage = ($lineTotalProfit / $totalCost) * 100;
 			
 				
 				$data['rows'][] = array(
@@ -298,7 +301,14 @@ class SalesRSalesreturnConnector {
 										'price' => $defCls->money($cat['rni_price']),
 										'cost' => $defCls->money($cat['rni_cost']),
 										'profit' => $defCls->money($profit),
-										'profit_percentage' => $defCls->money($profitPercentage)
+										'profit_percentage' => $defCls->money($profitPercentage),
+											
+										'totalQty' => $defCls->num($totalQty),
+										'totalPrice' => $defCls->money($totalPrice),
+										'totalCost' => $defCls->money($totalCost),
+										'totalNoOfItem' => $defCls->docNo('',$totalNoOfItem),
+										'totalProfit' => $defCls->money($totalProfit),
+										'totalProfitPercentage' => $defCls->num($lineTotalProfitPercentage)
 									);
 			}
 			

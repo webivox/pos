@@ -30,14 +30,14 @@ class SalesScreenConnector {
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['customer_create_url'] 	= $defCls->genURL("customers/master_customers/create");
-			$data['sales_return_url'] 	= $defCls->genURL("sales/transaction_return/create");
+			$data['sales_return_url'] 	= $defCls->genURL("sales/transaction_return/create/?val=jsneed");
 			$data['cashout_url'] 	= $defCls->genURL("sales/screen/cashout");
 			$data['report_url'] 	= $defCls->genURL("sales/r_pos");
 			$data['load_table_url'] = $defCls->genURL('sales/master_rep/load');
 			
 			if($sessionCls->load('lastPrintedInvoiceNo'))
 			{
-				$data['reprint_url'] = 'href="'.$defCls->genURL("sales/screen/print/".$sessionCls->load('lastPrintedInvoiceNo')."/").'" target="_blank"';
+				$data['reprint_url'] = 'href="'.$defCls->genURL("sales/screen/posprint/".$sessionCls->load('lastPrintedInvoiceNo')."/").'" ';
 			}
 			else{ $data['reprint_url'] = 'id="noreprintinvfound"'; }
 			
@@ -544,6 +544,7 @@ class SalesScreenConnector {
 		global $SystemMasterUsersQuery;
 		global $SalesScreenQuery;
 		global $SystemMasterCashierpointsQuery;
+		global $InventoryMasterItemsQuery;
 		
 		
 		$data = [];
@@ -562,6 +563,7 @@ class SalesScreenConnector {
 				
 				if($invoiceId)
 				{
+					
 					$addedItemId = $SalesScreenQuery->addItem($invoiceId,$id);
 					
 					$json['success']=true;
@@ -2652,7 +2654,7 @@ class SalesScreenConnector {
 						$createdInvId = $SalesScreenQuery->create('');
 						$sessionCls->set('invoiceId',$createdInvId);
 						
-						$json['redirect']=$defCls->genURL("sales/screen/print/".$lastInvoiceId."/");
+						$json['redirect']=$defCls->genURL("sales/screen/posprint/".$lastInvoiceId."/");
 						
 						$json['success']=true;
 						
@@ -2694,6 +2696,111 @@ class SalesScreenConnector {
 				$json['error_msg']=$error_msg_list;
 			}
 			echo json_encode($json);
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function posprint() {
+	
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $CustomersMasterCustomersQuery;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionInvoicesQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $SalesMasterRepQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$invoiceInfo = $SalesTransactionInvoicesQuery->get($id);
+		
+			if($invoiceInfo)
+			{
+				$data['status'] = $invoiceInfo['status'];
+				
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Sales Invoice Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				$data['invoice_logo_print'] = $defCls->master('invoice_logo_print');
+				
+				$data['invoice_header'] = $defCls->showText(nl2br($defCls->master('invoice_header')));
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' <br> Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['invoice_no'] = $invoiceInfo['invoice_no'];
+				
+				$data['added_date'] = date('d-m-Y H:i:s',strtotime($invoiceInfo['added_date']));
+				
+				$data['cashier'] = $SystemMasterUsersQuery->data($invoiceInfo['user_id'],'name');
+				
+				$data['sales_rep'] = $SalesMasterRepQuery->data($invoiceInfo['sales_rep_id'],'name');
+				
+				$data['customer'] = $CustomersMasterCustomersQuery->data($invoiceInfo['customer_id'],'name');
+				
+				$data['invoice_items'] = $SalesTransactionInvoicesQuery->getItems("WHERE invoice_id='".$invoiceInfo['invoice_id']."' ORDER BY invoice_item_id ASC");
+				
+				$data['discount_amount'] = $invoiceInfo['discount_amount'];
+				
+				$data['total_sale'] = $invoiceInfo['total_sale'];
+				
+				$data['invoice_payments'] = $SalesTransactionInvoicesQuery->getPayments("WHERE invoice_id='".$invoiceInfo['invoice_id']."' ORDER BY invoice_payment_id ASC");
+				
+				
+				$data['no_of_items'] = $invoiceInfo['no_of_items'];
+				$data['no_of_qty'] = $invoiceInfo['no_of_qty'];
+				
+				$loyalty_points = $db->fetch("SELECT * FROM customer_loyalty_transactions WHERE reference_id='".$invoiceInfo['invoice_id']."' AND transaction_type='INV'");
+				
+				$before_inv_points = $loyalty_points['balance']-$loyalty_points['debit'];
+				
+				if($before_inv_points>0){ $before_inv_points = $before_inv_points; }
+				else{ $before_inv_points = 0; }
+				
+				$data['before_inv_points'] = $before_inv_points;
+				$data['earned_points'] = $loyalty_points['debit'];
+				$data['balance_points'] = $loyalty_points['balance'];
+				
+				
+				$data['invoice_footer'] = $defCls->showText(nl2br($defCls->master('invoice_footer')));
+
+				$this_required_file = _HTML.'sales/posprint.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid invoice Id"; $error_no++;
+				
+				
+			}
 		}
 		else
 		{

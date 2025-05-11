@@ -1,4 +1,4 @@
-<h3>Location</h3>
+<h3>Master</h3>
 
 <form method="post" id="saveForm" data-url="<?php echo $data['form_url']; ?>">
         
@@ -13,7 +13,7 @@
     
     <div class="col_1">
         <label for="values">Value</label>
-        <input type="text" name="values" id="values" placeholder="Value" value="<?php echo $data['values']; ?>">
+        <textarea name="values" id="values" placeholder="Value"><?php echo $data['values']; ?></textarea>
     </div>
    
 </div> 

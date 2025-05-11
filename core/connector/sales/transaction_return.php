@@ -114,7 +114,8 @@ class SalesTransactionReturnConnector {
 										'customer' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name'),
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'total_value' => $defCls->money($cat['total_value']),
-										'updateURL' => $defCls->genURL('sales/transaction_return/edit/'.$cat['sales_return_id'])
+										'updateURL' => $defCls->genURL('sales/transaction_return/edit/'.$cat['sales_return_id']),
+										'printURL' => $defCls->genURL('sales/transaction_return/returnprint/'.$cat['sales_return_id'])
 											);
 			}
 			
@@ -166,6 +167,9 @@ class SalesTransactionReturnConnector {
 			$data['customer_list'] = $CustomersMasterCustomersQuery->gets("ORDER BY name ASC");
 				
 			$data['srn_no'] = 'New';
+			
+			if(isset($_REQUEST['val'])){ $data['val'] = $db->request('val'); }
+			else{ $data['val'] = ''; }
 			
 			if(isset($_REQUEST['location_id'])){ $data['location_id'] = $db->request('location_id'); }
 			else{ $data['location_id'] = ''; }
@@ -260,6 +264,7 @@ class SalesTransactionReturnConnector {
 					
 					
 					$json['success']=true;
+					$json['redirect']=_SERVER.'sales/transaction_return/returnprint/'.$createdId;
 					$json['success_msg']="Sucessfully Created";
 
 					
@@ -540,6 +545,97 @@ class SalesTransactionReturnConnector {
 					$json['error_msg']=$error_msg_list;
 				}
 				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function returnprint() {
+	
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $CustomersMasterCustomersQuery;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionsReturnQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$returnInfo = $SalesTransactionsReturnQuery->get($id);
+		
+			if($returnInfo)
+			{
+				
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Sales Return Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				$data['invoice_logo_print'] = $defCls->master('invoice_logo_print');
+				
+				$data['return_print_header'] = $defCls->showText(nl2br($defCls->master('return_print_header')));
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' <br> Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['return_no'] = $defCls->docNo('SRET',$returnInfo['sales_return_id']);
+				
+				$data['added_date'] = date('d-m-Y H:i:s',strtotime($returnInfo['added_date']));
+				
+				$data['cashier'] = $SystemMasterUsersQuery->data($returnInfo['user_id'],'name');
+				
+				$data['customer'] = $CustomersMasterCustomersQuery->data($returnInfo['customer_id'],'name');
+				
+				$data['return_items'] = $SalesTransactionsReturnQuery->getItems("WHERE sales_return_id='".$returnInfo['sales_return_id']."' ORDER BY sales_return_item_id ASC");
+				
+				$data['total_value'] = $returnInfo['total_value'];
+				
+				
+				
+				$data['no_of_items'] = $returnInfo['no_of_items'];
+				$data['no_of_qty'] = $returnInfo['no_of_qty'];
+				
+				$data['used_value'] = $returnInfo['used_value'];
+				$data['balance_value'] = $returnInfo['balance_value'];
+				
+				
+				
+				$data['return_print_footer'] = $defCls->showText(nl2br($defCls->master('return_print_footer')));
+
+				$this_required_file = _HTML.'sales/returnprint.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid return Id"; $error_no++;
+				
 				
 			}
 		}

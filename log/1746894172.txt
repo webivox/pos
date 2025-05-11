@@ -1,5 +1,0 @@
-[10-May-2025 16:22:52 UTC] PHP Fatal error:  Uncaught Error: Class "SalesTransactionKotPrintConnector" not found in D:\wamp64\www\pos\base\load.php:19
-Stack trace:
-#0 D:\wamp64\www\pos\index.php(16): require_once()
-#1 {main}
-  thrown in D:\wamp64\www\pos\base\load.php on line 19

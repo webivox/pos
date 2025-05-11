@@ -799,7 +799,7 @@ textarea{ padding-top:7px; }
 	font-size:14px; color:#FFF; text-align:left;
 	padding:15px
 }
-#modal_in ul li{ margin-left:5%; width:95%; }
+#modal_in ul li{ margin-left:5%; width:95%; list-style:square; }
 #modal_in_close
 {
 	width:50%; height:auto; float:left; cursor:pointer;

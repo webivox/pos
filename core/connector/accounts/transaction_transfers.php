@@ -117,7 +117,8 @@ class AccountsTransactionTransfersConnector {
 										'account_to' => $AccountsMasterAccountsQuery->data($cat['account_to_id'],'name'),
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('accounts/transaction_transfers/edit/'.$cat['transfer_id'])
+										'updateURL' => $defCls->genURL('accounts/transaction_transfers/edit/'.$cat['transfer_id']),
+										'printURL' => $defCls->genURL('accounts/transaction_transfers/printView/'.$cat['transfer_id'])
 											);
 			}
 			
@@ -485,4 +486,103 @@ class AccountsTransactionTransfersConnector {
 		
 	}
 	
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $AccountsMasterAccountsQuery;
+		global $SystemMasterUsersQuery;
+		global $AccountsTransactionsTransfersQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$transferInfo = $AccountsTransactionsTransfersQuery->get($id);
+			
+			if($transferInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Account Transfers Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['transfer_id'] = $transferInfo['transfer_id'];
+					
+				$data['transfer_no'] = $defCls->docNo('ATRN-',$transferInfo['transfer_id']);
+				
+				$data['added_date'] = $dateCls->showDate($transferInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($transferInfo['location_id'],'name');
+				
+				$data['account_from_id'] = $AccountsMasterAccountsQuery->data($transferInfo['account_from_id'],'name');
+				
+				$data['account_to_id'] = $AccountsMasterAccountsQuery->data($transferInfo['account_to_id'],'name');
+				
+				$data['amount'] = $defCls->money($transferInfo['amount']);
+				
+				$data['details'] = $defCls->showText($transferInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($transferInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'accounts/transaction_transfers_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid transfer Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

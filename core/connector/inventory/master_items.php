@@ -218,14 +218,14 @@ class InventoryMasterItemsConnector {
 			if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 			else{ $data['unit_id'] = 0; }
 			
-			if(isset($_REQUEST['supplier_id']))
+			if(isset($_REQUEST['supplier_id_item']))
 			{
-				$data['supplier_id'] = $db->request('supplier_id');
+				$data['supplier_id'] = $db->request('supplier_id_item');
 				$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
 			}
 			else
 			{
-				$data['supplier_id'] = '';
+				$data['supplier_id'] = 0;
 				$data['supplier_id_txt'] = '';
 			}
 			
@@ -260,7 +260,7 @@ class InventoryMasterItemsConnector {
 			else{ $data['minimum_qty'] = 1; }
 			
 			if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no'); }
-			else{ $data['minimum_qty'] = 0; }
+			else{ $data['unique_no'] = ''; }
 			
 			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
@@ -285,8 +285,8 @@ class InventoryMasterItemsConnector {
 				
 				if($data['barcode'] && $countItemsByBarcode){ $error_msg[]="The barcode already exists"; $error_no++; }
 				
-				if($data['selling_price']<1){ $error_msg[]="Selling price must be greater than 1."; $error_no++; }
-				if($data['minimum_selling_price']<1){ $error_msg[]="Minimum selling price must be greater than 1."; $error_no++; }
+				if($data['selling_price']<1){ $error_msg[]="Selling price must be greater than 0"; $error_no++; }
+				if($data['minimum_selling_price']<1){ $error_msg[]="Minimum selling price must be greater than 0"; $error_no++; }
 				
 				if(!$error_no)
 				{
@@ -390,9 +390,9 @@ class InventoryMasterItemsConnector {
 				if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 				else{ $data['unit_id'] = $getItemInfo['unit_id']; }
 				
-				if(isset($_REQUEST['supplier_id']))
+				if(isset($_REQUEST['supplier_id_item']))
 				{
-					$data['supplier_id'] = $db->request('supplier_id');
+					$data['supplier_id'] = $db->request('supplier_id_item');
 					$data['supplier_id_txt'] = $SuppliersMasterSuppliersQuery->data($data['supplier_id'],'name');
 				}
 				else

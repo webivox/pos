@@ -23,6 +23,8 @@
             <div class="col-10 action">
             
                 <a class="btn btn-primary open_popup_form" data-url="<?php echo $cat['updateURL']; ?>" data-formsizeclass="popup_form_in_size_medium"><i class="fa-light fa-pen-to-square"></i></a>
+            
+                <a class="btn btn-black open_popup_form" href="<?php echo $cat['printURL']; ?>" target="_blank"><i class="fa-light fa-print"></i></a>
                 
             
                 <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>

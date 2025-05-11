@@ -153,7 +153,7 @@ class SystemMasterMasterConnector {
 				
 				if(strlen($data['key'])<3){ $error_msg[]="Key must be minimum 3 letters"; $error_no++; }
 				if($countMasterByKey){ $error_msg[]="The key already exists"; $error_no++; }
-				if(strlen($data['values'])<3){ $error_msg[]="Value must be minimum 3 letters"; $error_no++; }
+				if(strlen($data['values'])<1){ $error_msg[]="Value must be minimum 3 letters"; $error_no++; }
 				
 				if(!$error_no)
 				{

@@ -10,7 +10,7 @@
     </div>
     
     <div class="col_3">
-        <label for="payee_id">Payee</label>
+        <label for="payee_id">Payee <a class="open_popup_form_sub label_create_btn" data-url="<?php echo $data['payee_create_url']; ?>"  data-formsizeclass="popup_form_in_size_small_sub">[Create]</a></label>
         <select name="payee_id" id="payee_id" class="autofocus">
             
             <option value="">- Choose -</option>

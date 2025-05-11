@@ -261,6 +261,11 @@ class InventoryRReturnConnector {
 										'qty' => $defCls->num($cat['irni_qty']),
 										'price' => $defCls->money($cat['irni_price']),
 										'total' => $defCls->money($cat['irni_total']),
+											
+											'totalNoOfItem' => $defCls->num($totalNoOfItem),
+											'totalQty' => $defCls->num($totalQty),
+											'totalPrice' => $defCls->money($totalPrice),
+											'totalTotal' => $defCls->money($totalTotal)
 									);
 			}
 			

@@ -8,7 +8,7 @@
     <div class="col_1">
     
         <label for="amount">Amount</label>
-        <input type="text" name="amount" id="amount" placeholder="0.00" value="" class="autofocus">
+        <input type="text" name="amount" id="amount" placeholder="0.00" value="" class="autofocus okeyboard">
     
     </div>
     

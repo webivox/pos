@@ -56,10 +56,10 @@
     </div>
     
     <div class="col_4">
-        <label for="supplier_id">Supplier</label>
+        <label for="supplier_id_item">Supplier</label>
         
-        <input type="text" name="supplier_id_txt" id="supplier_id_txt" data-setid="supplier_id" placeholder="" class="supplierAjax">
-        <input type="hidden" id="supplier_id" name="supplier_id" />
+        <input type="text" name="supplier_id_item_txt" id="supplier_id_item_txt" data-setid="supplier_id_item" placeholder="" class="supplierAjax" value="<?php echo $data['supplier_id_txt']; ?>">
+        <input type="hidden" id="supplier_id_item" name="supplier_id_item" value="<?php echo $data['supplier_id']; ?>" />
     </div>
     
     <div class="col_4">
@@ -118,7 +118,7 @@
         <select name="unique_no" id="unique_no">
         
         	<option value="1" <?php if($data['unique_no']==1){ echo 'selected'; } ?>>Required</option>
-        	<option value="0" <?php if($data['unique_no']==0){ echo 'selected'; } ?>>NO Need</option>
+        	<option value="0" <?php if($data['unique_no']==0){ echo 'selected'; } ?>>Not Required</option>
         
         </select>
     

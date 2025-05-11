@@ -112,7 +112,8 @@ class InventoryTransactionReturnnotesConnector {
 										'supplier_id' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'total_value' => $defCls->money($cat['total_value']),
-										'updateURL' => $defCls->genURL('inventory/transaction_returnnotes/edit/'.$cat['return_note_id'])
+										'updateURL' => $defCls->genURL('inventory/transaction_returnnotes/edit/'.$cat['return_note_id']),
+										'printURL' => $defCls->genURL('inventory/transaction_returnnotes/printView/'.$cat['return_note_id'])
 											);
 			}
 			
@@ -508,6 +509,108 @@ class InventoryTransactionReturnnotesConnector {
 						
 					}
 				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid return note Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsReturnnotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$returnNoteInfo = $InventoryTransactionsReturnnotesQuery->get($id);
+			
+			if($returnNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Inventory Return Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['return_note_id'] = $returnNoteInfo['return_note_id'];
+					
+				$data['return_note_no'] = $defCls->docNo('RETN-',$returnNoteInfo['return_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($returnNoteInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($returnNoteInfo['location_id'],'name');
+				
+				$data['supplier_id'] = $SuppliersMasterSuppliersQuery->data($returnNoteInfo['supplier_id'],'name');
+				
+				$data['rn_no'] = $defCls->showText($returnNoteInfo['rn_no']);
+				
+				$data['remarks'] = $defCls->showText($returnNoteInfo['remarks']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($returnNoteInfo['user_id'],'name');
+				
+				$data['totalQty'] = $returnNoteInfo['no_of_qty'];
+				
+				$data['totalTotal'] = $returnNoteInfo['total_value'];
+				
+				
+				$data['item_lists'] = $InventoryTransactionsReturnnotesQuery->getItems("WHERE return_note_id='".$id."' ORDER BY return_note_item_id ASC");
+
+				$this_required_file = _HTML.'inventory/transaction_returnnotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
 			}
 			else
 			{

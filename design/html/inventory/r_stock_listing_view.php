@@ -25,7 +25,7 @@
     
         <tr>
         
-            <td colspan="21">
+            <td colspan="19">
             
             	<div id="logo"><img src="<?php echo $data['logo']; ?>" alt="<?php echo $data['companyName']; ?>"></div>
             
@@ -35,7 +35,7 @@
     
         <tr>
         
-            <td colspan="21" id="sales_report_head">
+            <td colspan="19" id="sales_report_head">
             
             	<h1>Stock Listing Report</h1>
                 <h3>Filter: <?php echo $data['filter_heading']; ?></h3>
@@ -112,7 +112,7 @@
         <tfoot>
         
           
-          	<td colspan="17">Total</td>
+          	<td colspan="15">Total</td>
             <td class="text-right"><?php echo $data['totalIn']; ?></td>
             <td class="text-right"><?php echo $data['totalOut']; ?></td>
             <td class="text-right"><?php echo $data['totalAvailable']; ?></td>

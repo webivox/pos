@@ -159,6 +159,21 @@ class SalesTransactionInvoicesQuery{
 				
 				$stockTransactionsCls->delete($stockData);
 				
+				if($item['unique_no'])
+				{
+				
+					$db->query("UPDATE inventory_unique_nos SET 
+							
+									used_invoice_id='',
+									used_date='',
+									status='0'
+									
+									WHERE
+									
+									unique_no = '".$item['unique_no']."'
+									
+							");
+				}
 			}
 			
 			///////////

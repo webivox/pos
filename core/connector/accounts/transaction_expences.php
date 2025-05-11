@@ -115,7 +115,8 @@ class AccountsTransactionExpencesConnector {
 										'expences_type' => $AccountsMasterExpencestypesQuery->data($cat['expences_type_id'],'name'),
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('accounts/transaction_expences/edit/'.$cat['expence_id'])
+										'updateURL' => $defCls->genURL('accounts/transaction_expences/edit/'.$cat['expence_id']),
+										'printURL' => $defCls->genURL('accounts/transaction_expences/printView/'.$cat['expence_id'])
 											);
 			}
 			
@@ -164,6 +165,7 @@ class AccountsTransactionExpencesConnector {
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
 			$data['form_url'] 	= _SERVER."accounts/transaction_expences/create";
+			$data['payee_create_url'] = $defCls->genURL("accounts/master_payee/create");
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 			
@@ -352,6 +354,7 @@ class AccountsTransactionExpencesConnector {
 				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 				
 				$data['form_url'] 	= _SERVER."accounts/transaction_expences/edit/".$id;
+				$data['payee_create_url'] = $defCls->genURL("accounts/master_payee/create");
 				
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
@@ -597,4 +600,110 @@ class AccountsTransactionExpencesConnector {
 		
 	}
 	
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $AccountsMasterPayeeQuery;
+		global $SystemMasterUsersQuery;
+		global $AccountsTransactionsExpencesQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$expenseInfo = $AccountsTransactionsExpencesQuery->get($id);
+			
+			if($expenseInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Account Expenses Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['expence_id'] = $expenseInfo['expence_id'];
+					
+				$data['expense_no'] = $defCls->docNo('AEXP-',$expenseInfo['expence_id']);
+				
+				$data['added_date'] = $dateCls->showDate($expenseInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($expenseInfo['location_id'],'name');
+				
+				$data['payee_id'] = $AccountsMasterPayeeQuery->data($expenseInfo['payee_id'],'name');
+				
+				$data['amount'] = $defCls->money($expenseInfo['amount']);
+				
+				$data['account_id'] = $AccountsMasterAccountsQuery->data($expenseInfo['account_id'],'name');
+				
+				$data['cheque_no'] = $expenseInfo['cheque_no']; 
+				
+				$data['cheque_date'] = $dateCls->showDate($expenseInfo['cheque_date']);
+			
+				if(isset($_REQUEST['cheque_date'])){$data['cheque_date'] = $db->request('cheque_date'); }
+				else{ $data['cheque_date'] = $dateCls->showDate($expenseInfo['cheque_date']); }
+				
+				$data['details'] = $defCls->showText($expenseInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($expenseInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'accounts/transaction_expences_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid expense Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

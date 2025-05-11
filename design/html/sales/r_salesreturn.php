@@ -2,7 +2,7 @@
 
 	<div id="filter_head">
     
-    	<h1>Sales Listing Report</h1>
+    	<h1>Sales Return Report</h1>
         
     
     </div>

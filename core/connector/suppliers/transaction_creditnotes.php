@@ -107,7 +107,8 @@ class SuppliersTransactionCreditnotesConnector {
 										'supplier_id' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('suppliers/transaction_creditnotes/edit/'.$cat['credit_note_id'])
+										'updateURL' => $defCls->genURL('suppliers/transaction_creditnotes/edit/'.$cat['credit_note_id']),
+										'printURL' => $defCls->genURL('suppliers/transaction_creditnotes/printView/'.$cat['credit_note_id'])
 											);
 			}
 			
@@ -388,6 +389,103 @@ class SuppliersTransactionCreditnotesConnector {
 			else
 			{
 				$error_msg[]="Invalid creditnote Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SuppliersTransactionsCreditnotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$creditNoteInfo = $SuppliersTransactionsCreditnotesQuery->get($id);
+			
+			if($creditNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Supplier Credit Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['credit_note_id'] = $creditNoteInfo['credit_note_id'];
+					
+				$data['credit_note_no'] = $defCls->docNo('SCN-',$creditNoteInfo['credit_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($creditNoteInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($creditNoteInfo['location_id'],'name');
+				
+				$data['supplier_id'] = $SuppliersMasterSuppliersQuery->data($creditNoteInfo['supplier_id'],'name');
+				
+				$data['amount'] = $defCls->money($creditNoteInfo['amount']);
+				
+				$data['details'] = $defCls->showText($creditNoteInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($creditNoteInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'suppliers/transaction_creditnotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid credit_note Id"; $error_no++;
 					
 				if($error_no)
 				{

@@ -112,7 +112,18 @@
 						<td class="text-right"><?php echo $r['qty']; ?></td>
 					   
 					</tr>
-            <?php }} ?>
+           <?php } if ($r === end($data['rows'])) { ?>
+			
+					<tr class="grey">
+        
+                        <td colspan="1"><?php echo $r['totalNoOfItem']; ?></td>
+                        <td colspan="3"></td>
+                        <td class="text-right"><?php echo $r['totalQty']; ?></td>
+                   
+                    </tr>
+			
+			
+			<?php	}} ?>
     
     
     	</tbody>

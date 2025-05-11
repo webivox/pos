@@ -325,6 +325,9 @@ class SalesRSaleslistingConnector {
 				$totalProfit += $profit;
 				
 				
+				
+				$lineTotalProfit = $totalFinalPrice-$totalCost;
+				$lineTotalProfitPercentage = ($lineTotalProfit / $totalCost) * 100;
 			
 				
 				$data['rows'][] = array(
@@ -342,7 +345,18 @@ class SalesRSaleslistingConnector {
 										'final_price' => $defCls->money($finalPrice),
 										'cost' => $defCls->money($cat['sii_cost']),
 										'profit' => $defCls->money($profit),
-										'profit_percentage' => $defCls->money($profitPercentage)
+										'profit_percentage' => $defCls->money($profitPercentage),
+											
+										'totalQty' => $defCls->num($totalQty),
+										'totalMasterPrice' => $defCls->money($totalMasterPrice),
+										'totalSellingPrice' => $defCls->money($totalSellingPrice),
+										'totalUnitPrice' => $defCls->money($totalUnitPrice),
+										'totalGSD' => $defCls->money($totalGSD),
+										'totalFinalPrice' => $defCls->money($totalFinalPrice),
+										'totalCost' => $defCls->money($totalCost),
+										'totalNoOfItem' => $defCls->docNo('',$totalNoOfItem),
+										'totalProfit' => $defCls->money($totalProfit),
+										'totalProfitPercentage' => $defCls->num($lineTotalProfitPercentage)
 									);
 			}
 			

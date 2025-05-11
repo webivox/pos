@@ -108,7 +108,8 @@ class CustomersTransactionDebitnotesConnector {
 										'customer_id' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name'),
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('customers/transaction_debitnotes/edit/'.$cat['debit_note_id'])
+										'updateURL' => $defCls->genURL('customers/transaction_debitnotes/edit/'.$cat['debit_note_id']),
+										'printURL' => $defCls->genURL('customers/transaction_debitnotes/printView/'.$cat['debit_note_id'])
 											);
 			}
 			
@@ -391,6 +392,103 @@ class CustomersTransactionDebitnotesConnector {
 			else
 			{
 				$error_msg[]="Invalid debitnote Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $CustomersMasterCustomersQuery;
+		global $SystemMasterUsersQuery;
+		global $CustomersTransactionsDebitnotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$debitNoteInfo = $CustomersTransactionsDebitnotesQuery->get($id);
+			
+			if($debitNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Customer Debit Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['debit_note_id'] = $debitNoteInfo['debit_note_id'];
+					
+				$data['debit_note_no'] = $defCls->docNo('CDN-',$debitNoteInfo['debit_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($debitNoteInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($debitNoteInfo['location_id'],'name');
+				
+				$data['customer_id'] = $CustomersMasterCustomersQuery->data($debitNoteInfo['customer_id'],'name');
+				
+				$data['amount'] = $defCls->money($debitNoteInfo['amount']);
+				
+				$data['details'] = $defCls->showText($debitNoteInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($debitNoteInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'customers/transaction_debitnotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid debit_note Id"; $error_no++;
 					
 				if($error_no)
 				{

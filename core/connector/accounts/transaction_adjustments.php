@@ -110,7 +110,8 @@ class AccountsTransactionAdjustmentsConnector {
 										'type' => $cat['type'],
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('accounts/transaction_adjustments/edit/'.$cat['adjustment_id'])
+										'updateURL' => $defCls->genURL('accounts/transaction_adjustments/edit/'.$cat['adjustment_id']),
+										'printURL' => $defCls->genURL('accounts/transaction_adjustments/printView/'.$cat['adjustment_id'])
 											);
 			}
 			
@@ -187,7 +188,7 @@ class AccountsTransactionAdjustmentsConnector {
 			else{ $data['details'] = ''; }
 			
 			if(isset($_REQUEST['is_other_income'])){ $data['is_other_income'] = $db->request('is_other_income'); }
-			else{ $data['is_other_income'] = ''; }
+			else{ $data['is_other_income'] = 0; }
 			
 			$data['user_id'] = $userInfo['user_id'];
 
@@ -202,7 +203,7 @@ class AccountsTransactionAdjustmentsConnector {
 				if(!$data['added_date']){ $error_msg[]="You must enter added date"; $error_no++; }
 				if(!$data['amount']){ $error_msg[]="You must enter amount"; $error_no++; }
 				if(strlen($data['details'])<5){ $error_msg[]="You must enter details (min 5)"; $error_no++; }
-				if(!$data['is_other_income']){ $error_msg[]="You must choose income type"; $error_no++; }
+				if(!$data['is_other_income'] && $data['is_other_income']!==0){ $error_msg[]="You must choose income type"; $error_no++; }
 				
 				
 				if(!$error_no)
@@ -431,6 +432,104 @@ class AccountsTransactionAdjustmentsConnector {
 						
 					}
 				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid adjustment Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SystemMasterUsersQuery;
+		global $AccountsTransactionsAdjustmentsQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$adjustmentInfo = $AccountsTransactionsAdjustmentsQuery->get($id);
+			
+			if($adjustmentInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Account Adjustments Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['adjustment_id'] = $adjustmentInfo['adjustment_id'];
+					
+				$data['adjustment_no'] = $defCls->docNo('AADJ-',$adjustmentInfo['adjustment_id']);
+				
+				$data['added_date'] = $dateCls->showDate($adjustmentInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($adjustmentInfo['location_id'],'name');
+				
+				$data['account_id'] = $AccountsMasterAccountsQuery->data($adjustmentInfo['account_id'],'name');
+				
+				$data['type'] = $adjustmentInfo['type']; 
+				
+				$data['amount'] = $defCls->money($adjustmentInfo['amount']);
+				
+				$data['details'] = $defCls->showText($adjustmentInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($adjustmentInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'accounts/transaction_adjustments_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
 			}
 			else
 			{

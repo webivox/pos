@@ -103,7 +103,8 @@ class InventoryTransactionAdjustmentnotesConnector {
 										'adjustment_no' => $defCls->docNo('ADJ-',$cat['adjustment_note_id']),
 										'added_date' => $dateCls->showDate($cat['added_date']),
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
-										'updateURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/edit/'.$cat['adjustment_note_id'])
+										'updateURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/edit/'.$cat['adjustment_note_id']),
+										'printURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/printView/'.$cat['adjustment_note_id'])
 											);
 			}
 			
@@ -469,6 +470,100 @@ class InventoryTransactionAdjustmentnotesConnector {
 						
 					}
 				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid adjustment note Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsAdjustmentnotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$adjustmentNoteInfo = $InventoryTransactionsAdjustmentnotesQuery->get($id);
+			
+			if($adjustmentNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Inventory Adjustment Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['adjustment_note_id'] = $adjustmentNoteInfo['adjustment_note_id'];
+					
+				$data['adjustment_note_no'] = $defCls->docNo('TRN-',$adjustmentNoteInfo['adjustment_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($adjustmentNoteInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($adjustmentNoteInfo['location_id'],'name');
+				
+				$data['remarks'] = $defCls->showText($adjustmentNoteInfo['remarks']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($adjustmentNoteInfo['user_id'],'name');
+				
+				$data['item_lists'] = $InventoryTransactionsAdjustmentnotesQuery->getItems("WHERE adjustment_note_id='".$id."' ORDER BY adjustment_note_item_id ASC");
+
+				$this_required_file = _HTML.'inventory/transaction_adjustmentnotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
 			}
 			else
 			{

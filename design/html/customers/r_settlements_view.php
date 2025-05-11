@@ -25,7 +25,7 @@
     
         <tr>
         
-            <td colspan="7">
+            <td colspan="9">
             
             	<div id="logo"><img src="<?php echo $data['logo']; ?>" alt="<?php echo $data['companyName']; ?>"></div>
             
@@ -35,7 +35,7 @@
     
         <tr>
         
-            <td colspan="7" id="sales_report_head">
+            <td colspan="9" id="sales_report_head">
             
             	<h1>Customer Settlement Report</h1>
                 <h3>Filter: <?php echo $data['filter_heading']; ?></h3>
@@ -54,6 +54,8 @@
         	<td>Location</td>
         	<td>Account</td>
         	<td class="text-right">Amount</td>
+        	<td>Cheque No</td>
+        	<td>Cheque Date</td>
         	<td>User</td>
         
         </tr>
@@ -74,6 +76,8 @@
                 <td><?php echo $r['location']; ?></td>
                 <td><?php echo $r['account']; ?></td>
                 <td class="text-right"><?php echo $r['amount']; ?></td>
+                <td><?php echo $r['cheque_no']; ?></td>
+                <td><?php echo $r['cheque_date']; ?></td>
                 <td><?php echo $r['user']; ?></td>
             
             
@@ -90,7 +94,7 @@
             
                 <td colspan="5">Total</td>
                 <td class="text-right"><?php echo $data['amount']; ?></td>
-                <td colspan="1"></td>
+                <td colspan="3"></td>
             
             </tr>
         

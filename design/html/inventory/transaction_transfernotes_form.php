@@ -110,7 +110,7 @@
                         <td colspan="1"></td>
                         
                         <td class="text-right">Total Qty &nbsp;</td>
-                        <td><input type="text" id="bottom_total_qty" disabled value="<?php echo $defCls->num($data['items']); ?>" class="text-right" /></td>
+                        <td><input type="text" id="bottom_total_qty" disabled value="<?php echo $defCls->num($data['no_of_qty']); ?>" class="text-right" /></td>
                         <td></td>
                 
                     </tr>

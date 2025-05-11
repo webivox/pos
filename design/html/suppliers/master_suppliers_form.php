@@ -58,8 +58,17 @@
     <div class="col_4">
     
         <label for="country">Country</label>
-        <input type="text" name="country" id="country" placeholder="Country" value="<?php echo $data['country']; ?>">
-    
+    	<?php
+		$countries = $defCls->countryList();
+		?>
+        <select id="country" name="country">
+            <option value="">-- Select Country --</option>
+            <?php foreach ($countries as $code => $name): ?>
+                <option value="<?= $code ?>" <?php if (!empty($data['country']) && $data['country'] == $code) echo 'selected'; ?>>
+                    <?= htmlspecialchars($name) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     
     <div class="col_4">

@@ -109,7 +109,8 @@ class InventoryTransactionReceivingnotesConnector {
 										'supplier_id' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'total_value' => $defCls->money($cat['total_value']),
-										'updateURL' => $defCls->genURL('inventory/transaction_receivingnotes/edit/'.$cat['receiving_note_id'])
+										'updateURL' => $defCls->genURL('inventory/transaction_receivingnotes/edit/'.$cat['receiving_note_id']),
+										'printURL' => $defCls->genURL('inventory/transaction_receivingnotes/printView/'.$cat['receiving_note_id'])
 											);
 			}
 			
@@ -596,6 +597,115 @@ class InventoryTransactionReceivingnotesConnector {
 			else
 			{
 				$error_msg[]="Invalid receivingnote Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsReceivingnotesQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$receivingNoteInfo = $InventoryTransactionsReceivingnotesQuery->get($id);
+			
+			if($receivingNoteInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Inventory Receiving Note Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['receiving_note_id'] = $receivingNoteInfo['receiving_note_id'];
+					
+				$data['receiving_note_no'] = $defCls->docNo('RN-',$receivingNoteInfo['receiving_note_id']);
+				
+				$data['added_date'] = $dateCls->showDate($receivingNoteInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($receivingNoteInfo['location_id'],'name');
+				
+				$data['supplier_id'] = $SuppliersMasterSuppliersQuery->data($receivingNoteInfo['supplier_id'],'name');
+				
+				$data['invoice_no'] = $defCls->showText($receivingNoteInfo['invoice_no']);
+				
+				$data['due_date'] = $dateCls->showDate($receivingNoteInfo['due_date']);
+				
+				$data['remarks'] = $defCls->showText($receivingNoteInfo['remarks']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($receivingNoteInfo['user_id'],'name');
+				
+				$data['user'] = $SystemMasterUsersQuery->data($receivingNoteInfo['user_id'],'name');
+				
+				$data['totalQty'] = $receivingNoteInfo['no_of_qty'];
+				
+				$data['totalSave'] = $receivingNoteInfo['total_saving'];
+				
+				$data['totalTotal'] = $receivingNoteInfo['total_value'];
+				
+				
+				$data['item_lists'] = $InventoryTransactionsReceivingnotesQuery->getItems("WHERE receiving_note_id='".$id."' ORDER BY receiving_note_item_id ASC");
+
+				$this_required_file = _HTML.'inventory/transaction_receivingnotes_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid receiving_note Id"; $error_no++;
 					
 				if($error_no)
 				{

@@ -231,8 +231,8 @@
                     <ul>
             
                         <li><a href="<?php echo $defCls->genURL('suppliers/r_payments'); ?>">Payments</a></li>
-                        <li><a href="<?php echo $defCls->genURL('suppliers/r_debitnotes'); ?>">Debit Notes</a></li>
                         <li><a href="<?php echo $defCls->genURL('suppliers/r_creditnotes'); ?>">Credit Notes</a></li>
+                        <li><a href="<?php echo $defCls->genURL('suppliers/r_debitnotes'); ?>">Debit Notes</a></li>
                         <li><a href="<?php echo $defCls->genURL('suppliers/r_suppliers'); ?>">Suppliers</a></li>
                         <li><a href="<?php echo $defCls->genURL('suppliers/r_outstanding'); ?>">Outstanding</a></li>
                         <li><a href="<?php echo $defCls->genURL('suppliers/r_ledger'); ?>">Supplier Ledger</a></li>

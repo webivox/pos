@@ -1,0 +1,281 @@
+@font-face {
+  font-family: 'receipt';
+  src: url('../fonts/receipt.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@page 
+
+{
+
+	size: auto;   /* auto is the current printer page size */
+
+	margin: 0px;  /* this affects the margin in the printer settings */
+
+	padding:0px;
+
+}
+
+body
+
+{
+
+	margin:0px; height:0px;
+
+	font-family: "Consolas", monospace;
+
+	 font-size:12px; font-weight: normal;
+
+   -moz-user-select: none;
+
+   -khtml-user-select: none;
+
+   -webkit-user-select: none;
+
+}
+
+h1,h2,h3,h4,h5,h56,p{ margin:0px; padding:0px; }
+
+h1{ font-size:14px; }
+h3{ font-size:14px; }
+
+div
+
+{
+
+	-webkit-box-sizing: border-box;
+
+     -moz-box-sizing: border-box;
+
+          box-sizing: border-box;
+
+}
+
+#maindiv
+{
+
+	width:96%; height:auto; position:relative;
+	max-width:350px;
+	margin:0 auto;
+
+}
+#maindivin
+{
+	width:100%; height:auto; float:left; position:relative;
+}
+#maindivincancelled
+{
+	position: absolute;
+	top: 40%;
+	left: 0%;
+	font-size: 70px;
+	color: rgba(0,0,0,0.2);
+	transform: rotate(-30deg);
+	z-index: 0;
+	pointer-events: none;
+	white-space: nowrap;
+}
+
+#logo
+{
+	width:100%; height:auto; float:left;
+	text-align:center;
+}
+#logo img
+{
+	width:auto; height:75px;
+}
+
+#invoice_head
+{
+	border-top:1px dashed #000; border-bottom:1px dashed #000;
+	padding-top:10px; padding-bottom:10px;
+	font-size:14px; text-align:center;
+}
+
+#invoice_head_second
+{
+	border-bottom:1px dashed #000;font-size:14px;
+}
+#invoice_head_second table
+{
+	width:100%;
+}
+
+.invoice_head_second_ll{ width:100px; position:relative; }
+.invoice_head_second_ll:after{ content:':'; position:absolute; right:10px; }
+
+
+#invoice_item_head table
+{
+	width:100%;
+}
+
+.invoice_item_head_ln
+{
+	width:25px;
+	border-bottom:1px dashed #000;
+	font-size:14px;
+}
+.invoice_item_head_item
+{
+	border-bottom:1px dashed #000;
+	font-size:14px;
+}
+
+.invoice_item_head_price
+{
+	width:75px;
+	border-bottom:1px dashed #000;
+	text-align:right;
+	font-size:14px;
+}
+
+.invoice_item_head_qty
+{
+	width:55px;
+	border-bottom:1px dashed #000;
+	text-align:right;
+	font-size:14px;
+}
+.invoice_item_head_amount
+{
+	width:75px;
+	border-bottom:1px dashed #000;
+	text-align:right;
+	font-size:14px;
+}
+
+
+.invoice_item_ln
+{
+	width:25px;
+	font-size:14px;
+}
+.invoice_item_item
+{
+	font-size:14px;
+}
+
+.invoice_item_price
+{
+	width:75px;
+	text-align:right;
+	font-size:14px;
+}
+
+.invoice_item_qty
+{
+	width:55px;
+	text-align:right;
+	font-size:14px;
+}
+.invoice_item_amount
+{
+	width:85px;
+	text-align:right;
+	font-size:14px;
+}
+
+#subtotal_l
+{
+	padding-top:5px;
+	border-top:1px dashed #000;
+	font-size:14px;
+}
+
+#subtotal_r
+{
+	width:90px;
+	padding-top:5px;
+	border-top:1px dashed #000;
+	font-size:14px; text-align:right;
+}
+
+#discount_l
+{
+	font-size:14px;
+}
+
+#discount_r
+{
+	width:90px;
+	font-size:14px; text-align:right;
+}
+#net_total_l
+{
+	font-size:18px; font-weight:600;
+}
+
+#net_total_r
+{
+	width:90px;
+	font-size:18px; font-weight:600; text-align:right;
+}
+
+
+.payment_mode_l
+{
+	font-size:14px;
+}
+
+.payment_mode_r
+{
+	width:90px;
+	font-size:14px; text-align:right;
+}
+
+#cash_bl_l
+{
+	padding-top:5px;
+	padding-bottom:5px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:14px;
+}
+
+#cash_bl_r
+{
+	width:90px;
+	padding-top:5px;
+	padding-bottom:5px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:14px; text-align:right;
+}
+
+#qty_pcs td:nth-child(1) { width: 25%; }
+#qty_pcs td:nth-child(2) { width: 30%; }
+#qty_pcs td:nth-child(3) { width: 20%; }
+#qty_pcs td:nth-child(4) { width: 25%; }
+
+#loyalty_head
+{
+	padding-top:4px;
+	padding-bottom:4px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:14px; text-align:center; font-weight:600;
+}
+
+#total_saving
+{
+	padding-top:8px;
+	padding-bottom:8px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:18px; text-align:center; font-weight:600;
+}
+
+#footer
+{
+	padding-top:8px;
+	font-size:14px; text-align:center;
+}
+
+#barcode
+{
+	text-align:center;
+	padding-top:7px; padding-bottom:7px;
+	border-bottom:1px dashed #000;
+}

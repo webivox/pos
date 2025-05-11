@@ -40,7 +40,7 @@ $(document).on('change', '.invoicestatuschange', function() {
 	
 			if (json['success']) {
 	
-				$("#invstatus"+id).remove();
+				$("#invstatus" + id).parent('td').html('Cancelled');
 				$("#popup_form_in_close").trigger('click');
 				$("#modal_success p").text(json['success_msg']);
 				$("#modal_success").fadeIn(1);

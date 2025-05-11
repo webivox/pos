@@ -109,7 +109,8 @@ class CustomersTransactionSettlementsConnector {
 										'customer_id' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name'),
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
-										'updateURL' => $defCls->genURL('customers/transaction_settlements/edit/'.$cat['settlement_id'])
+										'updateURL' => $defCls->genURL('customers/transaction_settlements/edit/'.$cat['settlement_id']),
+										'printURL' => $defCls->genURL('customers/transaction_settlements/printView/'.$cat['settlement_id'])
 											);
 			}
 			
@@ -590,6 +591,112 @@ class CustomersTransactionSettlementsConnector {
 						
 					}
 				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid settlement Id"; $error_no++;
+					
+				if($error_no)
+				{
+					
+					$error_msg_list='';
+					foreach($error_msg as $e)
+					{
+						if($e)
+						{
+							$error_msg_list.='<li>'.$e.'</li>';
+						}
+					}
+					$json['error']=true;
+					$json['error_msg']=$error_msg_list;
+				}
+				echo json_encode($json);
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+
+    public function printView() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $CustomersMasterCustomersQuery;
+		global $SystemMasterUsersQuery;
+		global $CustomersTransactionsSettlementsQuery;
+		global $SystemMasterLocationsQuery;
+		global $AccountsMasterAccountsQuery;
+		global $accountsls;
+		global $AccountsTransactionChequeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$settlementInfo = $CustomersTransactionsSettlementsQuery->get($id);
+			
+			if($settlementInfo)
+			{
+			
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Customer Payments Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' | Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['settlement_id'] = $settlementInfo['settlement_id'];
+					
+				$data['settlement_no'] = $defCls->docNo('CSETT-',$settlementInfo['settlement_id']);
+				
+				$data['added_date'] = $dateCls->showDate($settlementInfo['added_date']);
+				
+				$data['location_id'] = $SystemMasterLocationsQuery->data($settlementInfo['location_id'],'name');
+				
+				$data['customer_id'] = $CustomersMasterCustomersQuery->data($settlementInfo['customer_id'],'name');
+				
+				$data['amount'] = $defCls->money($settlementInfo['amount']);
+				
+				$data['account_id'] = $AccountsMasterAccountsQuery->data($settlementInfo['account_id'],'name');
+				
+				$data['cheque_no'] = $settlementInfo['cheque_no']; 
+				
+				$data['cheque_date'] = $dateCls->showDate($settlementInfo['cheque_date']);
+			
+				if(isset($_REQUEST['cheque_date'])){$data['cheque_date'] = $db->request('cheque_date'); }
+				else{ $data['cheque_date'] = $dateCls->showDate($settlementInfo['cheque_date']); }
+				
+				$data['details'] = $defCls->showText($settlementInfo['details']);
+				
+				$data['user'] = $SystemMasterUsersQuery->data($settlementInfo['user_id'],'name');
+
+				$this_required_file = _HTML.'customers/transaction_settlements_print.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
 			}
 			else
 			{

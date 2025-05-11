@@ -109,7 +109,8 @@ class SalesTransactionInvoicesConnector {
 										'user' => $SystemMasterUsersQuery->data($cat['user_id'],'name'),
 										'status' => $cat['status'],
 										'total_sale' => $defCls->money($cat['total_sale']),
-										'updateURL' => $defCls->genURL('sales/transaction_invoices/edit/'.$cat['invoice_id'])
+										'updateURL' => $defCls->genURL('sales/transaction_invoices/edit/'.$cat['invoice_id']),
+										'printURL' => $defCls->genURL('sales/screen/posprint/'.$cat['invoice_id'])
 											);
 										
 			}

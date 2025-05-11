@@ -1,9 +1,0 @@
-[10-May-2025 16:17:33 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'unique_no' in 'where clause' in D:\wamp64\www\pos\base\class\db.php:28
-Stack trace:
-#0 D:\wamp64\www\pos\base\class\db.php(28): mysqli->prepare('UPDATE sales_pe...')
-#1 D:\wamp64\www\pos\core\query\sales\screen.php(683): db->query('UPDATE sales_pe...')
-#2 D:\wamp64\www\pos\core\connector\sales\screen.php(2648): SalesScreenQuery->complete(30)
-#3 D:\wamp64\www\pos\base\load.php(22): SalesScreenConnector->complete('complete')
-#4 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
-#5 {main}
-  thrown in D:\wamp64\www\pos\base\class\db.php on line 28

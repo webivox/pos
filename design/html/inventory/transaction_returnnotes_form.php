@@ -121,7 +121,7 @@
                 
                         <td colspan="2"></td>
                         
-                        <td><input type="text" id="bottom_total_save" disabled value="<?php echo $defCls->num($total_saved); ?>" class="text-right" /></td>
+                        <td><input type="text" id="bottom_total_save" disabled value="<?php echo $defCls->num($data['no_of_qty']); ?>" class="text-right" /></td>
                         <td class="text-right">Total &nbsp;</td>
                         <td><input type="text" id="bottom_total" disabled value="<?php echo $defCls->num($data['total_value']); ?>" class="text-right" /></td>
                         <td></td>

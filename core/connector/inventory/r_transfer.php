@@ -245,7 +245,10 @@ class InventoryRTransferConnector {
 										'rn_item_row' => true,
 										'item_id' => $defCls->docNo('',$cat['ii_item_id']),
 										'item_name' => $cat['ii_name'],
-										'qty' => $defCls->num($cat['irni_qty'])
+										'qty' => $defCls->num($cat['irni_qty']),
+											
+										'totalNoOfItem' => $defCls->num($totalNoOfItem),
+										'totalQty' => $defCls->num($totalQty)
 									);
 			}
 			

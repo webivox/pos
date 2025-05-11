@@ -133,12 +133,14 @@ class SuppliersRPaymentsConnector {
 				$amount += $cat['amount'];
 				
 				$data['rows'][] = array(
-										'no' => $defCls->docNo('CSETT-',$cat['payment_id']),
+										'no' => $defCls->docNo('SPMNT-',$cat['payment_id']),
 										'supplier' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'added_date' => date('d-m-Y',strtotime($cat['added_date'])),
 										'amount' => $defCls->money($cat['amount']),
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
 										'account' => $AccountsMasterAccountsQuery->data($cat['account_id'],'name'),
+										'cheque_no' => $defCls->showText($cat['cheque_no']),
+										'cheque_date' => $dateCls->showDate($cat['cheque_date']),
 										'user' => $SystemMasterUsersQuery->data($cat['user_id'],'name')
 									);
 											

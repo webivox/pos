@@ -120,7 +120,21 @@
 						<td class="text-right"><?php echo $r['total']; ?></td>
 					   
 					</tr>
-            <?php }} ?>
+            <?php } if ($r === end($data['rows'])) { ?>
+			
+			
+                      <tr class="grey">
+        
+                        <td colspan="1"><?php echo $r['totalNoOfItem']; ?></td>
+                        <td colspan="2"></td>
+                        <td class="text-right"><?php echo $r['totalQty']; ?></td>
+                        <td class="text-right"><?php echo $r['totalPrice']; ?></td>
+                        <td class="text-right"><?php echo $r['totalTotal']; ?></td>
+                   
+                    </tr>
+			
+			
+			<?php	}} ?>
     
     
     	</tbody>

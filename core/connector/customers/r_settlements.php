@@ -139,6 +139,8 @@ class CustomersRSettlementsConnector {
 										'amount' => $defCls->money($cat['amount']),
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
 										'account' => $AccountsMasterAccountsQuery->data($cat['account_id'],'name'),
+										'cheque_no' => $defCls->showText($cat['cheque_no']),
+										'cheque_date' => $dateCls->showDate($cat['cheque_date']),
 										'user' => $SystemMasterUsersQuery->data($cat['user_id'],'name')
 									);
 											

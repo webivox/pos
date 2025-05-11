@@ -159,7 +159,7 @@ class InventoryTransactionUniquenosConnector {
 			if(isset($_REQUEST['item_id']))
 			{
 				$data['item_id'] = $db->request('item_id');
-				$data['item_name'] = $InventoryMasterItemsQuery->data($cat['item_id'],'name');
+				$data['item_name'] = $InventoryMasterItemsQuery->data($data['item_id'],'name');
 			}
 			else{ $data['item_id'] = ''; $data['item_name'] = ''; }
 				
@@ -296,8 +296,10 @@ class InventoryTransactionUniquenosConnector {
 						$countUniquenosByUniqueno = $InventoryTransactionUniquenosQuery->gets("WHERE unique_no='".$data['unique_no']."'");
 						$countUniquenosByUniqueno = count($countUniquenosByUniqueno);
 						
-						if($countUniquenosByUniqueno){ $error_msg[]="The unique no already exists"; $error_no++; }
+						if($countUniquenosByUniqueno){ $error_msg[]="The unique no already exists!"; $error_no++; }
 					}
+					
+					if($getUniquenoInfo['status']==1){ $error_msg[]="You can't edit the unique number once the status is set to used!"; $error_no++; }
 					
 					if(!$error_no)
 					{

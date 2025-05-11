@@ -210,6 +210,7 @@ class InventoryRReceivingConnector {
 					
 					if(!$currentRNId)
 					{
+						
 						$totalNoOfItem = 0;
 						$totalQty = 0;
 						$totalPrice = 0;
@@ -255,7 +256,7 @@ class InventoryRReceivingConnector {
 										
 					
 				}
-				else{ $data['show_footer'] = false; }
+				else{ $data['show_footer'] = false;  }
 				
 				$totalNoOfItem += 1;
 				$totalQty += $cat['irni_qty'];
@@ -270,7 +271,7 @@ class InventoryRReceivingConnector {
 			
 				
 				$data['rows'][] = array(
-										'currentRNId' => false,
+										'currentRNId' => 'ssa',
 										'rnh_row' => false,
 										'rn_item_row' => true,
 										'item_id' => $defCls->docNo('',$cat['ii_item_id']),
@@ -281,6 +282,14 @@ class InventoryRReceivingConnector {
 										'discount' => $defCls->money($cat['irni_discount']).'%',
 										'final_price' => $defCls->money($cat['irni_final_price']),
 										'total' => $defCls->money($cat['irni_total']),
+											
+										'totalNoOfItem' => 1,
+										'totalQty' => $defCls->num($totalQty),
+										'totalPrice' => $defCls->money($totalPrice),
+										'totalBuyingPrice' => $defCls->money($totalBuyingPrice),
+										'totalFinalPrice' => $defCls->money($totalFinalPrice),
+										'totalNoOfItem' => $defCls->docNo('',$totalNoOfItem),
+										'totalTotal' => $defCls->money($totalTotal)
 									);
 			}
 			

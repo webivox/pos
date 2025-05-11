@@ -1,1 +1,0 @@
-[10-May-2025 16:10:38 UTC] PHP Parse error:  syntax error, unexpected variable "$error_no" in D:\wamp64\www\pos\core\connector\sales\screen.php on line 2480

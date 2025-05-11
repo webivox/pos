@@ -133,6 +133,7 @@ class SuppliersMasterSuppliersConnector {
 		
 		
 		$data = [];
+		$json = [];
 		
 		if($firewallCls->verifyUser())
 		{
@@ -169,6 +170,7 @@ class SuppliersMasterSuppliersConnector {
 		
 		
 		$data = [];
+		$json = [];
 		$error_no = 0;
 		$error_msg = [];
 		
@@ -293,6 +295,7 @@ class SuppliersMasterSuppliersConnector {
 		
 		
 		$data = [];
+		$json = [];
 		$error_no = 0;
 		$error_msg = [];
 		
@@ -346,7 +349,7 @@ class SuppliersMasterSuppliersConnector {
 				else{ $data['tax_number'] =  $getSupplierInfo['tax_number']; }
 				
 				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
-				else{ $data['status'] = 0; }
+				else{ $data['status'] = $getSupplierInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 				{

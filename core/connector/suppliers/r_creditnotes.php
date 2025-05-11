@@ -125,7 +125,7 @@ class SuppliersRCreditnotesConnector {
 				$amount += $cat['amount'];
 				
 				$data['rows'][] = array(
-										'no' => $defCls->docNo('CCN-',$cat['credit_note_id']),
+										'no' => $defCls->docNo('SCN-',$cat['credit_note_id']),
 										'supplier' => $SuppliersMasterSuppliersQuery->data($cat['supplier_id'],'name'),
 										'added_date' => date('d-m-Y',strtotime($cat['added_date'])),
 										'amount' => $defCls->money($cat['amount']),

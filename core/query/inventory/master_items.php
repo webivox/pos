@@ -94,6 +94,7 @@ class InventoryMasterItemsQuery {
     public function create($data) {
 		
 		global $db;
+		global $defCls;
 
         // Query to fetch all blogs
         $sql = "INSERT INTO ".$this->tableName." SET 
@@ -119,7 +120,24 @@ class InventoryMasterItemsQuery {
 						
         if($db->query($sql))
 		{
-			return $db->last_id();
+			$lastId = $db->last_id();
+			
+			if($lastId && !$data['barcode'])
+			{
+				$barcode = $defCls->master('barcode_no_start');
+				$barcodeGen = $defCls->docNo($barcode , $lastId);
+				
+				$db->query("UPDATE ".$this->tableName." SET 
+						
+						barcode='".$barcodeGen."'
+						
+						WHERE
+						
+						item_id = ".$lastId."");
+					
+			}
+			
+			return $lastId;
 		}
 		else{ return false; }
 		

@@ -49,7 +49,7 @@
     	<tr>
         
         	<td>Date</td>
-        	<td>Settlement No</td>
+        	<td>Debit Note No</td>
         	<td>Supplier Name</td>
         	<td>Location</td>
         	<td class="text-right">Amount</td>
