@@ -228,6 +228,52 @@ $(document).on("submit", "#saveFormSub", function (e) {
     });
 });
 
+$(document).on("click", ".delete", function (e) {
+    e.preventDefault(); // Prevent the default form submission
+
+    var url = $(this).data("url");
+	var id = $(this).data('id');
+
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: '',
+        dataType: 'json',
+        contentType: false,  // Let the browser set the content-type for the multipart form
+        cache: false,
+        processData: false, // Don't let jQuery process the data
+        beforeSend: function() {
+            $(this).hide();
+            $("#modal_loading").fadeIn(1);
+        },
+        success: function(json) {
+            console.log(json);
+
+            if (json['error']) {
+                $(this).show();
+                $("#modal_loading").fadeOut(1);
+                $("#modal ul").html(json['error_msg']);
+                $("#modal").fadeIn(1);
+            }
+
+
+            if (json['success']) {
+				
+                $('#rowLine'+id).remove();
+                $("#modal_loading").fadeOut(1);
+                $("#modal_success p").text(json['success_msg']);
+                $("#modal_success").fadeIn(1);
+				
+				
+            }
+        },
+        error: function(xhr, status, error) {
+		
+            console.error("Error:", error);
+        }
+    });
+});
+
 
 
 $(document).on('click','#modal_confirmation_close',function(){

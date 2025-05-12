@@ -92,7 +92,8 @@ class accountsMasterPayeeConnector {
 										'payee_id' => $payee['payee_id'],
 										'name' => $payee['name'],
 										'status' => $defCls->getMasterStatus($payee['status']),
-										'updateURL' => $defCls->genURL('accounts/master_payee/edit/'.$payee['payee_id'])
+										'updateURL' => $defCls->genURL('accounts/master_payee/edit/'.$payee['payee_id']),
+										'deleteURL' => $defCls->genURL('accounts/master_payee/delete/'.$payee['payee_id'])
 											);
 			}
 			
@@ -320,6 +321,90 @@ class accountsMasterPayeeConnector {
 				echo json_encode($json);
 				
 			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $AccountsMasterPayeeQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $AccountsMasterPayeeQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $AccountsMasterPayeeQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Payee Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the payee!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid payee Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
 		}
 		else
 		{

@@ -110,7 +110,8 @@ class InventoryTransactionUniquenosConnector {
 										'item' => $InventoryMasterItemsQuery->data($cat['item_id'],'name'),
 										'unique_no' => $defCls->showText($cat['unique_no']),
 										'status' => $status,
-										'updateURL' => $defCls->genURL('inventory/transaction_uniquenos/edit/'.$cat['unique_id'])
+										'updateURL' => $defCls->genURL('inventory/transaction_uniquenos/edit/'.$cat['unique_id']),
+										'deleteURL' => $defCls->genURL('inventory/transaction_uniquenos/delete/'.$cat['unique_id'])
 											);
 			}
 			
@@ -373,4 +374,88 @@ class InventoryTransactionUniquenosConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionUniquenosQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryTransactionUniquenosQuery->get($id);
+			
+			if($getInfo)
+			{
+				$unique_no = $getInfo['unique_no'];
+				
+				$deleteValue = $InventoryTransactionUniquenosQuery->delete($unique_no);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Unique No Deleted: ".$unique_no);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the unique no!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid unique no Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

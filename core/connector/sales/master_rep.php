@@ -89,7 +89,8 @@ class SalesMasterRepConnector {
 										'rep_id' => $rep['rep_id'],
 										'name' => $rep['name'],
 										'status' => $defCls->getMasterStatus($rep['status']),
-										'updateURL' => $defCls->genURL('sales/master_rep/edit/'.$rep['rep_id'])
+										'updateURL' => $defCls->genURL('sales/master_rep/edit/'.$rep['rep_id']),
+										'deleteURL' => $defCls->genURL('sales/master_rep/delete/'.$rep['rep_id'])
 											);
 			}
 			
@@ -323,4 +324,88 @@ class SalesMasterRepConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SalesMasterRepQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SalesMasterRepQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $SalesMasterRepQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Rep Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the rep!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid rep Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

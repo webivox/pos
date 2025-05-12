@@ -100,7 +100,8 @@ class SuppliersMasterSuppliersConnector {
 										'contact_person' => $cat['contact_person'],
 										'phone_number' => $cat['phone_number'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('suppliers/master_suppliers/edit/'.$cat['supplier_id'])
+										'updateURL' => $defCls->genURL('suppliers/master_suppliers/edit/'.$cat['supplier_id']),
+										'deleteURL' => $defCls->genURL('suppliers/master_suppliers/delete/'.$cat['supplier_id'])
 											);
 			}
 			
@@ -436,4 +437,88 @@ class SuppliersMasterSuppliersConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SuppliersMasterSuppliersQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SuppliersMasterSuppliersQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $SuppliersMasterSuppliersQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Supplier Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the supplier!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid supplier Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

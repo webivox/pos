@@ -1,0 +1,7 @@
+[12-May-2025 21:23:58 UTC] PHP Fatal error:  Cannot declare class InventoryMasterBrandsConnector, because the name is already in use in D:\wamp64\www\pos\core\connector\secure\users.php on line 3
+[12-May-2025 21:23:58 UTC] PHP Stack trace:
+[12-May-2025 21:23:58 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[12-May-2025 21:23:58 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[12-May-2025 21:23:58 UTC] PHP   3. SystemMasterUsergroupsPathConnector->index() D:\wamp64\www\pos\base\load.php:22
+[12-May-2025 21:23:58 UTC] PHP   4. scanDirRecursive($dir = 'D:/wamp64/www/pos/core/connector/') D:\wamp64\www\pos\core\connector\system\master_usergroups_path.php:58
+[12-May-2025 21:23:58 UTC] PHP   5. include_once() D:\wamp64\www\pos\core\connector\system\master_usergroups_path.php:49

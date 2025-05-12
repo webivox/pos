@@ -89,7 +89,8 @@ class InventoryMasterWarrantyConnector {
 										'warranty_id' => $warranty['warranty_id'],
 										'name' => $warranty['name'],
 										'status' => $defCls->getMasterStatus($warranty['status']),
-										'updateURL' => $defCls->genURL('inventory/master_warranty/edit/'.$warranty['warranty_id'])
+										'updateURL' => $defCls->genURL('inventory/master_warranty/edit/'.$warranty['warranty_id']),
+										'deleteURL' => $defCls->genURL('inventory/master_warranty/delete/'.$warranty['warranty_id'])
 											);
 			}
 			
@@ -323,4 +324,88 @@ class InventoryMasterWarrantyConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryMasterWarrantyQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryMasterWarrantyQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $InventoryMasterWarrantyQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Warranty Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the warranty!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid warranty Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

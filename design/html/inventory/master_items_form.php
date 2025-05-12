@@ -56,10 +56,18 @@
     </div>
     
     <div class="col_4">
-        <label for="supplier_id_item">Supplier</label>
+        <label for="warranty_id">Warranty</label>
+        <select name="warranty_id" id="warranty_id">
         
-        <input type="text" name="supplier_id_item_txt" id="supplier_id_item_txt" data-setid="supplier_id_item" placeholder="" class="supplierAjax" value="<?php echo $data['supplier_id_txt']; ?>">
-        <input type="hidden" id="supplier_id_item" name="supplier_id_item" value="<?php echo $data['supplier_id']; ?>" />
+        	<option value="">- Choose -</option>
+            
+            <?php
+			foreach($data['warranty_list'] as $cat){
+			?>
+            	<option value="<?php echo $cat['warranty_id']; ?>" <?php if($data['warranty_id']==$cat['warranty_id']){ echo 'selected'; } ?>><?php echo $cat['name']; ?></option>
+            <?php } ?>
+        
+        </select>
     </div>
     
     <div class="col_4">
@@ -75,6 +83,13 @@
     <div class="col_4">
         <label for="barcode">Barcode</label>
         <input type="text" name="barcode" id="barcode" placeholder="Barcode" value="<?php echo $data['barcode']; ?>">
+    </div>
+    
+    <div class="col_4">
+        <label for="supplier_id_item">Supplier</label>
+        
+        <input type="text" name="supplier_id_item_txt" id="supplier_id_item_txt" data-setid="supplier_id_item" placeholder="" class="supplierAjax" value="<?php echo $data['supplier_id_txt']; ?>">
+        <input type="hidden" id="supplier_id_item" name="supplier_id_item" value="<?php echo $data['supplier_id']; ?>" />
     </div>
     
     <div class="col_4">
@@ -119,6 +134,18 @@
         
         	<option value="1" <?php if($data['unique_no']==1){ echo 'selected'; } ?>>Required</option>
         	<option value="0" <?php if($data['unique_no']==0){ echo 'selected'; } ?>>Not Required</option>
+        
+        </select>
+    
+    </div>
+    
+    <div class="col_4">
+    
+        <label for="kot_item">KOT Item</label>
+        <select name="kot_item" id="kot_item">
+        
+        	<option value="0" <?php if($data['kot_item']==0){ echo 'selected'; } ?>>Disable</option>
+        	<option value="1" <?php if($data['kot_item']==1){ echo 'selected'; } ?>>Enable</option>
         
         </select>
     

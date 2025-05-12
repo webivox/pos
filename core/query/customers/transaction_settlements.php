@@ -178,6 +178,66 @@ class CustomersTransactionsSettlementsQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($settlementId) {
+		
+        global $db;
+        global $defCls;
+        global $CustomersTransactionsSettlementsQuery;
+        global $AccountsTransactionChequeQuery;
+        global $AccountsMasterAccountsQuery;
+        global $CustomersMasterCustomersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$settlementInfo = $CustomersTransactionsSettlementsQuery->get($settlementId);
+		
+		if($settlementInfo)
+		{
+			$transaction_no = $defCls->docNo('CSETT-',$settlementInfo['settlement_id']);
+			
+			$chequeInfo = $AccountsTransactionChequeQuery->getByTrn($settlementInfo['settlement_id'],'CSETT');
+			
+			if($chequeInfo && $chequeInfo['status']!==0)
+			{
+				$error[] = "Cheque already realized. Please Revert your cheque!"; $err++;
+			}
+			
+			if(!$err)
+			{
+				
+				$AccountsTransactionChequeQuery->delete($settlementInfo['settlement_id'],'CSETT');
+				$AccountsMasterAccountsQuery->transactionDelete($settlementInfo['settlement_id'],'CSETT');
+				
+				////Supplier transactipn update
+				$customerData = [];
+				$customerData['reference_id'] = $settlementInfo['settlement_id'];
+				$customerData['transaction_type'] = 'CSETT';
+				
+				$CustomersMasterCustomersQuery->transactionDelete($customerData);
+				
+				$db->query("DELETE FROM ".$this->tableName." WHERE settlement_id = ".$settlementInfo['settlement_id']."");
+				
+				return 'deleted';
+			}
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

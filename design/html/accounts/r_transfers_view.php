@@ -11,7 +11,8 @@
 <script type="text/javascript" src="<?php echo _JS; ?>common.js"></script>
 <link href="<?php echo _FONTS; ?>fa/css/all.css" rel="stylesheet" type="text/css">
 <link href="<?php echo _FONTS; ?>fa/css/all.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link id="page_favicon" href="<?php echo _IMAGES; ?>fav.png" rel="icon" type="image/x-icon" />
 <base href="<?php echo _SERVER; ?>">
 </head>
 

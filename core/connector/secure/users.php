@@ -87,7 +87,8 @@ class InventoryMasterBrandsConnector {
 										'brand_id' => $cat['brand_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('inventory/master_brands/edit/'.$cat['brand_id'])
+										'updateURL' => $defCls->genURL('inventory/master_brands/edit/'.$cat['brand_id']),
+										'deleteURL' => $defCls->genURL('system/master_brands/delete/'.$cat['brand_id'])
 											);
 			}
 			

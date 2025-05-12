@@ -108,7 +108,8 @@ class SuppliersTransactionDebitnotesConnector {
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
 										'updateURL' => $defCls->genURL('suppliers/transaction_debitnotes/edit/'.$cat['debit_note_id']),
-										'printURL' => $defCls->genURL('suppliers/transaction_debitnotes/printView/'.$cat['debit_note_id'])
+										'printURL' => $defCls->genURL('suppliers/transaction_debitnotes/printView/'.$cat['debit_note_id']),
+										'deleteURL' => $defCls->genURL('suppliers/transaction_debitnotes/delete/'.$cat['debit_note_id'])
 											);
 			}
 			
@@ -531,4 +532,83 @@ class SuppliersTransactionDebitnotesConnector {
 	}
 	
 
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SuppliersTransactionDebitnotesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SuppliersTransactionDebitnotesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('SDN-',$getInfo['debit_note_id']);;
+				
+				$deleteValue = $SuppliersTransactionDebitnotesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Supplier debit note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the supplier debit note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid supplier debit note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+	}
 }

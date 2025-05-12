@@ -165,6 +165,88 @@ class SystemMasterCashierpointsQuery {
 		
 		
     }
+    
+    public function delete($cashierPointId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+        $count = $db->fetch("SELECT COUNT(*) as count FROM accounts_adjustments WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in accounts adjustments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in accounts expences!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_transfers WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in accounts transfers!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_credit_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in customers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_debit_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in customers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_settlements WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in customers settlements!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_adjustment_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in inventory adjustment notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_quotations WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in inventory quotations!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_receiving_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in inventory receiving notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_return_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in inventory return notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_transfer_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in inventory transfer notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoices WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in sales invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoices WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in sales pending invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_return WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in sales return!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_shifts WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in sales shifts!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_credit_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in suppliers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_debit_notes WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in suppliers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_payments WHERE cashier_point_id = '".$cashierPointId."'");
+		if($count['count'] > 0){ $error[] = "This cashier point cannot be deleted as it is currently used in suppliers payments!"; $err++; }
+
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE cashierpoint_id = ".$cashierPointId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

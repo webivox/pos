@@ -178,6 +178,57 @@ class AccountsTransactionsExpencesQuery {
 		
 		
     }
+	
+	
+    
+    public function delete($expenceId) {
+		
+        global $db;
+        global $defCls;
+        global $AccountsTransactionsExpencesQuery;
+        global $AccountsTransactionChequeQuery;
+        global $AccountsMasterAccountsQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$expenceInfo = $AccountsTransactionsExpencesQuery->get($expenceId);
+		
+		if($expenceInfo)
+		{
+			$transaction_no = $defCls->docNo('AEXP-',$expenceInfo['expence_id']);
+			
+			$chequeInfo = $AccountsTransactionChequeQuery->getByTrn($expenceInfo['expence_id'],'AEXP');
+			
+			if($chequeInfo && $chequeInfo['status']!==0)
+			{
+				$error[] = "Cheque already realized. Please Revert your cheque!"; $err++;
+			}
+			
+			if(!$err)
+			{
+				
+				$AccountsTransactionChequeQuery->delete($expenceInfo['expence_id'],'AEXP');
+				$AccountsMasterAccountsQuery->transactionDelete($expenceInfo['expence_id'],'AEXP');
+				
+				
+				$db->query("DELETE FROM ".$this->tableName." WHERE expence_id = ".$expenceInfo['expence_id']."");
+				
+				return 'deleted';
+			}
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -381,6 +381,75 @@ class  InventoryTransactionsReceivingnotesQuery{
 					");	
 		
 	}
+	
+	
+	
+	
+    
+    public function delete($receivingNoteId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryTransactionsReceivingnotesQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$getReceivingnoteInfo = $InventoryTransactionsReceivingnotesQuery->get($receivingNoteId);
+		
+		if($getReceivingnoteInfo)
+		{
+			$data['item_lists'] = $InventoryTransactionsReceivingnotesQuery->getItems("WHERE receiving_note_id='".$receivingNoteId."' ORDER BY receiving_note_item_id ASC");
+			
+			foreach($data['item_lists'] as $i){
+				
+				$db->query("DELETE FROM ".$this->itemTableName." WHERE `receiving_note_item_id` = '".$i['receiving_note_item_id']."'");
+					
+				//// UPDATE STOCKS
+				
+				$stockData = [];
+				
+				$stockData['reference_id'] = $getReceivingnoteInfo['receiving_note_id'];
+				$stockData['reference_row_id'] = $i['receiving_note_item_id'];
+				$stockData['transaction_type'] = 'RN';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE receiving_note_id = ".$getReceivingnoteInfo['receiving_note_id']."");
+			
+			////Supplier transactipn update
+			$supplierData = [];
+			$supplierData['reference_id'] = $getReceivingnoteInfo['receiving_note_id'];
+			$supplierData['transaction_type'] = 'RN';
+			
+			$SuppliersMasterSuppliersQuery->transactionDelete($supplierData);
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

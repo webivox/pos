@@ -110,7 +110,8 @@ class InventoryTransactionReceivingnotesConnector {
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'total_value' => $defCls->money($cat['total_value']),
 										'updateURL' => $defCls->genURL('inventory/transaction_receivingnotes/edit/'.$cat['receiving_note_id']),
-										'printURL' => $defCls->genURL('inventory/transaction_receivingnotes/printView/'.$cat['receiving_note_id'])
+										'printURL' => $defCls->genURL('inventory/transaction_receivingnotes/printView/'.$cat['receiving_note_id']),
+										'deleteURL' => $defCls->genURL('inventory/transaction_receivingnotes/delete/'.$cat['receiving_note_id'])
 											);
 			}
 			
@@ -732,4 +733,91 @@ class InventoryTransactionReceivingnotesConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsReceivingnotesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryTransactionsReceivingnotesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('RN-',$getInfo['receiving_note_id']);;
+				
+				$deleteValue = $InventoryTransactionsReceivingnotesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Receiving Note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the receiving note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid receiving not Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

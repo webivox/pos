@@ -137,6 +137,44 @@ class CustomersMasterCustomergroupsQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($customerGroupId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM customers_customers WHERE customer_group_id = '".$customerGroupId."'");
+if($count['count'] > 0){ $error[] = "This customer group cannot be deleted as it is currently used in customers!"; $err++; }
+
+$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items_customer_group_price WHERE customer_group_id = '".$customerGroupId."'");
+if($count['count'] > 0){ $error[] = "This customer group cannot be deleted as it is currently used in inventory items customer group price!"; $err++; }
+
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE customer_group_id = ".$customerGroupId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -41,7 +41,7 @@
             
             	
             
-                <a class="btn btn-black open_popup_form" href="<?php echo $cat['printURL']; ?>"><i class="fa-light fa-print"></i></a>
+                <a class="btn btn-black" href="<?php echo $cat['printURL']; ?>"><i class="fa-light fa-print"></i></a>
                 
             
             </div>

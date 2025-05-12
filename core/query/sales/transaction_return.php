@@ -375,6 +375,68 @@ class  SalesTransactionsReturnQuery{
 					");	
 		
 	}
+	
+	
+    
+    public function delete($returnNoteId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $SalesTransactionsReturnQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$getReturnNoteInfo = $SalesTransactionsReturnQuery->get($returnNoteId);
+		
+		if($getReturnNoteInfo)
+		{
+			$data['item_lists'] = $SalesTransactionsReturnQuery->getItems("WHERE sales_return_id='".$returnNoteId."' ORDER BY sales_return_item_id ASC");
+			
+			foreach($data['item_lists'] as $i){
+				
+				$db->query("DELETE FROM ".$this->itemTableName." WHERE `sales_return_item_id` = '".$i['sales_return_item_id']."'");
+					
+				//// UPDATE STOCKS
+				
+				$stockData = [];
+				
+				$stockData['reference_id'] = $getReturnNoteInfo['sales_return_id'];
+				$stockData['reference_row_id'] = $i['sales_return_item_id'];
+				$stockData['transaction_type'] = 'SRET';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE sales_return_id = ".$getReturnNoteInfo['sales_return_id']."");
+			
+			
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

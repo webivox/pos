@@ -100,6 +100,7 @@ class SystemMasterUsergroupsQuery{
         $sql = "INSERT INTO ".$this->tableName." SET 
 						
 						name='".$data['name']."',
+						permissions='".$data['permissions']."',
 						status='".$data['status']."'
 						
 				";
@@ -121,6 +122,7 @@ class SystemMasterUsergroupsQuery{
         $sql = "UPDATE ".$this->tableName." SET 
 						
 						name='".$data['name']."',
+						permissions='".$data['permissions']."',
 						status='".$data['status']."'
 						
 						WHERE
@@ -136,6 +138,41 @@ class SystemMasterUsergroupsQuery{
 		else{ return false; }
 		
 		
+    }
+	
+	
+	
+	
+    
+    public function delete($groupId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM secure_users WHERE group_id = '".$groupId."'");
+		if($count['count'] > 0){ $error[] = "This user group cannot be deleted as it is currently used in users!"; $err++; }
+		
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE group_id = ".$groupId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
     }
 }
 

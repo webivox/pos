@@ -156,6 +156,42 @@ class InventoryTransactionUniquenosQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($uniqueNo) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoice_items WHERE unique_no = '".$uniqueNo."'");
+		if($count['count'] > 0){ $error[] = "This unique no cannot be deleted as it is currently used in sales invoice items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoice_items WHERE unique_no = '".$uniqueNo."'");
+		if($count['count'] > 0){ $error[] = "This unique no cannot be deleted as it is currently used in pending sales invoice items!"; $err++; }
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE unique_no = ".$uniqueNo."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -89,7 +89,8 @@ class SystemMasterUsersConnector {
 										'user_id' => $cat['user_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('system/master_users/edit/'.$cat['user_id'])
+										'updateURL' => $defCls->genURL('system/master_users/edit/'.$cat['user_id']),
+										'deleteURL' => $defCls->genURL('system/master_users/delete/'.$cat['user_id'])
 											);
 			}
 			
@@ -430,5 +431,89 @@ class SystemMasterUsersConnector {
 		}
 		
 	}
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SystemMasterUsersQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $SystemMasterUsersQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("User Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the user!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid user Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
 	
 }

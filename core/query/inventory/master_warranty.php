@@ -136,6 +136,37 @@ class InventoryMasterWarrantyQuery {
 		
 		
     }
+	
+	
+	
+    
+    public function delete($warrantyId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items WHERE warranty_id = '".$warrantyId."'");
+		if($count['count'] > 0){ $error[] = "This warranty cannot be deleted as it is currently used in inventory items!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE warranty_id = ".$warrantyId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

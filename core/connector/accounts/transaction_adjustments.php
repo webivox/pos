@@ -111,7 +111,8 @@ class AccountsTransactionAdjustmentsConnector {
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
 										'updateURL' => $defCls->genURL('accounts/transaction_adjustments/edit/'.$cat['adjustment_id']),
-										'printURL' => $defCls->genURL('accounts/transaction_adjustments/printView/'.$cat['adjustment_id'])
+										'printURL' => $defCls->genURL('accounts/transaction_adjustments/printView/'.$cat['adjustment_id']),
+										'deleteURL' => $defCls->genURL('accounts/transaction_adjustments/delete/'.$cat['adjustment_id'])
 											);
 			}
 			
@@ -560,4 +561,90 @@ class AccountsTransactionAdjustmentsConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $AccountsTransactionsAdjustmentsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $AccountsTransactionsAdjustmentsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('AADJ-',$getInfo['adjustment_id']);;
+				
+				$deleteValue = $AccountsTransactionsAdjustmentsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Accounts Adjustment Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the accounts adjustment!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid adjustment Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

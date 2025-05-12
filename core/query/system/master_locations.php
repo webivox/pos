@@ -144,6 +144,93 @@ class SystemMasterLocationsQuery {
 		
 		
     }
+    
+    public function delete($locationId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+        $count = $db->fetch("SELECT COUNT(*) as count FROM inventory_receiving_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in inventory receiving notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_adjustment_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in inventory adjustment notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_quotations WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in sales quotations!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_return_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in inventory return notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_stock_transactions WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in inventory stock transactions (location from id)!"; $err++; }
+	
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_transfer_notes WHERE location_from_id = '".$locationId."' OR location_to_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in inventory transfer notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in accounts expences!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_transfers WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in accounts transfers!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_adjustments WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in accounts adjustments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_credit_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in customers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_debit_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in customers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_settlements WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in customers settlements!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoices WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in sales invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoices WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in sales pending invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_return WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in sales return!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM secure_users WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in secure users!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_credit_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in suppliers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_debit_notes WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in suppliers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_payments WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in suppliers payments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM system_cashierpoints WHERE location_id = '".$locationId."'");
+		if($count['count'] > 0){ $error[] = "This location cannot be deleted as it is currently used in system cashier points!".$count; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE location_id = ".$locationId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -169,6 +169,48 @@ class CustomersTransactionsCreditnotesQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($creditNoteId) {
+		
+        global $db;
+        global $defCls;
+        global $CustomersTransactionsCreditnotesQuery;
+        global $CustomersMasterCustomersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$creditNoteInfo = $CustomersTransactionsCreditnotesQuery->get($creditNoteId);
+		
+		if($creditNoteInfo)
+		{
+			////Customer transactipn update
+			$customerData = [];
+			$customerData['reference_id'] = $creditNoteInfo['credit_note_id'];
+			$customerData['transaction_type'] = 'CCN';
+			
+			$CustomersMasterCustomersQuery->transactionDelete($customerData);
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE credit_note_id = ".$creditNoteInfo['credit_note_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

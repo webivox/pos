@@ -387,6 +387,64 @@ class CustomersMasterCustomersQuery {
 		
 		$db->query("UPDATE customers_customers SET loyalty_points='".$balanceAll."' WHERE customer_id=".$customerId."");
 	}
+	
+	
+	
+    
+    public function delete($customerId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM customers_credit_notes WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in customers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_debit_notes WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in customers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_settlements WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in customers settlements!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customer_loyalty_transactions WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in customer loyalty transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customer_transactions WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in customer transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_quotations WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in inventory quotations!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoices WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in sales invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoices WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in sales pending invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_return WHERE customer_id = '".$customerId."'");
+		if($count['count'] > 0){ $error[] = "This customer cannot be deleted as it is currently used in sales return!"; $err++; }
+
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE customer_id = ".$customerId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

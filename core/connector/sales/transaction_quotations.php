@@ -114,7 +114,9 @@ class SalesTransactionQuotationsConnector {
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
 										'customer' => $CustomersMasterCustomersQuery->data($cat['customer_id'],'name'),
 										'no_of_items' => $defCls->num($cat['no_of_items']).' / '.$defCls->num($cat['no_of_qty']),
-										'updateURL' => $defCls->genURL('sales/transaction_quotations/edit/'.$cat['quotation_id'])
+										'updateURL' => $defCls->genURL('sales/transaction_quotations/edit/'.$cat['quotation_id']),
+										'printURL' => $defCls->genURL('sales/transaction_quotations/posprint/'.$cat['quotation_id']),
+										'deleteURL' => $defCls->genURL('sales/transaction_quotations/delete/'.$cat['quotation_id'])
 											);
 			}
 			
@@ -566,4 +568,177 @@ class SalesTransactionQuotationsConnector {
 		
 	}
 	
+	
+	
+	
+	
+
+    public function posprint() {
+	
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $CustomersMasterCustomersQuery;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionsQuotationsQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $SalesMasterRepQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$invoiceInfo = $SalesTransactionsQuotationsQuery->get($id);
+		
+			if($invoiceInfo)
+			{
+				
+				$data['companyName'] 	= $defCls->master('companyName');
+				$data['logo'] 			= _UPLOADS.$defCls->master('logo');
+			
+				$data['title_tag'] = 'Sales Quotation Print | '.$dateCls->todayDate('d-m-Y H:i:s').' | '.$data['companyName'];
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				$data['invoice_logo_print'] = $defCls->master('invoice_logo_print');
+				
+				$data['invoice_header'] = $defCls->showText(nl2br($defCls->master('invoice_header')));
+				
+				$data['print_by_n_date'] = 'Print By: '.$SystemMasterUsersQuery->data($sessionCls->load('signedUserId'),'name').' <br> Printed On: '.$dateCls->todayDate('d-m-Y H:i:s');
+				
+				$data['quotation_no'] = $defCls->docNo('QTE',$invoiceInfo['quotation_id']);
+				
+				$data['added_date'] = date('d-m-Y H:i:s',strtotime($invoiceInfo['added_date']));
+				
+				$data['cashier'] = $SystemMasterUsersQuery->data($invoiceInfo['user_id'],'name');
+				
+				$data['customer'] = $CustomersMasterCustomersQuery->data($invoiceInfo['customer_id'],'name');
+				
+				$data['invoice_items'] = $SalesTransactionsQuotationsQuery->getItems("WHERE quotation_id='".$invoiceInfo['quotation_id']."' ORDER BY quotation_item_id ASC");
+				
+				
+				$data['total_sale'] = $invoiceInfo['total'];
+				
+				
+				$data['no_of_items'] = $invoiceInfo['no_of_items'];
+				$data['no_of_qty'] = $invoiceInfo['no_of_qty'];
+				
+				
+				$data['invoice_footer'] = $defCls->showText(nl2br($defCls->master('invoice_footer')));
+
+				$this_required_file = _HTML.'sales/posquotationprint.php';
+				if (!file_exists($this_required_file)) {
+					error_log("File not found: ".$this_required_file);
+					die('File not found:'.$this_required_file);
+				}
+				else {
+	
+					require_once($this_required_file);
+					
+				}
+			}
+			else
+			{
+				$error_msg[]="Invalid invoice Id"; $error_no++;
+				
+				
+			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionsQuotationsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SalesTransactionsQuotationsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('QTE-',$getInfo['quotation_id']);;
+				
+				$deleteValue = $SalesTransactionsQuotationsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Sales Quotation Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the sales quotation note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid sales quotation note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

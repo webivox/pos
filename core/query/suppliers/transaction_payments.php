@@ -177,6 +177,66 @@ class SuppliersTransactionsPaymentsQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($paymentId) {
+		
+        global $db;
+        global $defCls;
+        global $SuppliersTransactionsPaymentsQuery;
+        global $AccountsTransactionChequeQuery;
+        global $AccountsMasterAccountsQuery;
+        global $SuppliersMasterSuppliersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$paymentInfo = $SuppliersTransactionsPaymentsQuery->get($paymentId);
+		
+		if($paymentInfo)
+		{
+			$transaction_no = $defCls->docNo('SPMNT-',$paymentInfo['payment_id']);
+			
+			$chequeInfo = $AccountsTransactionChequeQuery->getByTrn($paymentInfo['payment_id'],'SPMNT');
+			
+			if($chequeInfo && $chequeInfo['status']!==0)
+			{
+				$error[] = "Cheque already realized. Please Revert your cheque!"; $err++;
+			}
+			
+			if(!$err)
+			{
+				
+				$AccountsTransactionChequeQuery->delete($paymentInfo['payment_id'],'SPMNT');
+				$AccountsMasterAccountsQuery->transactionDelete($paymentInfo['payment_id'],'SPMNT');
+				
+				////Supplier transactipn update
+				$supplierData = [];
+				$supplierData['reference_id'] = $paymentInfo['payment_id'];
+				$supplierData['transaction_type'] = 'SPMNT';
+				
+				$SuppliersMasterSuppliersQuery->transactionDelete($supplierData);
+				
+				$db->query("DELETE FROM ".$this->tableName." WHERE payment_id = ".$paymentInfo['payment_id']."");
+				
+				return 'deleted';
+			}
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

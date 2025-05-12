@@ -22,7 +22,6 @@
                 <a class="btn btn-primary open_popup_form" data-url="<?php echo $cat['updateURL']; ?>" data-width="420" data-height="290"><i class="fa-light fa-pen-to-square"></i></a>
                 
             
-                <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>
             
             </div>
         

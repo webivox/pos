@@ -88,7 +88,8 @@ class SystemMasterUsergroupsConnector {
 										'group_id' => $cat['group_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('system/master_usergroups/edit/'.$cat['group_id'])
+										'updateURL' => $defCls->genURL('system/master_usergroups/edit/'.$cat['group_id']),
+										'deleteURL' => $defCls->genURL('system/master_usergroups/delete/'.$cat['group_id'])
 											);
 			}
 			
@@ -132,6 +133,8 @@ class SystemMasterUsergroupsConnector {
 			$data['form_url'] 	= _SERVER."system/master_usergroups/create";
 			
 			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+			
+			$data['openCheckBox'] = false;
 				
 			if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 			else{ $data['name'] = ''; }
@@ -150,6 +153,33 @@ class SystemMasterUsergroupsConnector {
 				
 				if(!$error_no)
 				{
+					$perm=[];
+					$res=$db->fetchAll("SELECT * FROM secure_users_group_paths");
+					foreach($res as $row)
+					{
+						//if(isset($_REQUEST['path_id'.$row['path_id']]))
+						//{
+						//	$perm.=$db->request('path_id'.$row['path_id']).':';
+						//}
+						if(isset($_REQUEST['access'.$row['path_id']]) && $_REQUEST['access'.$row['path_id']])
+						{ $access=1; }else{ $access=0; }
+						
+						if(isset($_REQUEST['create'.$row['path_id']]) && $_REQUEST['create'.$row['path_id']])
+						{ $create=1; }else{ $create=0; }
+						
+						if(isset($_REQUEST['edit'.$row['path_id']]) && $_REQUEST['edit'.$row['path_id']])
+						{ $edit=1; }else{ $edit=0; }
+						
+						if(isset($_REQUEST['delete'.$row['path_id']]) && $_REQUEST['delete'.$row['path_id']])
+						{ $delete=1; }else{ $delete=0; }
+						
+						$perm[]=array('path'=>$row['path_id'],'permission'=>array($access,$create,$edit,$delete));
+						
+						
+						
+					}
+					
+					$data['permissions'] = json_encode($perm);
 					
 					$SystemMasterUsergroupsQuery->create($data);
 					$firewallCls->addLog("Usergroup Created: ".$data['name']);
@@ -232,6 +262,10 @@ class SystemMasterUsergroupsConnector {
 				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
 				
 				$data['group_id'] = $getUsergroupInfo['group_id'];
+			
+				$data['openCheckBox'] = true;
+			
+				$data['savedPermissions'] = json_decode($getUsergroupInfo['permissions'],true);
 					
 				if(isset($_REQUEST['name'])){ $data['name'] = $db->request('name');}
 				else{ $data['name'] = $getUsergroupInfo['name']; }
@@ -254,6 +288,34 @@ class SystemMasterUsergroupsConnector {
 					
 					if(!$error_no)
 					{
+						
+						$perm=[];
+						$res=$db->fetchAll("SELECT * FROM secure_users_group_paths");
+						foreach($res as $row)
+						{
+							//if(isset($_REQUEST['path_id'.$row['path_id']]))
+							//{
+							//	$perm.=$db->request('path_id'.$row['path_id']).':';
+							//}
+							if(isset($_REQUEST['access'.$row['path_id']]) && $_REQUEST['access'.$row['path_id']])
+							{ $access=1; }else{ $access=0; }
+							
+							if(isset($_REQUEST['create'.$row['path_id']]) && $_REQUEST['create'.$row['path_id']])
+							{ $create=1; }else{ $create=0; }
+							
+							if(isset($_REQUEST['edit'.$row['path_id']]) && $_REQUEST['edit'.$row['path_id']])
+							{ $edit=1; }else{ $edit=0; }
+							
+							if(isset($_REQUEST['delete'.$row['path_id']]) && $_REQUEST['delete'.$row['path_id']])
+							{ $delete=1; }else{ $delete=0; }
+							
+							$perm[]=array('path'=>$row['path_id'],'permission'=>array($access,$create,$edit,$delete));
+							
+							
+							
+						}
+						
+						$data['permissions'] = json_encode($perm);
 						
 						$SystemMasterUsergroupsQuery->edit($data);
 						$firewallCls->addLog("Usergroups Updated: ".$data['name']);
@@ -316,6 +378,90 @@ class SystemMasterUsergroupsConnector {
 				echo json_encode($json);
 				
 			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterUsergroupsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SystemMasterUsergroupsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $SystemMasterUsergroupsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("User Group Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the user group!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid user group Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
 		}
 		else
 		{

@@ -293,6 +293,54 @@ class SalesTransactionsQuotationsQuery {
 		$db->query("UPDATE ".$this->tableName." SET no_of_items = '".$total_no_items."', no_of_qty='".$total_qty."', total='".$total_amount."' WHERE quotation_id = '".$quotationId."'");
 	}
     
+	
+	
+	
+    
+    public function delete($quotationId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $SalesTransactionsQuotationsQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$quotationInfo = $SalesTransactionsQuotationsQuery->get($quotationId);
+		
+		if($quotationInfo)
+		{
+			$data['item_lists'] = $SalesTransactionsQuotationsQuery->getItems("WHERE quotation_id='".$quotationId."' ORDER BY quotation_item_id ASC");
+			
+			
+			$db->query("DELETE FROM ".$this->itemTableName." WHERE `quotation_id` = '".$quotationInfo['quotation_id']."'");
+			$db->query("DELETE FROM ".$this->tableName." WHERE quotation_id = ".$quotationInfo['quotation_id']."");
+			
+			
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

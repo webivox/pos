@@ -110,7 +110,8 @@ class SuppliersTransactionPaymentsConnector {
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
 										'updateURL' => $defCls->genURL('suppliers/transaction_payments/edit/'.$cat['payment_id']),
-										'printURL' => $defCls->genURL('suppliers/transaction_payments/printView/'.$cat['payment_id'])
+										'printURL' => $defCls->genURL('suppliers/transaction_payments/printView/'.$cat['payment_id']),
+										'deleteURL' => $defCls->genURL('suppliers/transaction_payments/delete/'.$cat['payment_id'])
 											);
 			}
 			
@@ -719,6 +720,91 @@ class SuppliersTransactionPaymentsConnector {
 				echo json_encode($json);
 				
 			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SuppliersTransactionsPaymentsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SuppliersTransactionsPaymentsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('SPMNT-',$getInfo['payment_id']);;
+				
+				$deleteValue = $SuppliersTransactionsPaymentsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Supplier payment Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the supplier payment!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid supplier payment Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
 		}
 		else
 		{

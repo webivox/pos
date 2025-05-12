@@ -1,0 +1,14 @@
+[12-May-2025 22:55:46 UTC] PHP Warning:  Undefined variable $data in D:\wamp64\www\pos\base\load.php on line 26
+[12-May-2025 22:55:46 UTC] PHP Stack trace:
+[12-May-2025 22:55:46 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[12-May-2025 22:55:46 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[12-May-2025 22:55:46 UTC] PHP Warning:  Trying to access array offset on value of type null in D:\wamp64\www\pos\base\load.php on line 26
+[12-May-2025 22:55:46 UTC] PHP Stack trace:
+[12-May-2025 22:55:46 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[12-May-2025 22:55:46 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[12-May-2025 22:55:46 UTC] PHP Fatal error:  Uncaught TypeError: array_filter(): Argument #1 ($array) must be of type array, null given in D:\wamp64\www\pos\base\load.php:28
+Stack trace:
+#0 D:\wamp64\www\pos\base\load.php(28): array_filter(NULL, Object(Closure))
+#1 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
+#2 {main}
+  thrown in D:\wamp64\www\pos\base\load.php on line 28

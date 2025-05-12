@@ -18,14 +18,13 @@
         foreach($data['gc'] as $gc)
         {
         ?>
-        <div class="row rowhover">
+        <div class="row rowhover" id="rowLine<?php echo $gc['gc_id']; ?>">
         
             <div class="col-10 action">
             
                 <a class="btn btn-primary open_popup_form" data-url="<?php echo $gc['updateURL']; ?>" data-formsizeclass="popup_form_in_size_small"><i class="fa-light fa-pen-to-square"></i></a>
                 
-            
-                <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>
+                <a data-url="<?php echo $gc['deleteURL']; ?>" data-id="<?php echo $gc['gc_id']; ?>" class="btn btn-danger delete"><i class="fa-light fa-trash-can"></i></a>
             
             </div>
             <div class="col-20"><?php echo $gc['no']; ?></div>

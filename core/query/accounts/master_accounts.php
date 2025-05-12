@@ -277,6 +277,86 @@ class AccountsMasterAccountsQuery {
 		
 		$db->query("UPDATE accounts_accounts SET closing_balance='".$balanceAll."' WHERE account_id=".$accountId."");
 	}
+	
+	
+	
+	
+	
+	
+    
+    public function delete($accountId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       $count = $db->fetch("SELECT COUNT(*) as count FROM accounts_adjustments WHERE account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts adjustments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_cheque_transactions WHERE bank_code = '".$accountId."' AND `type`='Issued'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts cheque transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_cheque_transactions WHERE deposited_account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts cheque transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts expenses!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_transfers WHERE account_from_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts transfers!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_transfers WHERE account_to_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in accounts transfers!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM account_transactions WHERE account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in account transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_settlements WHERE account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in customers settlements!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_payments WHERE account_id = '".$accountId."'");
+		if($count['count'] > 0){ $error[] = "This account cannot be deleted as it is currently used in suppliers payments!"; $err++; }
+		
+		$count = $db->fetch("
+							SELECT COUNT(*) as count 
+							FROM system_cashierpoints 
+							WHERE 
+								cash_account_id = '".$accountId."' OR 
+								transfer_account_id = '".$accountId."' OR 
+								card_account_1_id = '".$accountId."' OR 
+								card_account_2_id = '".$accountId."' OR 
+								card_account_3_id = '".$accountId."' OR 
+								card_account_4_id = '".$accountId."' OR 
+								card_account_5_id = '".$accountId."'
+							");
+
+		if ($count['count'] > 0) {
+			$error[] = "This account cannot be deleted as it is currently used in cashier point!";
+			$err++;
+		}
+
+		
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE account_id = ".$accountId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

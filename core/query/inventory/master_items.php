@@ -102,6 +102,7 @@ class InventoryMasterItemsQuery {
 						category_id='".$data['category_id']."',
 						brand_id='".$data['brand_id']."',
 						unit_id='".$data['unit_id']."',
+						warranty_id='".$data['warranty_id']."',
 						supplier_id='".$data['supplier_id']."',
 						name='".$data['name']."',
 						description='".$data['description']."',
@@ -114,7 +115,7 @@ class InventoryMasterItemsQuery {
 						order_qty='".$data['order_qty']."',
 						minimum_qty='".$data['minimum_qty']."',
 						unique_no='".$data['unique_no']."',
-						status='".$data['status']."'
+						kot_item='".$data['kot_item']."'
 						
 				";
 						
@@ -154,6 +155,7 @@ class InventoryMasterItemsQuery {
 						category_id='".$data['category_id']."',
 						brand_id='".$data['brand_id']."',
 						unit_id='".$data['unit_id']."',
+						warranty_id='".$data['warranty_id']."',
 						supplier_id='".$data['supplier_id']."',
 						name='".$data['name']."',
 						description='".$data['description']."',
@@ -166,7 +168,8 @@ class InventoryMasterItemsQuery {
 						order_qty='".$data['order_qty']."',
 						minimum_qty='".$data['minimum_qty']."',
 						unique_no='".$data['unique_no']."',
-						status='".$data['status']."'
+						status='".$data['status']."',
+						kot_item='".$data['kot_item']."'
 						
 						WHERE
 						
@@ -231,6 +234,67 @@ class InventoryMasterItemsQuery {
 		
 		}
 	}
+	
+	
+	
+    
+    public function delete($itemId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_adjustment_note_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory adjustment note items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items_customer_group_price WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory items customer group price!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_quotation_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory quotation items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_receiving_note_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory receiving note items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_stock_transactions WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory stock transactions!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_transfer_note_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory transfer note items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_unique_nos WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in inventory unique nos!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoice_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in sales invoice items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoice_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in sales pending invoice items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_return_items WHERE item_id = '".$itemId."'");
+		if($count['count'] > 0){ $error[] = "This item cannot be deleted as it is currently used in sales return items!"; $err++; }
+
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE item_id = ".$itemId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 	
 	
 }

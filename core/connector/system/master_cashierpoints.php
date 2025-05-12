@@ -91,7 +91,8 @@ class SystemMasterCashierpointsConnector {
 										'cashierpoint_id' => $cat['cashierpoint_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('system/master_cashierpoints/edit/'.$cat['cashierpoint_id'])
+										'updateURL' => $defCls->genURL('system/master_cashierpoints/edit/'.$cat['cashierpoint_id']),
+										'deleteURL' => $defCls->genURL('system/master_cashierpoints/delete/'.$cat['cashierpoint_id'])
 											);
 			}
 			
@@ -416,6 +417,89 @@ class SystemMasterCashierpointsConnector {
 		else
 		{
 			header("cashierpoint:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterCashierpointsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SystemMasterCashierpointsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $SystemMasterCashierpointsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Cashier Point Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the cashier point!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid cashier point Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
 		}
 		
 	}

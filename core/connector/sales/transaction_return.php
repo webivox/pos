@@ -115,7 +115,8 @@ class SalesTransactionReturnConnector {
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'total_value' => $defCls->money($cat['total_value']),
 										'updateURL' => $defCls->genURL('sales/transaction_return/edit/'.$cat['sales_return_id']),
-										'printURL' => $defCls->genURL('sales/transaction_return/returnprint/'.$cat['sales_return_id'])
+										'printURL' => $defCls->genURL('sales/transaction_return/returnprint/'.$cat['sales_return_id']),
+										'deleteURL' => $defCls->genURL('sales/transaction_return/delete/'.$cat['sales_return_id'])
 											);
 			}
 			
@@ -646,4 +647,86 @@ class SalesTransactionReturnConnector {
 		
 	}
 	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionsReturnQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SalesTransactionsReturnQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('SRET-',$getInfo['sales_return_id']);;
+				
+				$deleteValue = $SalesTransactionsReturnQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Sales Return Note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the sales return note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid sales return note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

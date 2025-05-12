@@ -18,7 +18,7 @@
         foreach($data['items'] as $cat)
         {
         ?>
-        <div class="row rowhover">
+        <div class="row rowhover" id="rowLine<?php echo $cat['item_id']; ?>">
         
             <div class="col-20 action">
             
@@ -27,7 +27,7 @@
                 <a class="btn btn-black open_popup_form" data-url="<?php echo $cat['updatePriceURL']; ?>" data-formsizeclass="popup_form_in_size_small"><i class="fa-light fa-money-check-dollar-pen"></i></a>
                 
             
-                <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>
+                <a data-url="<?php echo $cat['deleteURL']; ?>" data-id="<?php echo $cat['item_id']; ?>" class="btn btn-danger delete"><i class="fa-light fa-trash-can"></i></a>
             
             </div>
             <div class="col-30"><?php echo $cat['name']; ?></div>

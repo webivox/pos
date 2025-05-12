@@ -138,6 +138,43 @@ class SalesMasterRepQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($repId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoices WHERE sales_rep_id = '".$repId."'");
+if($count['count'] > 0){ $error[] = "This sales representative cannot be deleted as they are currently used in sales invoices!"; $err++; }
+
+$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoices WHERE sales_rep_id = '".$repId."'");
+if($count['count'] > 0){ $error[] = "This sales representative cannot be deleted as they are currently used in sales pending invoices!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE rep_id = ".$repId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

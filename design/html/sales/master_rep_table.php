@@ -15,14 +15,14 @@
         foreach($data['rep'] as $rep)
         {
         ?>
-        <div class="row rowhover">
+        <div class="row rowhover" id="rowLine<?php echo $rep['rep_id']; ?>">
         
             <div class="col-10 action">
             
                 <a class="btn btn-primary open_popup_form" data-url="<?php echo $rep['updateURL']; ?>" data-formsizeclass="popup_form_in_size_small"><i class="fa-light fa-pen-to-square"></i></a>
                 
             
-                <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>
+                <a data-url="<?php echo $rep['deleteURL']; ?>" data-id="<?php echo $rep['rep_id']; ?>" class="btn btn-danger delete"><i class="fa-light fa-trash-can"></i></a>
             
             </div>
             <div class="col-80"><?php echo $rep['name']; ?></div>

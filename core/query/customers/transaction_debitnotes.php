@@ -168,6 +168,48 @@ class CustomersTransactionsDebitnotesQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($debitNoteId) {
+		
+        global $db;
+        global $defCls;
+        global $CustomersTransactionsDebitnotesQuery;
+        global $CustomersMasterCustomersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$debitNoteInfo = $CustomersTransactionsDebitnotesQuery->get($debitNoteId);
+		
+		if($debitNoteInfo)
+		{
+			////Customer transactipn update
+			$customerData = [];
+			$customerData['reference_id'] = $debitNoteInfo['debit_note_id'];
+			$customerData['transaction_type'] = 'SDN';
+			
+			$CustomersMasterCustomersQuery->transactionDelete($customerData);
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE debit_note_id = ".$debitNoteInfo['debit_note_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

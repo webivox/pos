@@ -251,7 +251,7 @@ class SuppliersMasterSuppliersQuery {
 		
 		$row = $db->fetch("SELECT * FROM supplier_transactions WHERE `reference_id`='".$supplierData['reference_id']."' AND `transaction_type`='".$supplierData['transaction_type']."'");
 		
-		$itemId = $row['item_id'];
+		$supplier_id = $row['supplier_id'];
 		
 		$sql = "DELETE FROM supplier_transactions 
 												
@@ -269,7 +269,7 @@ class SuppliersMasterSuppliersQuery {
 		
 		$db->query($sql);
 		
-		$this->transactionsBalanceUpdate($itemId);
+		$this->transactionsBalanceUpdate($supplier_id);
 	}
 	
 	
@@ -295,6 +295,58 @@ class SuppliersMasterSuppliersQuery {
 		
 		$db->query("UPDATE suppliers_suppliers SET closing_balance='".$balanceAll."' WHERE supplier_id=".$supplierId."");
 	}
+	
+	
+	
+	
+    
+    public function delete($supplierId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in inventory items!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_receiving_notes WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in inventory receiving notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_return_notes WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in inventory return notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_credit_notes WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in suppliers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_debit_notes WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in suppliers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_payments WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in suppliers payments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM supplier_transactions WHERE supplier_id = '".$supplierId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in supplier transactions!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE supplier_id = ".$supplierId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

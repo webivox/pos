@@ -337,6 +337,69 @@ class InventoryTransactionsAdjustmentnotesQuery {
 		
     }
     
+	
+	
+	
+    
+    public function delete($adjustmentNoteId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryTransactionsAdjustmentnotesQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$getReturnNoteInfo = $InventoryTransactionsAdjustmentnotesQuery->get($adjustmentNoteId);
+		
+		if($getReturnNoteInfo)
+		{
+			$data['item_lists'] = $InventoryTransactionsAdjustmentnotesQuery->getItems("WHERE adjustment_note_id='".$adjustmentNoteId."' ORDER BY adjustment_note_item_id ASC");
+			
+			foreach($data['item_lists'] as $i){
+				
+				$db->query("DELETE FROM ".$this->itemTableName." WHERE `adjustment_note_item_id` = '".$i['adjustment_note_item_id']."'");
+					
+				//// UPDATE STOCKS
+				
+				$stockData = [];
+				
+				$stockData['reference_id'] = $getReturnNoteInfo['adjustment_note_id'];
+				$stockData['reference_row_id'] = $i['adjustment_note_item_id'];
+				$stockData['transaction_type'] = 'ADJ';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE adjustment_note_id = ".$getReturnNoteInfo['adjustment_note_id']."");
+			
+			
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -90,7 +90,8 @@ class InventoryMasterUnitsConnector {
 										'unit_id' => $cat['unit_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('inventory/master_units/edit/'.$cat['unit_id'])
+										'updateURL' => $defCls->genURL('inventory/master_units/edit/'.$cat['unit_id']),
+										'deleteURL' => $defCls->genURL('inventory/master_units/delete/'.$cat['unit_id'])
 											);
 			}
 			
@@ -323,4 +324,88 @@ class InventoryMasterUnitsConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryMasterUnitsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryMasterUnitsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $InventoryMasterUnitsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Unit Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the unit!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid unit Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

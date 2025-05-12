@@ -116,7 +116,8 @@ class AccountsTransactionExpencesConnector {
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
 										'updateURL' => $defCls->genURL('accounts/transaction_expences/edit/'.$cat['expence_id']),
-										'printURL' => $defCls->genURL('accounts/transaction_expences/printView/'.$cat['expence_id'])
+										'printURL' => $defCls->genURL('accounts/transaction_expences/printView/'.$cat['expence_id']),
+										'deleteURL' => $defCls->genURL('accounts/transaction_expences/delete/'.$cat['expence_id'])
 											);
 			}
 			
@@ -699,6 +700,91 @@ class AccountsTransactionExpencesConnector {
 				echo json_encode($json);
 				
 			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $AccountsTransactionsExpencesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $AccountsTransactionsExpencesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('AEXP-',$getInfo['expence_id']);;
+				
+				$deleteValue = $AccountsTransactionsExpencesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Expense Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the accounts expense!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid expense Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
 		}
 		else
 		{

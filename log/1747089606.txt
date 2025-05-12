@@ -1,0 +1,6 @@
+[12-May-2025 22:40:06 UTC] PHP Warning:  Undefined array key "openCheckBsox" in D:\wamp64\www\pos\design\html\system\master_usergroups_form.php on line 43
+[12-May-2025 22:40:06 UTC] PHP Stack trace:
+[12-May-2025 22:40:06 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[12-May-2025 22:40:06 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[12-May-2025 22:40:06 UTC] PHP   3. SystemMasterUsergroupsConnector->edit('edit', '1') D:\wamp64\www\pos\base\load.php:27
+[12-May-2025 22:40:06 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\system\master_usergroups.php:355

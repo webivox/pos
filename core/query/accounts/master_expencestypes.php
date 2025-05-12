@@ -137,6 +137,40 @@ class AccountsMasterExpencestypesQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($expencesTypeId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE expences_type_id = '".$expencesTypeId."'");
+		if($count['count'] > 0){ $error[] = "This expenses type cannot be deleted as it is currently used in expenses!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE expences_type_id = ".$expencesTypeId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

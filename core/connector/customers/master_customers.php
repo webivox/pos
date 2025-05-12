@@ -103,7 +103,8 @@ class CustomersMasterCustomersConnector {
 										'phone_number' => $cat['phone_number'],
 										'customer_group' => $customer_group,
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('customers/master_customers/edit/'.$cat['customer_id'])
+										'updateURL' => $defCls->genURL('customers/master_customers/edit/'.$cat['customer_id']),
+										'deleteURL' => $defCls->genURL('customers/master_customers/delete/'.$cat['customer_id'])
 											);
 			}
 			
@@ -432,6 +433,90 @@ class CustomersMasterCustomersConnector {
 		
 		echo json_encode($json);
 	
+	}
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $CustomersMasterCustomersQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $CustomersMasterCustomersQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $CustomersMasterCustomersQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Customer Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the customer!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid customer Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
 	}
 	
 }

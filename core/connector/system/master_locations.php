@@ -91,7 +91,8 @@ class SystemMasterLocationsConnector {
 										'location_id' => $cat['location_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('system/master_locations/edit/'.$cat['location_id'])
+										'updateURL' => $defCls->genURL('system/master_locations/edit/'.$cat['location_id']),
+										'deleteURL' => $defCls->genURL('system/master_locations/delete/'.$cat['location_id'])
 											);
 			}
 			
@@ -429,6 +430,89 @@ class SystemMasterLocationsConnector {
 				echo json_encode($json);
 				
 			}
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getLocationInfo = $SystemMasterLocationsQuery->get($id);
+			
+			if($getLocationInfo)
+			{
+				$locationName = $getLocationInfo['name'];
+				
+				$deleteValue = $SystemMasterLocationsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Locations Deleted: ".$locationName);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the location!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid location Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
 		}
 		else
 		{

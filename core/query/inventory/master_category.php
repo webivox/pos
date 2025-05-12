@@ -138,6 +138,40 @@ class InventoryMasterCategoryQuery {
 		
 		
     }
+	
+	
+	
+    
+    public function delete($categoryId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items WHERE category_id = '".$categoryId."'");
+		if($count['count'] > 0){ $error[] = "This category cannot be deleted as it is currently used in inventory items!"; $err++; }
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM ".$this->tableName." WHERE parent_category_id = '".$categoryId."'");
+		if($count['count'] > 0){ $error[] = "This category cannot be deleted as it is currently used in inventory sub category!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE category_id = ".$categoryId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

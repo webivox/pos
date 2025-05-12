@@ -136,6 +136,37 @@ class InventoryMasterUnitsQuery {
 		
 		
     }
+	
+	
+	
+    
+    public function delete($unitId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_items WHERE unit_id = '".$unitId."'");
+		if($count['count'] > 0){ $error[] = "This unit cannot be deleted as it is currently used in inventory items!"; $err++; }
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE unit_id = ".$unitId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

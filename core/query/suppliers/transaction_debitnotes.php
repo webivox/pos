@@ -168,6 +168,48 @@ class SuppliersTransactionDebitnotesQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($debitNoteId) {
+		
+        global $db;
+        global $defCls;
+        global $SuppliersTransactionDebitnotesQuery;
+        global $SuppliersMasterSuppliersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$debitNoteInfo = $SuppliersTransactionDebitnotesQuery->get($debitNoteId);
+		
+		if($debitNoteInfo)
+		{
+			////Supplier transactipn update
+			$supplierData = [];
+			$supplierData['reference_id'] = $debitNoteInfo['debit_note_id'];
+			$supplierData['transaction_type'] = 'SDN';
+			
+			$SuppliersMasterSuppliersQuery->transactionDelete($supplierData);
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE debit_note_id = ".$debitNoteInfo['debit_note_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

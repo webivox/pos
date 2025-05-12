@@ -59,6 +59,36 @@ ul,li,h1,h2,h3,h4,h5,h6,p{ margin:0px; padding:0px; list-style:none; }
 .text-left{ text-align:left; }
 .text-center{ text-align:center; }
 
+
+
+.btn {
+	display: inline-block; text-decoration:none;
+	margin-bottom: 0;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	touch-action: manipulation;
+	cursor: pointer;
+	background-image: none;
+	white-space: nowrap;
+	padding: 1px 25px;
+	font-size: 13px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+
+
+.btn-primary {
+	color: #ffffff;
+	background-color: #0d5ab4;
+	border-color: #271103;
+}
+
+.btn-primary:hover{ color:#FFF; background:#0a4c9a; }
+.btn-primary:active{ color:#FFF; background:#053c7d; }
 /* Table */
 .table
 {

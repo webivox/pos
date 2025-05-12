@@ -382,6 +382,69 @@ class InventoryTransactionsTransfernotesQuery {
 						
 		
 	}
+	
+	
+	
+    
+    public function delete($transferNoteId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryTransactionsTransfernotesQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$getTransferNoteInfo = $InventoryTransactionsTransfernotesQuery->get($transferNoteId);
+		
+		if($getTransferNoteInfo)
+		{
+			$data['item_lists'] = $InventoryTransactionsTransfernotesQuery->getItems("WHERE transfer_note_id='".$transferNoteId."' ORDER BY transfer_note_item_id ASC");
+			
+			foreach($data['item_lists'] as $i){
+				
+				$db->query("DELETE FROM ".$this->itemTableName." WHERE `transfer_note_item_id` = '".$i['transfer_note_item_id']."'");
+					
+				//// UPDATE STOCKS
+				
+				$stockData = [];
+				
+				$stockData['reference_id'] = $getTransferNoteInfo['transfer_note_id'];
+				$stockData['reference_row_id'] = $i['transfer_note_item_id'];
+				$stockData['transaction_type'] = 'TRN';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE transfer_note_id = ".$getTransferNoteInfo['transfer_note_id']."");
+			
+			
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

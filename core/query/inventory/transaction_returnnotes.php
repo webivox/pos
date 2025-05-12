@@ -343,6 +343,69 @@ class InventoryTransactionsReturnnotesQuery {
 						
 		
 	}
+	
+	
+	
+    
+    public function delete($returnNoteId) {
+		
+     	global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $dateCls;
+		global $SuppliersMasterSuppliersQuery;
+		global $SystemMasterUsersQuery;
+		global $SystemMasterLocationsQuery;
+		global $InventoryTransactionsReturnnotesQuery;
+		global $InventoryMasterItemsQuery;
+		global $stockTransactionsCls;
+
+		$error = [];
+		$err = 0;
+		
+		$getReturnNoteInfo = $InventoryTransactionsReturnnotesQuery->get($returnNoteId);
+		
+		if($getReturnNoteInfo)
+		{
+			$data['item_lists'] = $InventoryTransactionsReturnnotesQuery->getItems("WHERE return_note_id='".$returnNoteId."' ORDER BY return_note_item_id ASC");
+			
+			foreach($data['item_lists'] as $i){
+				
+				$db->query("DELETE FROM ".$this->itemTableName." WHERE `return_note_item_id` = '".$i['return_note_item_id']."'");
+					
+				//// UPDATE STOCKS
+				
+				$stockData = [];
+				
+				$stockData['reference_id'] = $getReturnNoteInfo['return_note_id'];
+				$stockData['reference_row_id'] = $i['return_note_item_id'];
+				$stockData['transaction_type'] = 'RETN';
+				
+				$stockTransactionsCls->delete($stockData);
+				
+			}
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE return_note_id = ".$getReturnNoteInfo['return_note_id']."");
+			
+			
+			
+			return 'deleted';
+			
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

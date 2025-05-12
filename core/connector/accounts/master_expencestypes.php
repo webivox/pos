@@ -90,7 +90,8 @@ class AccountsMasterExpencestypesConnector {
 										'expences_type_id' => $cat['expences_type_id'],
 										'name' => $cat['name'],
 										'status' => $defCls->getMasterStatus($cat['status']),
-										'updateURL' => $defCls->genURL('accounts/master_expencestypes/edit/'.$cat['expences_type_id'])
+										'updateURL' => $defCls->genURL('accounts/master_expencestypes/edit/'.$cat['expences_type_id']),
+										'deleteURL' => $defCls->genURL('accounts/master_expencestypes/delete/'.$cat['expences_type_id'])
 											);
 			}
 			
@@ -328,4 +329,88 @@ class AccountsMasterExpencestypesConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $AccountsMasterExpencestypesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $AccountsMasterExpencestypesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $AccountsMasterExpencestypesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Expences type Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the expences type!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid expences type Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

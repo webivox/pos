@@ -150,6 +150,42 @@ class SalesTransactionGiftcardsQuery {
 		$db->query("UPDATE ".$this->tableName." SET used_value = used_value-".$usedAmount.", balance_value = balance_value+".$usedAmount." WHERE gift_card_id = '".$giftCardId."'");
 		
 	}
+	
+	
+	
+	
+    
+    public function delete($giftCardId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoice_payments WHERE gift_card_id = '".$giftCardId."'");
+if($count['count'] > 0){ $error[] = "This gift card cannot be deleted as it is currently used in sales invoice payments!"; $err++; }
+
+$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoice_payments WHERE gift_card_id = '".$giftCardId."'");
+if($count['count'] > 0){ $error[] = "This gift card cannot be deleted as it is currently used in sales pending invoice payments!"; $err++; }
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE gift_card_id = ".$giftCardId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -109,7 +109,8 @@ class InventoryMasterItemsConnector {
 										'selling_price' => $cat['selling_price'],
 										'status' => $defCls->getMasterStatus($cat['status']),
 										'updateURL' => $defCls->genURL('inventory/master_items/edit/'.$cat['item_id']),
-										'updatePriceURL' => $defCls->genURL('inventory/master_items/editprice/'.$cat['item_id'])
+										'updatePriceURL' => $defCls->genURL('inventory/master_items/editprice/'.$cat['item_id']),
+										'deleteURL' => $defCls->genURL('inventory/master_items/delete/'.$cat['item_id'])
 											);
 			}
 			
@@ -208,6 +209,7 @@ class InventoryMasterItemsConnector {
 			$data['category_list'] = $InventoryMasterCategoryQuery->gets("WHERE parent_category_id=0 ORDER BY name ASC");
 			$data['brand_list'] = $InventoryMasterBrandsQuery->gets("ORDER BY name ASC");
 			$data['unit_list'] = $InventoryMasterUnitsQuery->gets("ORDER BY name ASC");
+			$data['warranty_list'] = $InventoryMasterWarrantyQuery->gets("ORDER BY name ASC");
 				
 			if(isset($_REQUEST['category_id'])){ $data['category_id'] = $db->request('category_id'); }
 			else{ $data['category_id'] = 0; }
@@ -217,6 +219,9 @@ class InventoryMasterItemsConnector {
 			
 			if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 			else{ $data['unit_id'] = 0; }
+			
+			if(isset($_REQUEST['warranty_id'])){ $data['warranty_id'] = $db->request('warranty_id'); }
+			else{ $data['warranty_id'] = 0; }
 			
 			if(isset($_REQUEST['supplier_id_item']))
 			{
@@ -262,6 +267,9 @@ class InventoryMasterItemsConnector {
 			if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no'); }
 			else{ $data['unique_no'] = ''; }
 			
+			if(isset($_REQUEST['kot_item'])){ $data['kot_item'] = $db->request('kot_item');}
+			else{ $data['kot_item'] = 0; }
+			
 			if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status');}
 			else{ $data['status'] = 0; }
 			
@@ -277,6 +285,7 @@ class InventoryMasterItemsConnector {
 				
 				if(!$InventoryMasterCategoryQuery->has($data['category_id'])){ $error_msg[]="You must choose a valid category."; $error_no++; }
 				if(!$InventoryMasterUnitsQuery->has($data['unit_id'])){ $error_msg[]="You must choose a valid unit."; $error_no++; }
+				if(!$InventoryMasterWarrantyQuery->has($data['warranty_id'])){ $error_msg[]="You must choose a valid warranty."; $error_no++; }
 				
 				if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 				if($countItemsByName){ $error_msg[]="The name already exists"; $error_no++; }
@@ -378,6 +387,7 @@ class InventoryMasterItemsConnector {
 				$data['category_list'] = $InventoryMasterCategoryQuery->gets("WHERE parent_category_id=0 ORDER BY name ASC");
 				$data['brand_list'] = $InventoryMasterBrandsQuery->gets("ORDER BY name ASC");
 				$data['unit_list'] = $InventoryMasterUnitsQuery->gets("ORDER BY name ASC");
+				$data['warranty_list'] = $InventoryMasterWarrantyQuery->gets("ORDER BY name ASC");
 				
 				$data['item_id'] = $getItemInfo['item_id'];
 					
@@ -389,6 +399,9 @@ class InventoryMasterItemsConnector {
 				
 				if(isset($_REQUEST['unit_id'])){ $data['unit_id'] = $db->request('unit_id'); }
 				else{ $data['unit_id'] = $getItemInfo['unit_id']; }
+				
+				if(isset($_REQUEST['warranty_id'])){ $data['warranty_id'] = $db->request('warranty_id'); }
+				else{ $data['warranty_id'] = $getItemInfo['warranty_id']; }
 				
 				if(isset($_REQUEST['supplier_id_item']))
 				{
@@ -434,12 +447,18 @@ class InventoryMasterItemsConnector {
 				if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no'); }
 				else{ $data['unique_no'] = $getItemInfo['unique_no']; }
 				
+				if(isset($_REQUEST['kot_item'])){ $data['kot_item'] = $db->request('kot_item'); }
+				else{ $data['kot_item'] = $getItemInfo['kot_item']; }
+				
 				if(isset($_REQUEST['status'])){ $data['status'] = $db->request('status'); }
 				else{ $data['status'] = $getItemInfo['status']; }
 				
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 				{
 					
+					if(!$InventoryMasterCategoryQuery->has($data['category_id'])){ $error_msg[]="You must choose a valid category."; $error_no++; }
+					if(!$InventoryMasterUnitsQuery->has($data['unit_id'])){ $error_msg[]="You must choose a valid unit."; $error_no++; }
+					if(!$InventoryMasterWarrantyQuery->has($data['warranty_id'])){ $error_msg[]="You must choose a valid warranty."; $error_no++; }
 					if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 					
 					if($db->request('name')!==$getItemInfo['name'])
@@ -449,7 +468,12 @@ class InventoryMasterItemsConnector {
 						
 						if($countItemsByName){ $error_msg[]="The name already exists"; $error_no++; }
 					}
-					
+				
+					if(strlen($data['description'])<3){ $error_msg[]="Description must be minimum 3 letters"; $error_no++; }
+					if($data['barcode'] && $countItemsByBarcode){ $error_msg[]="The barcode already exists"; $error_no++; }
+				
+					if($data['selling_price']<1){ $error_msg[]="Selling price must be greater than 0"; $error_no++; }
+					if($data['minimum_selling_price']<1){ $error_msg[]="Minimum selling price must be greater than 0"; $error_no++; }
 					if(!$error_no)
 					{
 						
@@ -681,4 +705,88 @@ class InventoryMasterItemsConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryMasterItemsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryMasterItemsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$name = $getInfo['name'];
+				
+				$deleteValue = $InventoryMasterItemsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Inventory Item Deleted: ".$name);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the inventory Item!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid item Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

@@ -163,6 +163,93 @@ class SystemMasterUsersQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($userId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_adjustments WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in accounts adjustments!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in accounts expences!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_transfers WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in accounts transfers!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_credit_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in customers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_debit_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in customers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM customers_settlements WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in customers settlements!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_adjustment_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in inventory adjustment notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_quotations WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in inventory quotations!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_receiving_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in inventory receiving notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_return_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in inventory return notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM inventory_transfer_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in inventory transfer notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_invoices WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in sales invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_pending_invoices WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in sales pending invoices!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_return WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in sales return!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM sales_shifts WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in sales shifts!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_credit_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in suppliers credit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_debit_notes WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in suppliers debit notes!"; $err++; }
+		
+		$count = $db->fetch("SELECT COUNT(*) as count FROM suppliers_payments WHERE user_id = '".$userId."'");
+		if($count['count'] > 0){ $error[] = "This user cannot be deleted as it is currently used in suppliers payments!"; $err++; }
+		
+
+
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE user_id = ".$userId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

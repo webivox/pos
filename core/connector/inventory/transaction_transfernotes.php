@@ -106,7 +106,8 @@ class InventoryTransactionTransfernotesConnector {
 										'location_to' => $SystemMasterLocationsQuery->data($cat['location_to_id'],'name'),
 										'items' => $defCls->num($cat['no_of_items']).'/'.$defCls->num($cat['no_of_qty']),
 										'updateURL' => $defCls->genURL('inventory/transaction_transfernotes/edit/'.$cat['transfer_note_id']),
-										'printURL' => $defCls->genURL('inventory/transaction_transfernotes/printView/'.$cat['transfer_note_id'])
+										'printURL' => $defCls->genURL('inventory/transaction_transfernotes/printView/'.$cat['transfer_note_id']),
+										'deleteURL' => $defCls->genURL('inventory/transaction_transfernotes/delete/'.$cat['transfer_note_id'])
 											);
 			}
 			
@@ -599,4 +600,90 @@ class InventoryTransactionTransfernotesConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsTransfernotesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryTransactionsTransfernotesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('TRN-',$getInfo['transfer_note_id']);;
+				
+				$deleteValue = $InventoryTransactionsTransfernotesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Transfer Note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the transfer note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid transfer note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

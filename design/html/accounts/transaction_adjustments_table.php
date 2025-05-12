@@ -18,7 +18,7 @@
         foreach($data['adjustments'] as $cat)
         {
         ?>
-        <div class="row rowhover">
+        <div class="row rowhover" id="rowLine<?php echo $cat['adjustment_id']; ?>">
         
             <div class="col-10 action">
             
@@ -27,7 +27,7 @@
                 <a class="btn btn-black open_popup_form" href="<?php echo $cat['printURL']; ?>" target="_blank"><i class="fa-light fa-print"></i></a>
                 
             
-                <a href="" class="btn btn-danger"><i class="fa-light fa-trash-can"></i></a>
+                <a data-url="<?php echo $cat['deleteURL']; ?>" data-id="<?php echo $cat['adjustment_id']; ?>" class="btn btn-danger delete"><i class="fa-light fa-trash-can"></i></a>
             
             </div>
             <div class="col-10"><?php echo $cat['adjustment_no']; ?></div>

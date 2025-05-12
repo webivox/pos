@@ -89,7 +89,8 @@ class SalesTransactionGiftcardsConnector {
 										'amount' => $defCls->num($gc['amount']),
 										'used_amount' => $defCls->num($gc['used_amount']),
 										'balance_amount' => $defCls->num($gc['balance_amount']),
-										'updateURL' => $defCls->genURL('sales/transaction_giftcards/edit/'.$gc['gift_card_id'])
+										'updateURL' => $defCls->genURL('sales/transaction_giftcards/edit/'.$gc['gift_card_id']),
+										'deleteURL' => $defCls->genURL('sales/transaction_giftcards/delete/'.$gc['gift_card_id'])
 											);
 			}
 			
@@ -334,4 +335,88 @@ class SalesTransactionGiftcardsConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SalesTransactionGiftcardsQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SalesTransactionGiftcardsQuery->get($id);
+			
+			if($getInfo)
+			{
+				$no = $getInfo['no'];
+				
+				$deleteValue = $SalesTransactionGiftcardsQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Gift Card Deleted: ".$no);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the gift card!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid gift card Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

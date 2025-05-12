@@ -137,6 +137,39 @@ class AccountsMasterPayeeQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($payeeId) {
+		
+        global $db;
+
+		$error = [];
+		$err = 0;
+		
+       	$count = $db->fetch("SELECT COUNT(*) as count FROM accounts_expences WHERE payee_id = '".$payeeId."'");
+		if($count['count'] > 0){ $error[] = "This supplier cannot be deleted as it is currently used in payee!"; $err++; }
+
+		if($err)
+		{
+			return $error;
+		}
+		else
+		{
+			$sql = "DELETE FROM ".$this->tableName." WHERE payee_id = ".$payeeId."";
+						
+			if($db->query($sql))
+			{
+				return 'deleted';
+			}
+			else{ return false; }
+		}
+			
+			
+			
+    }
 }
 
 // Instantiate the blogsModels class

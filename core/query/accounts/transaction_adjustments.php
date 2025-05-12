@@ -172,6 +172,45 @@ class AccountsTransactionsAdjustmentsQuery {
 		
 		
     }
+	
+	
+    
+    public function delete($adjustmentId) {
+		
+        global $db;
+        global $defCls;
+        global $AccountsTransactionsAdjustmentsQuery;
+        global $AccountsTransactionChequeQuery;
+        global $AccountsMasterAccountsQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$adjustmentInfo = $AccountsTransactionsAdjustmentsQuery->get($adjustmentId);
+		
+		if($adjustmentInfo)
+		{
+			$transaction_no = $defCls->docNo('AADJ-',$adjustmentInfo['adjustment_id']);
+				
+			$AccountsMasterAccountsQuery->transactionDelete($adjustmentInfo['adjustment_id'],'AADJ');
+			
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE adjustment_id = ".$adjustmentInfo['adjustment_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

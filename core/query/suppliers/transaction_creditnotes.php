@@ -168,6 +168,48 @@ class SuppliersTransactionsCreditnotesQuery {
 		
 		
     }
+	
+	
+	
+	
+    
+    public function delete($creditNoteId) {
+		
+        global $db;
+        global $defCls;
+        global $SuppliersTransactionsCreditnotesQuery;
+        global $SuppliersMasterSuppliersQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$creditNoteInfo = $SuppliersTransactionsCreditnotesQuery->get($creditNoteId);
+		
+		if($creditNoteInfo)
+		{
+			////Supplier transactipn update
+			$supplierData = [];
+			$supplierData['reference_id'] = $creditNoteInfo['credit_note_id'];
+			$supplierData['transaction_type'] = 'SCN';
+			
+			$SuppliersMasterSuppliersQuery->transactionDelete($supplierData);
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE credit_note_id = ".$creditNoteInfo['credit_note_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

@@ -172,6 +172,46 @@ class AccountsTransactionsTransfersQuery {
 		
 		
     }
+	
+	
+    
+    public function delete($transferId) {
+		
+        global $db;
+        global $defCls;
+        global $AccountsTransactionsTransfersQuery;
+        global $AccountsTransactionChequeQuery;
+        global $AccountsMasterAccountsQuery;
+
+		$error = [];
+		$err = 0;
+		
+		$transferInfo = $AccountsTransactionsTransfersQuery->get($transferId);
+		
+		if($transferInfo)
+		{
+			$transaction_no = $defCls->docNo('ATRN-',$transferInfo['transfer_id']);
+				
+			$AccountsMasterAccountsQuery->transactionDelete($transferInfo['transfer_id'],'ATRNIN');
+			$AccountsMasterAccountsQuery->transactionDelete($transferInfo['transfer_id'],'ATRNOUT');
+			
+			
+			$db->query("DELETE FROM ".$this->tableName." WHERE transfer_id = ".$transferInfo['transfer_id']."");
+			
+			return 'deleted';
+			
+		
+		}
+		else{ $error[] = "Invalid id!"; $err++; }
+		
+       	
+
+		if($err)
+		{
+			return $error;
+		}
+			
+    }
 }
 
 // Instantiate the blogsModels class

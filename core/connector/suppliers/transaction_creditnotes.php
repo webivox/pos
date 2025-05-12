@@ -108,7 +108,8 @@ class SuppliersTransactionCreditnotesConnector {
 										'details' => $defCls->showText($cat['details']),
 										'amount' => $defCls->money($cat['amount']),
 										'updateURL' => $defCls->genURL('suppliers/transaction_creditnotes/edit/'.$cat['credit_note_id']),
-										'printURL' => $defCls->genURL('suppliers/transaction_creditnotes/printView/'.$cat['credit_note_id'])
+										'printURL' => $defCls->genURL('suppliers/transaction_creditnotes/printView/'.$cat['credit_note_id']),
+										'deleteURL' => $defCls->genURL('suppliers/transaction_creditnotes/delete/'.$cat['credit_note_id'])
 											);
 			}
 			
@@ -512,4 +513,90 @@ class SuppliersTransactionCreditnotesConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $SuppliersTransactionsCreditnotesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $SuppliersTransactionsCreditnotesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('SCN-',$getInfo['credit_note_id']);;
+				
+				$deleteValue = $SuppliersTransactionsCreditnotesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Supplier credit note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the supplier credit note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid supplier credit note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

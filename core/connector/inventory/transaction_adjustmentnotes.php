@@ -104,7 +104,8 @@ class InventoryTransactionAdjustmentnotesConnector {
 										'added_date' => $dateCls->showDate($cat['added_date']),
 										'location' => $SystemMasterLocationsQuery->data($cat['location_id'],'name'),
 										'updateURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/edit/'.$cat['adjustment_note_id']),
-										'printURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/printView/'.$cat['adjustment_note_id'])
+										'printURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/printView/'.$cat['adjustment_note_id']),
+										'deleteURL' => $defCls->genURL('inventory/transaction_adjustmentnotes/delete/'.$cat['adjustment_note_id'])
 											);
 			}
 			
@@ -542,7 +543,7 @@ class InventoryTransactionAdjustmentnotesConnector {
 				
 				$data['adjustment_note_id'] = $adjustmentNoteInfo['adjustment_note_id'];
 					
-				$data['adjustment_note_no'] = $defCls->docNo('TRN-',$adjustmentNoteInfo['adjustment_note_id']);
+				$data['adjustment_note_no'] = $defCls->docNo('ADJ-',$adjustmentNoteInfo['adjustment_note_id']);
 				
 				$data['added_date'] = $dateCls->showDate($adjustmentNoteInfo['added_date']);
 				
@@ -594,4 +595,90 @@ class InventoryTransactionAdjustmentnotesConnector {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public function delete() {
+		
+		global $defCls;
+		global $sessionCls;
+		global $firewallCls;
+		global $db;
+		global $id;
+		global $SystemMasterUsersQuery;
+		global $InventoryTransactionsAdjustmentnotesQuery;
+		
+		
+		$data = [];
+		$error_no = 0;
+		$error_msg = [];
+		
+		if($firewallCls->verifyUser())
+		{
+			$getInfo = $InventoryTransactionsAdjustmentnotesQuery->get($id);
+			
+			if($getInfo)
+			{
+				$doNo = $defCls->docNo('ADJ-',$getInfo['adjustment_note_id']);;
+				
+				$deleteValue = $InventoryTransactionsAdjustmentnotesQuery->delete($id);
+				
+				if($deleteValue=='deleted')
+				{
+					$firewallCls->addLog("Adjustment Note Deleted: ".$doNo);
+				
+					$json['success']=true;
+					$json['success_msg']="Sucessfully Updated";
+				
+				}
+				elseif(is_array($deleteValue))
+				{
+					foreach($deleteValue as $v)
+					{
+						$error_msg[]=$v; $error_no++;
+					}
+					
+				}
+				else
+				{
+					$error_msg[]="An error occurred while attempting to delete the adjustment note!"; $error_no++;
+				}	
+			}
+			else
+			{
+				$error_msg[]="Invalid adjustment note Id"; $error_no++;
+				
+				
+			}
+			
+				
+			if($error_no)
+			{
+				
+				$error_msg_list='';
+				foreach($error_msg as $e)
+				{
+					if($e)
+					{
+						$error_msg_list.='<li>'.$e.'</li>';
+					}
+				}
+				$json['error']=true;
+				$json['error_msg']=$error_msg_list;
+			}
+			echo json_encode($json);
+				
+		}
+		else
+		{
+			header("location:"._SERVER);
+		}
+		
+	}
 }

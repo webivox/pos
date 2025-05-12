@@ -1,0 +1,14 @@
+[12-May-2025 23:06:09 UTC] PHP Warning:  Undefined array key "savedPermissions" in D:\wamp64\www\pos\design\html\system\master_usergroups_form.php on line 55
+[12-May-2025 23:06:09 UTC] PHP Stack trace:
+[12-May-2025 23:06:09 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[12-May-2025 23:06:09 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[12-May-2025 23:06:09 UTC] PHP   3. SystemMasterUsergroupsConnector->create('create') D:\wamp64\www\pos\base\load.php:61
+[12-May-2025 23:06:09 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\system\master_usergroups.php:220
+[12-May-2025 23:06:09 UTC] PHP Fatal error:  Uncaught TypeError: array_filter(): Argument #1 ($array) must be of type array, null given in D:\wamp64\www\pos\design\html\system\master_usergroups_form.php:57
+Stack trace:
+#0 D:\wamp64\www\pos\design\html\system\master_usergroups_form.php(57): array_filter(NULL, Object(Closure))
+#1 D:\wamp64\www\pos\core\connector\system\master_usergroups.php(220): require_once('D:\\wamp64\\www\\p...')
+#2 D:\wamp64\www\pos\base\load.php(61): SystemMasterUsergroupsConnector->create('create')
+#3 D:\wamp64\www\pos\index.php(16): require_once('D:\\wamp64\\www\\p...')
+#4 {main}
+  thrown in D:\wamp64\www\pos\design\html\system\master_usergroups_form.php on line 57
