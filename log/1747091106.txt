@@ -1,8 +1,0 @@
-[12-May-2025 23:05:06 UTC] PHP Warning:  Undefined variable $accessKey in D:\wamp64\www\pos\base\load.php on line 51
-[12-May-2025 23:05:06 UTC] PHP Stack trace:
-[12-May-2025 23:05:06 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[12-May-2025 23:05:06 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
-[12-May-2025 23:05:06 UTC] PHP Warning:  Undefined array key "" in D:\wamp64\www\pos\base\load.php on line 51
-[12-May-2025 23:05:06 UTC] PHP Stack trace:
-[12-May-2025 23:05:06 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[12-May-2025 23:05:06 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16

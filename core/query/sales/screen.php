@@ -568,6 +568,7 @@ class SalesScreenQuery {
 		global $AccountsMasterAccountsQuery;
 		global $SystemMasterCashierpointsQuery;
 		global $AccountsTransactionChequeQuery;
+		global $InventoryTransactionUniquenosQuery;
 		
 		$invoiceInfo = $SalesScreenQuery->get($invoiceId);
 		$invoiceItemsInfo = $SalesScreenQuery->getItems($invoiceId);
@@ -651,10 +652,20 @@ class SalesScreenQuery {
 			$no_of_qty = 0;
 			foreach($invoiceItemsInfo as $item)
 			{
+				if($item['unique_no'])
+				{
+					$getUniqueNoInfo = $InventoryTransactionUniquenosQuery->getByUniqueNo($item['unique_no']);
+					
+					if($getUniqueNoInfo['cost']){ $cost = $getUniqueNoInfo['cost']; }
+					else{ $cost = $item['cost']; }
+					
+				}
+				
+				
 				$db->query("INSERT INTO sales_invoice_items SET
 											`invoice_id`='".$lastId."',
 											`item_id`='".$item['item_id']."',
-											`cost`='".$item['cost']."',
+											`cost`='".$cost."',
 											`master_price`='".$item['master_price']."',
 											`price`='".$item['price']."',
 											`discount`='".$item['discount']."',

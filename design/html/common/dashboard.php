@@ -4,8 +4,7 @@
 	<div id="filter_head" style="margin-bottom:10px;">
     
     	<h1>DASHBOARD</h1>
-        
-    
+
     </div>
 
 	<?php require_once _HTML."common/dashboard/today_sales.php"; ?>

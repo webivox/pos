@@ -194,7 +194,7 @@ class InventoryRStockListingConnector {
 										'in' => $defCls->money($in),
 										'out' => $defCls->money($out),
 										'available' => $defCls->money($available),
-										'value' => $defCls->money($cat['closing_stocks'])
+										'value' => $defCls->money($cat['closing_stocks']*$cat['cost'])
 										
 									);
 									

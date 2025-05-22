@@ -1,0 +1,6 @@
+[22-May-2025 19:25:15 UTC] PHP Warning:  Undefined array key "cost" in D:\wamp64\www\pos\design\html\inventory\transaction_uniquenos_form.php on line 27
+[22-May-2025 19:25:15 UTC] PHP Stack trace:
+[22-May-2025 19:25:15 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 19:25:15 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[22-May-2025 19:25:15 UTC] PHP   3. InventoryTransactionUniquenosConnector->create('create') D:\wamp64\www\pos\base\load.php:72
+[22-May-2025 19:25:15 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\inventory\transaction_uniquenos.php:228

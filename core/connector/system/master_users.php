@@ -67,7 +67,8 @@ class SystemMasterUsersConnector {
 			else{ $pageno = 1; }
 			/////////////
 			
-			$sql=" WHERE user_id!=0";
+			if($sessionCls->load('signedUserId')==1){ $sql=" WHERE user_id!=0"; }
+			else{ $sql=" WHERE user_id!=1"; }
 			
 			if($search_name){ $sql.=" AND name LIKE '%$search_name%'"; }
 			if($search_status){ $sql.=" AND status='".$search_status."'"; }
@@ -186,8 +187,15 @@ class SystemMasterUsersConnector {
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 			{
 				
+				$masterUserLimit = $defCls->master('users_limit');
+				
+				$countUsers = $SystemMasterUsersQuery->gets("");
+				$countUsers = count($countUsers);
+				
 				$countUsersByUserName = $SystemMasterUsersQuery->gets("WHERE username='".$data['username']."'");
 				$countUsersByUserName = count($countUsersByUserName);
+				
+				if($countUsers>$masterUserLimit){ $error_msg[]="You have reached the account user limit!"; $error_no++; }
 				
 				if(!$SystemMasterUsergroupsQuery->has($data['group_id'])){ $error_msg[]="Please choose a valid user group!"; $error_no++; }
 				if(!$SystemMasterLocationsQuery->has($data['location_id'])){ $error_msg[]="Please choose a valid location!"; $error_no++; }
@@ -349,7 +357,7 @@ class SystemMasterUsersConnector {
 						$countUsersByUserName = $SystemMasterUsersQuery->gets("WHERE username='".$data['username']."'");
 						$countUsersByUserName = count($countUsersByUserName);
 						
-						if($countUsersByName){ $error_msg[]="The username already exists"; $error_no++; }
+						if($countUsersByUserName){ $error_msg[]="The username already exists"; $error_no++; }
 					}
 				
 					if($data['password'])
@@ -454,42 +462,48 @@ class SystemMasterUsersConnector {
 		
 		if($firewallCls->verifyUser())
 		{
-			$getInfo = $SystemMasterUsersQuery->get($id);
-			
-			if($getInfo)
+			if($id==1)
 			{
-				$name = $getInfo['name'];
-				
-				$deleteValue = $SystemMasterUsersQuery->delete($id);
-				
-				if($deleteValue=='deleted')
-				{
-					$firewallCls->addLog("User Deleted: ".$name);
-				
-					$json['success']=true;
-					$json['success_msg']="Sucessfully Updated";
-				
-				}
-				elseif(is_array($deleteValue))
-				{
-					foreach($deleteValue as $v)
-					{
-						$error_msg[]=$v; $error_no++;
-					}
-					
-				}
-				else
-				{
-					$error_msg[]="An error occurred while attempting to delete the user!"; $error_no++;
-				}	
+				$error_msg[]="You can't delete this user!"; $error_no++;
 			}
 			else
 			{
-				$error_msg[]="Invalid user Id"; $error_no++;
+				$getInfo = $SystemMasterUsersQuery->get($id);
 				
-				
+				if($getInfo)
+				{
+					$name = $getInfo['name'];
+					
+					$deleteValue = $SystemMasterUsersQuery->delete($id);
+					
+					if($deleteValue=='deleted')
+					{
+						$firewallCls->addLog("User Deleted: ".$name);
+					
+						$json['success']=true;
+						$json['success_msg']="Sucessfully Updated";
+					
+					}
+					elseif(is_array($deleteValue))
+					{
+						foreach($deleteValue as $v)
+						{
+							$error_msg[]=$v; $error_no++;
+						}
+						
+					}
+					else
+					{
+						$error_msg[]="An error occurred while attempting to delete the user!"; $error_no++;
+					}	
+				}
+				else
+				{
+					$error_msg[]="Invalid user Id"; $error_no++;
+					
+					
+				}
 			}
-			
 				
 			if($error_no)
 			{

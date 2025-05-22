@@ -1,0 +1,16 @@
+[22-May-2025 19:28:30 UTC] PHP Warning:  Trying to access array offset on value of type null in D:\wamp64\www\pos\base\load.php on line 28
+[22-May-2025 19:28:30 UTC] PHP Stack trace:
+[22-May-2025 19:28:30 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 19:28:30 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[22-May-2025 19:28:30 UTC] PHP Warning:  Undefined array key 0 in D:\wamp64\www\pos\base\load.php on line 34
+[22-May-2025 19:28:30 UTC] PHP Stack trace:
+[22-May-2025 19:28:30 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 19:28:30 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[22-May-2025 19:28:30 UTC] PHP Warning:  Trying to access array offset on value of type null in D:\wamp64\www\pos\base\load.php on line 34
+[22-May-2025 19:28:30 UTC] PHP Stack trace:
+[22-May-2025 19:28:30 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 19:28:30 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[22-May-2025 19:28:30 UTC] PHP Warning:  Trying to access array offset on value of type null in D:\wamp64\www\pos\base\load.php on line 63
+[22-May-2025 19:28:30 UTC] PHP Stack trace:
+[22-May-2025 19:28:30 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 19:28:30 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16

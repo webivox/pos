@@ -1,0 +1,76 @@
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  Undefined variable $json in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Deprecated:  json_decode(): Passing null to parameter #1 ($json) of type string is deprecated in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP   5. json_decode($json = NULL, $associative = TRUE) D:\wamp64\www\pos\design\html\common\dashboard.php:18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\common\dashboard.php on line 21
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  Undefined variable $json in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Deprecated:  json_decode(): Passing null to parameter #1 ($json) of type string is deprecated in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP   5. json_decode($json = NULL, $associative = TRUE) D:\wamp64\www\pos\design\html\common\dashboard.php:18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\common\dashboard.php on line 21
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  Undefined variable $json in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Deprecated:  json_decode(): Passing null to parameter #1 ($json) of type string is deprecated in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP   5. json_decode($json = NULL, $associative = TRUE) D:\wamp64\www\pos\design\html\common\dashboard.php:18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\common\dashboard.php on line 21
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  Undefined variable $json in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP Deprecated:  json_decode(): Passing null to parameter #1 ($json) of type string is deprecated in D:\wamp64\www\pos\design\html\common\dashboard.php on line 18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34
+[23-May-2025 01:28:16 Asia/Colombo] PHP   5. json_decode($json = NULL, $associative = TRUE) D:\wamp64\www\pos\design\html\common\dashboard.php:18
+[23-May-2025 01:28:16 Asia/Colombo] PHP Warning:  foreach() argument must be of type array|object, null given in D:\wamp64\www\pos\design\html\common\dashboard.php on line 21
+[23-May-2025 01:28:16 Asia/Colombo] PHP Stack trace:
+[23-May-2025 01:28:16 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[23-May-2025 01:28:16 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[23-May-2025 01:28:16 Asia/Colombo] PHP   3. CommonDashboardConnector->index() D:\wamp64\www\pos\base\load.php:72
+[23-May-2025 01:28:16 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\common\dashboard.php:34

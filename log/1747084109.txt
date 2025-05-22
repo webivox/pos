@@ -1,5 +1,0 @@
-[12-May-2025 21:08:29 UTC] PHP Warning:  Undefined array key "warranty_id" in D:\wamp64\www\pos\core\connector\inventory\master_items.php on line 404
-[12-May-2025 21:08:29 UTC] PHP Stack trace:
-[12-May-2025 21:08:29 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[12-May-2025 21:08:29 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
-[12-May-2025 21:08:29 UTC] PHP   3. InventoryMasterItemsConnector->edit('edit', '11') D:\wamp64\www\pos\base\load.php:22

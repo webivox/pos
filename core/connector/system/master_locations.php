@@ -216,8 +216,15 @@ class SystemMasterLocationsConnector {
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 			{
 				
+				$masterLocationLimit = $defCls->master('locations_limit');
+				
+				$countLocations = $SystemMasterUsersQuery->gets("");
+				$countLocations = count($countLocations);
+				
 				$countLocationsByName = $SystemMasterLocationsQuery->gets("WHERE name='".$data['name']."'");
 				$countLocationsByName = count($countLocationsByName);
+				
+				if($countLocations>$masterLocationLimit){ $error_msg[]="You have reached the account location limit!"; $error_no++; }
 				
 				if(strlen($data['name'])<3){ $error_msg[]="Name must be minimum 3 letters"; $error_no++; }
 				if($countLocationsByName){ $error_msg[]="The name already exists"; $error_no++; }

@@ -14,6 +14,7 @@ class SalesScreenConnector {
 		global $SalesMasterRepQuery;
 		global $InventoryMasterCategoryQuery;
 		global $AccountsMasterAccountsQuery;
+		global $SalesTransactionInvoicesQuery;
 		
 		
 		$data = [];
@@ -23,175 +24,208 @@ class SalesScreenConnector {
 			
 			$userId = $sessionCls->load('signedUserId');
 			
+			$masterInvoiceLimit = $defCls->master('invoice_limits_per_month');
+				
+			$countMonthInvoices = $SalesTransactionInvoicesQuery->gets("WHERE MONTH(added_date) = MONTH(CURRENT_DATE()) AND YEAR(added_date) = YEAR(CURRENT_DATE())");
+			$countMonthInvoices = count($countMonthInvoices);
+			
 			$data = [];
 			
 			$data['titleTag'] 	= 'Sales | '.$defCls->master('companyName');
 			$data['companyName'] 	= $defCls->master('companyName');
 			$data['logo'] 			= _UPLOADS.$defCls->master('logo');
 			
-			$data['customer_create_url'] 	= $defCls->genURL("customers/master_customers/create");
-			$data['sales_return_url'] 	= $defCls->genURL("sales/transaction_return/create/?val=jsneed");
-			$data['cashout_url'] 	= $defCls->genURL("sales/screen/cashout");
-			$data['report_url'] 	= $defCls->genURL("sales/r_pos");
-			$data['load_table_url'] = $defCls->genURL('sales/master_rep/load');
-			
-			if($sessionCls->load('lastPrintedInvoiceNo'))
+			if($masterInvoiceLimit>$countMonthInvoices+1)
 			{
-				$data['reprint_url'] = 'href="'.$defCls->genURL("sales/screen/posprint/".$sessionCls->load('lastPrintedInvoiceNo')."/").'" ';
-			}
-			else{ $data['reprint_url'] = 'id="noreprintinvfound"'; }
 			
-			$data['shift_status'] 	= count($SalesScreenQuery->getShift($userId));
-			
-			$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
-			
-			$data['cashierPoints'] = $SystemMasterCashierpointsQuery->gets("WHERE location_id='".$userInfo['location_id']."' ORDER BY name ASC");
-			
-			$shiftInfo = $SalesScreenQuery->getShift($userId);
-			
-			if($shiftInfo)
-			{
+				$data['customer_create_url'] 	= $defCls->genURL("customers/master_customers/create");
+				$data['sales_return_url'] 	= $defCls->genURL("sales/transaction_return/create/?val=jsneed");
+				$data['cashout_url'] 	= $defCls->genURL("sales/screen/cashout");
+				$data['report_url'] 	= $defCls->genURL("sales/r_pos");
+				$data['load_table_url'] = $defCls->genURL('sales/master_rep/load');
 				
-			
-				if($sessionCls->load('invoiceId'))
+				if($sessionCls->load('lastPrintedInvoiceNo'))
+				{
+					$data['reprint_url'] = 'href="'.$defCls->genURL("sales/screen/posprint/".$sessionCls->load('lastPrintedInvoiceNo')."/").'" ';
+				}
+				else{ $data['reprint_url'] = 'id="noreprintinvfound"'; }
+				
+				$data['shift_status'] 	= count($SalesScreenQuery->getShift($userId));
+				
+				$userInfo = $SystemMasterUsersQuery->get($sessionCls->load('signedUserId'));
+				
+				$data['cashierPoints'] = $SystemMasterCashierpointsQuery->gets("WHERE location_id='".$userInfo['location_id']."' ORDER BY name ASC");
+				
+				$shiftInfo = $SalesScreenQuery->getShift($userId);
+				
+				if($shiftInfo)
 				{
 					
-					$data['invoiceId'] = $sessionCls->load('invoiceId');
-					$salesInfo = $SalesScreenQuery->get($data['invoiceId']);
-					
-					if($salesInfo)
+				
+					if($sessionCls->load('invoiceId'))
 					{
 						
+						$data['invoiceId'] = $sessionCls->load('invoiceId');
 						$salesInfo = $SalesScreenQuery->get($data['invoiceId']);
-						$cashierPointInfo = $SystemMasterCashierpointsQuery->get($salesInfo['cashier_point_id']);
 						
-						$data['loggedUserName'] = $defCls->showText($userInfo['name']);
-						$data['logOut'] = $defCls->genURL('secure/signout');
-						
-						$data['customer_name'] = $defCls->showText($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'name').' ('.$CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'phone_number').')');
-						
-						$data['salesRepDD'] = $SalesMasterRepQuery->gets("ORDER BY name ASC");
-						$data['sales_rep_id'] = $salesInfo['sales_rep_id'];
-						$data['pendingINVDD'] = $SalesScreenQuery->getsSql("WHERE user_id='".$userId."' AND cashier_point_id='".$shiftInfo['cashier_point_id']."' ORDER BY invoice_id ASC");
-						
-						
-						
-						$data['cartItems'] = [];
-						
-						$cartItems = $SalesScreenQuery->getItems($data['invoiceId']);
-						
-						foreach($cartItems as $ci)
+						if($salesInfo)
 						{
-							$data['cartItems'][] = $ci['invoice_item_id'];
-						}
-						
-						$data['customerOutstanding'] = $defCls->money($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'closing_balance'));
-						$data['loyaltyPoints'] = $defCls->money($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'loyalty_points'));
-						
-						$data['total_sale'] = $defCls->money($salesInfo['total_sale']+$salesInfo['discount_amount']);
-						$data['discount_type'] = $salesInfo['discount_type'];
-						$data['discount_value'] = $defCls->num($salesInfo['discount_value']);
-						$data['discount_amount'] = $defCls->money($salesInfo['discount_amount']);
-						$data['total_paid'] = $defCls->money($salesInfo['total_paid']);
-						$data['net_total'] = $defCls->money($salesInfo['total_sale']);
-						
-						
-						$data['comments'] = $defCls->showText($salesInfo['comments']);
-						
-						
-						
-						$data['categoryList'] = [];
-						
-						$categories = $InventoryMasterCategoryQuery->gets("WHERE status=1 AND parent_category_id=0 ORDER BY name ASC");
-						
-						foreach($categories as $c)
-						{
-							$data['categoryList'][] = array(
 							
-													'catId' => $c['category_id'],
-													'name' => $defCls->showText($c['name']),
-													'url' => $defCls->genURL('sales/screen/loadinventorycategory/'.$c['category_id'].'/')
+							$salesInfo = $SalesScreenQuery->get($data['invoiceId']);
+							$cashierPointInfo = $SystemMasterCashierpointsQuery->get($salesInfo['cashier_point_id']);
 							
-													);
-						}
-						
-						
-						$data['cardPayments'] = [];
-						
-						if($cashierPointInfo['card_account_1_name'] && $cashierPointInfo['card_account_1_id'])
-						{
-							$data['cardPayments'][] = array(
+							$data['loggedUserName'] = $defCls->showText($userInfo['name']);
+							$data['logOut'] = $defCls->genURL('secure/signout');
 							
-														'accountId' => $cashierPointInfo['card_account_1_id'],
-														'name' => $defCls->showText($cashierPointInfo['card_account_1_name'])
+							$data['customer_name'] = $defCls->showText($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'name').' ('.$CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'phone_number').')');
 							
+							$data['salesRepDD'] = $SalesMasterRepQuery->gets("ORDER BY name ASC");
+							$data['sales_rep_id'] = $salesInfo['sales_rep_id'];
+							$data['pendingINVDD'] = $SalesScreenQuery->getsSql("WHERE user_id='".$userId."' AND cashier_point_id='".$shiftInfo['cashier_point_id']."' ORDER BY invoice_id ASC");
+							
+							
+							
+							$data['cartItems'] = [];
+							
+							$cartItems = $SalesScreenQuery->getItems($data['invoiceId']);
+							
+							foreach($cartItems as $ci)
+							{
+								$data['cartItems'][] = $ci['invoice_item_id'];
+							}
+							
+							$data['customerOutstanding'] = $defCls->money($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'closing_balance'));
+							$data['loyaltyPoints'] = $defCls->money($CustomersMasterCustomersQuery->data($salesInfo['customer_id'],'loyalty_points'));
+							
+							$data['total_sale'] = $defCls->money($salesInfo['total_sale']+$salesInfo['discount_amount']);
+							$data['discount_type'] = $salesInfo['discount_type'];
+							$data['discount_value'] = $defCls->num($salesInfo['discount_value']);
+							$data['discount_amount'] = $defCls->money($salesInfo['discount_amount']);
+							$data['total_paid'] = $defCls->money($salesInfo['total_paid']);
+							$data['net_total'] = $defCls->money($salesInfo['total_sale']);
+							
+							
+							$data['comments'] = $defCls->showText($salesInfo['comments']);
+							
+							
+							
+							$data['categoryList'] = [];
+							
+							$categories = $InventoryMasterCategoryQuery->gets("WHERE status=1 AND parent_category_id=0 ORDER BY name ASC");
+							
+							foreach($categories as $c)
+							{
+								$data['categoryList'][] = array(
+								
+														'catId' => $c['category_id'],
+														'name' => $defCls->showText($c['name']),
+														'url' => $defCls->genURL('sales/screen/loadinventorycategory/'.$c['category_id'].'/')
+								
 														);
+							}
+							
+							
+							$data['cardPayments'] = [];
+							
+							if($cashierPointInfo['card_account_1_name'] && $cashierPointInfo['card_account_1_id'])
+							{
+								$data['cardPayments'][] = array(
+								
+															'accountId' => $cashierPointInfo['card_account_1_id'],
+															'name' => $defCls->showText($cashierPointInfo['card_account_1_name'])
+								
+															);
+							}
+							
+							if($cashierPointInfo['card_account_2_name'] && $cashierPointInfo['card_account_2_id'])
+							{
+								$data['cardPayments'][] = array(
+								
+															'accountId' => $cashierPointInfo['card_account_2_id'],
+															'name' => $defCls->showText($cashierPointInfo['card_account_2_name'])
+								
+															);
+							}
+							
+							if($cashierPointInfo['card_account_3_name'] && $cashierPointInfo['card_account_3_id'])
+							{
+								$data['cardPayments'][] = array(
+								
+															'accountId' => $cashierPointInfo['card_account_3_id'],
+															'name' => $defCls->showText($cashierPointInfo['card_account_3_name'])
+								
+															);
+							}
+							
+							if($cashierPointInfo['card_account_4_name'] && $cashierPointInfo['card_account_4_id'])
+							{
+								$data['cardPayments'][] = array(
+								
+															'accountId' => $cashierPointInfo['card_account_4_id'],
+															'name' => $defCls->showText($cashierPointInfo['card_account_4_name'])
+								
+															);
+							}
+							
+							if($cashierPointInfo['card_account_5_name'] && $cashierPointInfo['card_account_5_id'])
+							{
+								$data['cardPayments'][] = array(
+								
+															'accountId' => $cashierPointInfo['card_account_5_id'],
+															'name' => $defCls->showText($cashierPointInfo['card_account_5_name'])
+								
+															);
+							}
+							
+							$data['cartPayments'] = [];
+							
+							$cartPayments = $SalesScreenQuery->getPayments($data['invoiceId']);
+							
+							foreach($cartPayments as $cp)
+							{
+								$data['cartPayments'][] = array(
+								
+															'paymentId' => $cp['invoice_payment_id'],
+															'type' => $cp['type'],
+															'amount' => $defCls->num($cp['amount']+$cp['amount_balance'])
+								
+															);
+								
+							}
+							
+							
+							
+							require_once _HTML."sales/screen.php";
 						}
-						
-						if($cashierPointInfo['card_account_2_name'] && $cashierPointInfo['card_account_2_id'])
+						else
 						{
-							$data['cardPayments'][] = array(
+							$getInvoiceByUser = $SalesScreenQuery->getSql("WHERE user_id='".$userId."' AND cashier_point_id='".$shiftInfo['cashier_point_id']."' ORDER BY invoice_id ASC");
+						
+							if($getInvoiceByUser)
+							{
+								
+								$sessionCls->set('invoiceId',$getInvoiceByUser['invoice_id']);
+								
+								
+								header("location:"._SERVER."sales/screen");
 							
-														'accountId' => $cashierPointInfo['card_account_2_id'],
-														'name' => $defCls->showText($cashierPointInfo['card_account_2_name'])
-							
-														);
+							}
+							else
+							{
+								
+								$createdInvId = $SalesScreenQuery->create('');
+								$sessionCls->set('invoiceId',$createdInvId);
+									
+								header("location:"._SERVER."sales/screen");
+								
+							}
 						}
-						
-						if($cashierPointInfo['card_account_3_name'] && $cashierPointInfo['card_account_3_id'])
-						{
-							$data['cardPayments'][] = array(
-							
-														'accountId' => $cashierPointInfo['card_account_3_id'],
-														'name' => $defCls->showText($cashierPointInfo['card_account_3_name'])
-							
-														);
-						}
-						
-						if($cashierPointInfo['card_account_4_name'] && $cashierPointInfo['card_account_4_id'])
-						{
-							$data['cardPayments'][] = array(
-							
-														'accountId' => $cashierPointInfo['card_account_4_id'],
-														'name' => $defCls->showText($cashierPointInfo['card_account_4_name'])
-							
-														);
-						}
-						
-						if($cashierPointInfo['card_account_5_name'] && $cashierPointInfo['card_account_5_id'])
-						{
-							$data['cardPayments'][] = array(
-							
-														'accountId' => $cashierPointInfo['card_account_5_id'],
-														'name' => $defCls->showText($cashierPointInfo['card_account_5_name'])
-							
-														);
-						}
-						
-						$data['cartPayments'] = [];
-						
-						$cartPayments = $SalesScreenQuery->getPayments($data['invoiceId']);
-						
-						foreach($cartPayments as $cp)
-						{
-							$data['cartPayments'][] = array(
-							
-														'paymentId' => $cp['invoice_payment_id'],
-														'type' => $cp['type'],
-														'amount' => $defCls->num($cp['amount']+$cp['amount_balance'])
-							
-														);
-							
-						}
-						
-						
-						
-						require_once _HTML."sales/screen.php";
 					}
 					else
 					{
+						
 						$getInvoiceByUser = $SalesScreenQuery->getSql("WHERE user_id='".$userId."' AND cashier_point_id='".$shiftInfo['cashier_point_id']."' ORDER BY invoice_id ASC");
-					
+						
 						if($getInvoiceByUser)
 						{
 							
@@ -211,39 +245,17 @@ class SalesScreenConnector {
 							
 						}
 					}
+				
 				}
 				else
 				{
 					
-					$getInvoiceByUser = $SalesScreenQuery->getSql("WHERE user_id='".$userId."' AND cashier_point_id='".$shiftInfo['cashier_point_id']."' ORDER BY invoice_id ASC");
+					require_once _HTML."sales/screen.php";
 					
-					if($getInvoiceByUser)
-					{
-						
-						$sessionCls->set('invoiceId',$getInvoiceByUser['invoice_id']);
-						
-						
-						header("location:"._SERVER."sales/screen");
-					
-					}
-					else
-					{
-						
-						$createdInvId = $SalesScreenQuery->create('');
-						$sessionCls->set('invoiceId',$createdInvId);
-							
-						header("location:"._SERVER."sales/screen");
-						
-					}
 				}
 			
 			}
-			else
-			{
-				
-				require_once _HTML."sales/screen.php";
-				
-			}
+			else{ echo 'Invoice limit reached for this month!'; }
 		}
 		else
 		{

@@ -145,9 +145,12 @@ class SalesTransactionGiftcardsConnector {
 			
 			if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 			{
+				$masterGiftCardEnabled = $defCls->master('gift_cards');
 				
 				$countGCsByNO = $SalesTransactionGiftcardsQuery->gets("WHERE no='".$data['no']."'");
 				$countGCsByNO = count($countGCsByNO);
+				
+				if(!$masterGiftCardEnabled){ $error_msg[]="Your account doesn't have permission to use the gift card feature"; $error_no++; }
 				
 				if(strlen($data['no'])<6){ $error_msg[]="No must be minimum 6 letters"; $error_no++; }
 				if($countGCsByNO){ $error_msg[]="The no already exists"; $error_no++; }

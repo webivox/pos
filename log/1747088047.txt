@@ -1,1 +1,0 @@
-[12-May-2025 22:14:07 UTC] PHP Parse error:  Unclosed '[' does not match ')' in D:\wamp64\www\pos\design\html\system\master_usergroups_form.php on line 50

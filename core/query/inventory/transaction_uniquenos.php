@@ -116,6 +116,7 @@ class InventoryTransactionUniquenosQuery {
 						added_date='".$dateToday."',
 						item_id='".$data['item_id']."',
 						unique_no='".$data['unique_no']."',
+						cost='".$data['cost']."',
 						remarks='".$data['remarks']."',
 						status='".$data['status']."'
 						
@@ -139,6 +140,7 @@ class InventoryTransactionUniquenosQuery {
 						
 						item_id='".$data['item_id']."',
 						unique_no='".$data['unique_no']."',
+						cost='".$data['cost']."',
 						remarks='".$data['remarks']."',
 						status='".$data['status']."'
 						

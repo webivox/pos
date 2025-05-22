@@ -62,7 +62,7 @@ class SecureSigninConnector {
 		else{ $data['password'] = ''; }
 		
 		
-		if(strlen($data['username'])==5){ $error_msg[]="Username must be 5 letters"; $error_no++; }
+		if(strlen($data['username'])<5){ $error_msg[]="Username must be minimum 5 letters"; $error_no++; }
 		if(strlen($data['password'])<8){ $error_msg[]="Password must be minimum 8 letters"; $error_no++; }
 		
 		

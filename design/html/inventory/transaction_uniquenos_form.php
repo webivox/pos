@@ -1,4 +1,4 @@
-<h3>Brand</h3>
+<h3>Unique NOs</h3>
 
 <form method="post" id="saveForm" data-url="<?php echo $data['form_url']; ?>">
         
@@ -9,7 +9,7 @@
     <div class="col_1">
         
         <label for="item_name">Item Name</label>
-        <input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="unique_no" data-setid="item_id" class="autofocus" value="<?php echo $data['item_name']; ?>" />
+        <input type="text" id="item_name" name="item_name" class="itemAjax" data-focus="unique_no" class="autofocus" data-setid="item_id" value="<?php echo $data['item_name']; ?>" />
         <input type="hidden" id="item_id" name="item_id" value="<?php echo $data['item_id']; ?>" />
 
     </div>
@@ -19,6 +19,13 @@
         <label for="unique_no">Unique No</label>
         <input type="text" name="unique_no" id="unique_no" placeholder="Unique No" value="<?php echo $data['unique_no']; ?>">
     
+    </div>
+        
+    <div class="col_1">
+        
+        <label for="cost">Cost</label>
+        <input type="text" id="cost" name="cost" value="<?php echo $data['cost']; ?>" />
+
     </div>
     
     <div class="col_1">

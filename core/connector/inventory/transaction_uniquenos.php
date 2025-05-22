@@ -167,6 +167,9 @@ class InventoryTransactionUniquenosConnector {
 			if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no');}
 			else{ $data['unique_no'] = ''; }
 				
+			if(isset($_REQUEST['cost'])){ $data['cost'] = $db->request('cost');}
+			else{ $data['cost'] = 0; }
+				
 			if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks');}
 			else{ $data['remarks'] = ''; }
 			
@@ -280,6 +283,9 @@ class InventoryTransactionUniquenosConnector {
 					
 				if(isset($_REQUEST['unique_no'])){ $data['unique_no'] = $db->request('unique_no');}
 				else{ $data['unique_no'] = $getUniquenoInfo['unique_no']; }
+				
+				if(isset($_REQUEST['cost'])){ $data['cost'] = $db->request('cost');}
+				else{ $data['cost'] = $getUniquenoInfo['cost']; }
 					
 				if(isset($_REQUEST['remarks'])){ $data['remarks'] = $db->request('remarks');}
 				else{ $data['remarks'] = $getUniquenoInfo['remarks']; }
@@ -290,6 +296,7 @@ class InventoryTransactionUniquenosConnector {
 				if(($_SERVER['REQUEST_METHOD'] == 'POST'))
 				{
 					
+					if(!$data['transaction_no']){ $error_msg[]="You must enter transaction no"; $error_no++; }
 					if(strlen($data['unique_no'])<4){ $error_msg[]="Unique no must be minimum 4 letters"; $error_no++; }
 					
 					if($db->request('unique_no')!==$getUniquenoInfo['unique_no'])

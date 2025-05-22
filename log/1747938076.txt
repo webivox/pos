@@ -1,0 +1,6 @@
+[22-May-2025 18:21:17 UTC] PHP Warning:  unlink(D:/wamp64/www/pos/ux/uploads/company/company/logo-1747937853.png): No such file or directory in D:\wamp64\www\pos\core\connector\system\setup.php on line 107
+[22-May-2025 18:21:17 UTC] PHP Stack trace:
+[22-May-2025 18:21:17 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[22-May-2025 18:21:17 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[22-May-2025 18:21:17 UTC] PHP   3. SystemSetupConnector->index() D:\wamp64\www\pos\base\load.php:72
+[22-May-2025 18:21:17 UTC] PHP   4. unlink($filename = 'D:/wamp64/www/pos/ux/uploads/company/company/logo-1747937853.png') D:\wamp64\www\pos\core\connector\system\setup.php:107

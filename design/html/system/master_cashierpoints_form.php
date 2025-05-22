@@ -1,6 +1,6 @@
 <h3>Cashier Point</h3>
 
-<form method="post" id="saveForm" data-url="<?php echo $data['form_url']; ?>">
+<form method="post" id="saveForm" data-url="<?php echo $data['form_url']; ?>" enctype="multipart/form-data">
         
    
         
@@ -96,7 +96,7 @@
 <div id="popup_form_in_form_button">
     <div class="col_1">
     
-        <button form="saveForm" type="submit" id="saveFormBtn">Save Now</button>
+        <button form="saveForm" type="submit" id="saveFormBtn">Save</button>
     
     </div>
 </div> 
