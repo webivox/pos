@@ -2801,10 +2801,17 @@ class SalesScreenConnector {
 				$data['earned_points'] = $earned_points;
 				$data['balance_points'] = $balance_points;
 				
+				$data['comments'] = $invoiceInfo['comments'];
 				
 				$data['invoice_footer'] = $defCls->showText(nl2br($defCls->master('invoice_footer')));
 
-				$this_required_file = _HTML.'sales/posprint.php';
+				$printIn = $defCls->master('invoicePrint');
+
+				if($printIn=='POS'){	$this_required_file = _HTML.'sales/posprint.php';	}
+				elseif($printIn=='A5P'){	$this_required_file = _HTML.'sales/a5printportrait.php';	}
+				elseif($printIn=='A5L'){	$this_required_file = _HTML.'sales/a5printlandscape.php';	}
+				
+				
 				if (!file_exists($this_required_file)) {
 					error_log("File not found: ".$this_required_file);
 					die('File not found:'.$this_required_file);

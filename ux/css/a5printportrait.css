@@ -1,0 +1,297 @@
+/* CSS Document */
+
+@font-face {
+  font-family: 'receipt';
+  src: url('../fonts/receipt.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@page {
+  size: A5 portrait; /* or 'A5 landscape' if needed */
+  margin: 25px;
+}
+
+
+body
+
+{
+
+	margin:0px; height:0px;
+
+	font-family: "Consolas", monospace;
+
+	 font-size:13px; font-weight: normal;
+
+   -moz-user-select: none;
+
+   -khtml-user-select: none;
+
+   -webkit-user-select: none;
+
+}
+
+h1,h2,h3,h4,h5,h56,p{ margin:0px; padding:0px; }
+
+h1{ font-size:14px; }
+h3{ font-size:14px; }
+
+div
+
+{
+
+	-webkit-box-sizing: border-box;
+
+     -moz-box-sizing: border-box;
+
+          box-sizing: border-box;
+
+}
+
+
+
+
+.text-right{ text-align:right; }
+.text-left{ text-align:left; }
+.text-center{ text-align:center; }
+
+/* Table */
+.table
+{
+	width:100%; height:auto;
+	border-spacing: 0;
+	border-collapse: collapse;
+	display: table;
+	border:1px solid #DDD;
+}
+.table thead
+{
+	background:#eef2f4;
+	font-size:13px;
+}
+.table th
+{
+	padding:6px;
+	border: 1px solid #DDD; font-weight:500; text-align:left;
+}
+.table td
+{
+	padding:6px;
+	border: 1px solid #DDD;
+}
+.table tbody tr.grey{ background:#f5f6fa; }
+.table tbody td
+{
+	border-top: 1px solid #DDD;
+	font-size:13px;
+}
+.table tfoot tr.grey{ background:#f5f6fa; }
+.table tfoot td
+{
+	border-top: 1px solid #DDD;
+	font-size:13px;
+}
+
+
+#cont
+{
+	width:100%; height:740px; float:left;
+}
+#maindiv
+{
+
+	width:100%; height:740px; float:left;
+
+}
+
+#first_row
+{
+	width:100%; height:90px; float:left;
+	border:1px solid #DDD;
+}
+
+#logo
+{
+	width:40%; height:90px; float:left;
+	padding:15px 0px 15px 10px;
+}
+#logo img
+{
+	width:auto; height:60px;
+}
+
+#company
+{
+	width:60%; height:70px; float:left;
+	padding:15px;
+	text-align:right;
+}
+
+
+
+#second_row
+{
+	width:100%; height:112px; float:left;
+	border:1px solid #DDD; border-top:0px;
+}
+#invoice_to
+{
+	width:50%; height:112px; float:left;
+	padding:10px;
+	border-right:1px solid #DDD;
+}
+
+
+#invoice_details
+{
+	width:50%; height:112px; float:left;
+}
+
+.invoice_details_row
+{
+	width:100%; height:28px; float:left;
+	border-bottom:1px solid #DDD;
+}
+
+.invoice_details_row_l
+{
+	width:40%; height:27px; float:left; padding-left:5px; line-height:27px; border-right:1px solid #DDD;
+	font-weight:600;
+}
+.invoice_details_row_r{ width:60%; height:27px; float:left; padding-left:5px; line-height:27px; }
+
+
+.invoice_head_second_ll{ width:90px; position:relative; }
+
+
+#invoice_item_line_head
+{
+	width:100%; height:27px; float:left;
+	background:#EEE;
+	border:1px solid #DDD; border-top:0px;
+	font-size:13px; line-height:26px; font-weight:600;
+}
+
+
+.invoice_item_head_ln
+{
+	width:27px; height:26px; float:left;
+	padding-right:5px;
+	border-right:1px solid #DDD;
+	text-align:right;
+}
+.invoice_item_head_item
+{
+	width:210px; height:26px; float:left;
+	border-right:1px solid #DDD;
+	padding-left:10px;
+}
+
+.invoice_item_head_price
+{
+	width:100px; height:26px; float:left;
+	border-right:1px solid #DDD;
+	text-align:right;
+	padding-right:10px;
+}
+
+.invoice_item_head_qty
+{
+	width:65px; height:26px; float:left;
+	border-right:1px solid #DDD;
+	text-align:right;
+	padding-right:10px;
+}
+.invoice_item_head_amount
+{
+	width:100px; height:26px; float:left;
+	text-align:right;
+	padding-right:10px;
+}
+
+
+
+.invoice_item_line_row
+{
+	width:100%; height:27px; float:left;
+	border:1px solid #DDD; border-top:0px;
+	font-size:13px; line-height:26px;
+}
+
+.invoice_item_det_ln
+{
+	width:30px; height:26px; float:left;
+	padding-right:5px;
+	border-right:1px solid #DDD;
+	text-align:right;
+}
+.invoice_item_det_item
+{
+	width:478px; height:26px; float:left;
+	padding-left:10px;
+}
+
+.invoice_item_det_unique
+{
+	width:238px; height:26px; float:left;
+	padding-left:10px;
+	border-right:1px solid #DDD;
+	font-size:13px;
+}
+
+
+.invoice_item_det_discount
+{
+	width:403px; height:26px; float:left;
+	padding-left:10px;
+	border-right:1px solid #DDD;
+	font-size:13px;
+}
+
+
+.invoice_item_det_price
+{
+	width:100px; height:26px; float:left;
+	border-right:1px solid #DDD;
+	text-align:right;
+	padding-right:10px;
+}
+
+.invoice_item_det_qty
+{
+	width:65px; height:26px; float:left;
+	border-right:1px solid #DDD;
+	text-align:right;
+	padding-right:10px;
+}
+.invoice_item_det_amount
+{
+	width:100px; height:26px; float:left;
+	text-align:right;
+	padding-right:10px;
+}
+
+
+
+#loyalty_head
+{
+	padding-top:4px;
+	padding-bottom:4px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:14px; text-align:center; font-weight:600;
+}
+
+#total_saving
+{
+	padding-top:8px;
+	padding-bottom:8px;
+	border-top:1px dashed #000;
+	border-bottom:1px dashed #000;
+	font-size:14px; text-align:center; font-weight:600;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }

@@ -80,6 +80,17 @@
         </div>
         
         <div class="col_2">
+            <label for="invoicePrint">Invoice Print</label>
+            <select name="invoicePrint" id="invoicePrint">
+            
+                <option value="POS" <?php if($formData['invoicePrint']=='POS'){ echo 'selected'; } ?>>POS</option>
+                <option value="A5P" <?php if($formData['invoicePrint']=='A5P'){ echo 'selected'; } ?>>A5 Portrait</option>
+                <option value="A5L" <?php if($formData['invoicePrint']=='A5L'){ echo 'selected'; } ?>>A5 Landscape</option>
+            
+            </select>
+        </div>
+        
+        <div class="col_2">
             <label for="invoice_header">Invoice Header Text</label>
             <textarea name="invoice_header" id="invoice_header" placeholder="Header Text" style="height:85px"><?php echo $formData['invoice_header']; ?></textarea>
         </div>

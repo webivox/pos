@@ -1,0 +1,1 @@
+[24-May-2025 17:02:04 UTC] PHP Parse error:  Unclosed '{' on line 127 in D:\wamp64\www\pos\design\html\sales\a4print.php on line 347

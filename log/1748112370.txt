@@ -1,0 +1,6 @@
+[24-May-2025 18:46:10 UTC] PHP Warning:  Undefined array key "comments" in D:\wamp64\www\pos\design\html\sales\a4print.php on line 320
+[24-May-2025 18:46:10 UTC] PHP Stack trace:
+[24-May-2025 18:46:10 UTC] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
+[24-May-2025 18:46:10 UTC] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
+[24-May-2025 18:46:10 UTC] PHP   3. SalesScreenConnector->posprint('posprint', '16') D:\wamp64\www\pos\base\load.php:72
+[24-May-2025 18:46:10 UTC] PHP   4. require_once() D:\wamp64\www\pos\core\connector\sales\screen.php:2814

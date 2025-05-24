@@ -49,6 +49,7 @@ class SystemSetupConnector {
 			$formData['invoice_header'] = isset($_REQUEST['invoice_header']) ? $db->request('invoice_header') : $defCls->master('invoice_header');
 			$formData['invoice_footer'] = isset($_REQUEST['invoice_footer']) ? $db->request('invoice_footer') : $defCls->master('invoice_footer');
 			$formData['invoice_logo_print'] = isset($_REQUEST['invoice_logo_print']) ? $db->request('invoice_logo_print') : $defCls->master('invoice_logo_print');
+			$formData['invoicePrint'] = isset($_REQUEST['invoicePrint']) ? $db->request('invoicePrint') : $defCls->master('invoicePrint');
 			
 			// Return Settings
 			$formData['return_print_header'] = isset($_REQUEST['return_print_header']) ? $db->request('return_print_header') : $defCls->master('return_print_header');
