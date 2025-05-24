@@ -52,11 +52,23 @@
 				
 				$targetPath = $row['path_id'];
 
-				$matched = array_values(array_filter($data['savedPermissions'], function($item) use ($targetPath) {
-					return $item['path'] == $targetPath;
-				}));
+				if (isset($data['savedPermissions'])) {
+					$matched = array_values(array_filter($data['savedPermissions'], function($item) use ($targetPath) {
+						return $item['path'] == $targetPath;
+					}));
+				} else {
+					$matched = [];
+				}
 				
-				$permissions = $matched[0]['permission'];
+				if (!empty($matched) && isset($matched[0]['permission'])) {
+					$permissions = is_array($matched[0]['permission']) ? $matched[0]['permission'] : json_decode($matched[0]['permission'], true);
+					if (!is_array($permissions)) {
+						$permissions = [0, 0, 0, 0];
+					}
+				} else {
+					$permissions = [0, 0, 0, 0];
+				}
+
 				
 
 			?>

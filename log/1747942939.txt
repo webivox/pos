@@ -1,6 +1,0 @@
-[23-May-2025 01:12:19 Asia/Colombo] PHP Warning:  Undefined variable $connectorPath in D:\wamp64\www\pos\design\html\common\menu.php on line 22
-[23-May-2025 01:12:19 Asia/Colombo] PHP Stack trace:
-[23-May-2025 01:12:19 Asia/Colombo] PHP   1. {main}() D:\wamp64\www\pos\index.php:0
-[23-May-2025 01:12:19 Asia/Colombo] PHP   2. require_once() D:\wamp64\www\pos\index.php:16
-[23-May-2025 01:12:19 Asia/Colombo] PHP   3. SystemMasterUsersConnector->index() D:\wamp64\www\pos\base\load.php:72
-[23-May-2025 01:12:19 Asia/Colombo] PHP   4. require_once() D:\wamp64\www\pos\core\connector\system\master_users.php:32

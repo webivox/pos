@@ -660,6 +660,7 @@ class SalesScreenQuery {
 					else{ $cost = $item['cost']; }
 					
 				}
+				else{ $cost = $item['cost']; }
 				
 				
 				$db->query("INSERT INTO sales_invoice_items SET

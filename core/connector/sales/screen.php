@@ -2784,14 +2784,22 @@ class SalesScreenConnector {
 				
 				$loyalty_points = $db->fetch("SELECT * FROM customer_loyalty_transactions WHERE reference_id='".$invoiceInfo['invoice_id']."' AND transaction_type='INV'");
 				
-				$before_inv_points = $loyalty_points['balance']-$loyalty_points['debit'];
-				
+				if (is_array($loyalty_points) && isset($loyalty_points['balance'], $loyalty_points['debit'])) {
+					$before_inv_points = $loyalty_points['balance'] - $loyalty_points['debit'];
+					$earned_points = $loyalty_points['debit'];
+					$balance_points = $loyalty_points['balance'];
+				} else {
+					$before_inv_points = 0; // or another fallback
+					$earned_points = 0;
+					$balance_points = 0;
+				}
+								
 				if($before_inv_points>0){ $before_inv_points = $before_inv_points; }
 				else{ $before_inv_points = 0; }
 				
 				$data['before_inv_points'] = $before_inv_points;
-				$data['earned_points'] = $loyalty_points['debit'];
-				$data['balance_points'] = $loyalty_points['balance'];
+				$data['earned_points'] = $earned_points;
+				$data['balance_points'] = $balance_points;
 				
 				
 				$data['invoice_footer'] = $defCls->showText(nl2br($defCls->master('invoice_footer')));

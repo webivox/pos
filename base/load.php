@@ -15,7 +15,7 @@ $id = isset($url[3]) ? $url[3] : '0';
 $connectorPath = _CONNECTOR . $dir . "/" . $file .".php";
 
 if($dir && $file && $dir!=='secure' && $file!=='signin')
-	{
+{
 	
 	/////////////
 	$path_dir_file = $db->escape($dir . "/" . $file);
@@ -33,7 +33,7 @@ if($dir && $file && $dir!=='secure' && $file!=='signin')
 					
 	$permissions = $matched[0]['permission'];
 	
-	$accessArray = array('index','load','autoComplete','printView','view','returnprint' ,'posprint', 'shiftStart', 'shiftEnd', 'suspend', 'recall', 'updateuniqueno', 'removeItem', 'updateQty', 'updateDiscount', 'updatePrice', 'updateSalesDiscount', 'comments', 'loadinventorycategory', 'loadinventoryitems', 'loadreturnBalance', 'loadGiftCardBalance', 'addPayment', 'removePayment', 'cashout');
+	$accessArray = array('index','load','autoComplete','printView','view','returnprint' ,'posprint', 'shiftStart', 'shiftEnd', 'suspend', 'recall', 'updateuniqueno', 'removeItem', 'updateQty', 'updateDiscount', 'updatePrice', 'updateSalesDiscount', 'comments', 'loadinventorycategory', 'loadinventoryitems', 'loadreturnBalance', 'loadGiftCardBalance', 'addPayment', 'removePayment', 'cashout','shiftstart','shiftEnd','suspend','recall','additem','addcustomer','addsalesrep','updatePrice','updateDiscount','updateQty','updateuniqueno','removeItem','updateSalesDiscount','comments','','loadinventorycategory','loadinventoryitems','loadreturnBalance','loadGiftCardBalance','addPayment','removePayment','cashout','complete','posprint');
 	$createArray = array('create', 'additem', 'addcustomer', 'addsalesrep', 'complete', 'validate');
 	$editArray = array('edit','update','revertupdate','autoComplete','printView','view','editprice');
 	$deleteArray = array('delete','cancellation');

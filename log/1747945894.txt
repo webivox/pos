@@ -1,2 +1,0 @@
-[23-May-2025 02:01:34 Asia/Colombo] PHP Parse error:  Unclosed '{' on line 50 in D:\wamp64\www\pos\design\html\common\menu.php on line 506
-[23-May-2025 02:01:34 Asia/Colombo] PHP Parse error:  Unclosed '{' on line 50 in D:\wamp64\www\pos\design\html\common\menu.php on line 506
